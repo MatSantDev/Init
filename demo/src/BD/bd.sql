@@ -2,48 +2,48 @@ CREATE DATABASE orcamento_db;
 USE orcamento_db;
 
 -- =========================
--- Tabela Produto
+-- Tabela model.Produto
 -- =========================
 CREATE TABLE produto (
-    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
-    valor_unitario DECIMAL(10,2) NOT NULL,
+    valorUnitario DECIMAL(10,2) NOT NULL,
     estoque INT DEFAULT 0
 );
 
 -- =========================
--- Tabela Serviço
+-- Tabela model.Serviço
 -- =========================
 CREATE TABLE servico (
-    id_servico INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
-    valor_unitario DECIMAL(10,2) NOT NULL
+    valorUnitario DECIMAL(10,2) NOT NULL
 );
 
 -- =========================
 -- Tabela Orçamento
 -- =========================
 CREATE TABLE orcamento (
-    id_orcamento INT AUTO_INCREMENT PRIMARY KEY,
-    cliente_nome VARCHAR(100) NOT NULL,
-    data_orcamento DATE NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente VARCHAR(100) NOT NULL,
+    dataOrcamento DATE NOT NULL,
     observacao TEXT,
-    valor_total DECIMAL(10,2) DEFAULT 0
+    valorTotal DECIMAL(10,2) DEFAULT 0
 );
 
 -- =========================
 -- Tabela Item do Orçamento
 -- =========================
-CREATE TABLE orcamento_item (
-    id_item INT AUTO_INCREMENT PRIMARY KEY,
-    id_orcamento INT NOT NULL,
-    tipo_item ENUM('produto', 'servico') NOT NULL,
-    id_produto INT NULL,
-    id_servico INT NULL,
+CREATE TABLE orcamentoItem (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    orcamento_id INT NOT NULL,
+    tipoOrcamentoItem ENUM('produto', 'servico') NOT NULL,
+    produto_id INT NULL,
+    servico_id INT NULL,
     quantidade INT NOT NULL,
-    valor_unitario DECIMAL(10,2) NOT NULL,
+    valorUnitario DECIMAL(10,2) NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,
 
     FOREIGN KEY (id_orcamento) REFERENCES orcamento(id_orcamento) ON DELETE CASCADE,

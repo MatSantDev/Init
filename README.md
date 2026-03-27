@@ -85,7 +85,7 @@ src/
 
 ## 🧩 Padrões Utilizados
 
-### DAO
+### dao
 Responsável pelo acesso ao banco de dados.
 
 ### MVC
