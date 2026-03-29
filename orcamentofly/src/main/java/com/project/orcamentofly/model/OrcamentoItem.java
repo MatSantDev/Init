@@ -4,7 +4,7 @@ import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 
 public class OrcamentoItem {
 
-    private int id;
+    private Integer id;
     private String descricao;
     private TipoOrcamentoItem tipoOrcamentoItem;
     private int quantidade;
@@ -18,7 +18,7 @@ public class OrcamentoItem {
     public OrcamentoItem() {
     }
 
-    public OrcamentoItem(int id, String descricao, TipoOrcamentoItem tipoOrcamentoItem, int quantidade, double valorUnitario, double subtotal, Orcamento orcamento, Produto produto, Servico servico) {
+    public OrcamentoItem(Integer id, String descricao, TipoOrcamentoItem tipoOrcamentoItem, int quantidade, double valorUnitario, double subtotal, Orcamento orcamento, Produto produto, Servico servico) {
         this.id = id;
         this.descricao = descricao;
         this.tipoOrcamentoItem = tipoOrcamentoItem;
@@ -34,7 +34,7 @@ public class OrcamentoItem {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

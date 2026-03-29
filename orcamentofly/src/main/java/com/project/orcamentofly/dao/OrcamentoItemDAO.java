@@ -75,7 +75,7 @@ public class OrcamentoItemDAO {
 
         String sql = "INSERT INTO orcamento_item (orcamento_id, descricao, tipoOrcamentoItem, quantidade, valorUnitario, subtotal, produto_id, servico_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = conn.prepareStatement(sql);
+        PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
         statement.setInt(1, item.getOrcamento().getId());
         statement.setString(2, item.getDescricao());
@@ -135,7 +135,6 @@ public class OrcamentoItemDAO {
         statement.setInt(9, item.getOrcamento().getId());
 
         statement.executeUpdate();
-        conn.close();
     }
 
     public void deletar(int id, int orcamentoId, Connection conn) throws SQLException, ClassNotFoundException {
@@ -147,7 +146,6 @@ public class OrcamentoItemDAO {
         statement.setInt(2, orcamentoId);
 
         statement.executeUpdate();
-        conn.close();
     }
 
 
