@@ -113,4 +113,12 @@ public class ProdutoDAO {
 
         return produto;
     }
+
+    public void atualizarEstoque(int produtoId, int quantidade, Connection conn) throws SQLException {
+        String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setInt(1, quantidade);
+        statement.setInt(2, produtoId);
+        statement.executeUpdate();
+    }
 }

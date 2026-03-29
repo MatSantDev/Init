@@ -5,24 +5,27 @@ import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 public class OrcamentoItem {
 
     private int id;
+    private String descricao;
     private TipoOrcamentoItem tipoOrcamentoItem;
     private int quantidade;
     private double valorUnitario;
     private double subtotal;
 
-    // Orcamento orcamento;
+    private Orcamento orcamento;
     private Produto produto;
     private Servico servico;
 
     public OrcamentoItem() {
     }
 
-    public OrcamentoItem(int id, TipoOrcamentoItem tipoOrcamentoItem, int quantidade, double valorUnitario, double subtotal, Produto produto, Servico servico) {
+    public OrcamentoItem(int id, String descricao, TipoOrcamentoItem tipoOrcamentoItem, int quantidade, double valorUnitario, double subtotal, Orcamento orcamento, Produto produto, Servico servico) {
         this.id = id;
+        this.descricao = descricao;
         this.tipoOrcamentoItem = tipoOrcamentoItem;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
         this.subtotal = subtotal;
+        this.orcamento = orcamento;
         this.produto = produto;
         this.servico = servico;
     }
@@ -65,7 +68,7 @@ public class OrcamentoItem {
         return subtotal;
     }
 
-    private void setSubtotal(double subtotal) {
+    public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
 
@@ -87,6 +90,22 @@ public class OrcamentoItem {
 
     public void calcularSubtotal(){
         setSubtotal(quantidade * valorUnitario);
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Orcamento getOrcamento() {
+        return orcamento;
+    }
+
+    public void setOrcamento(Orcamento orcamento) {
+        this.orcamento = orcamento;
     }
 
     public void definirProduto(Produto produto, int quantidade){

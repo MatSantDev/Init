@@ -1,6 +1,8 @@
 package com.project.orcamentofly.dao;
 
 import com.project.orcamentofly.model.Orcamento;
+import com.project.orcamentofly.model.OrcamentoItem;
+import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
 
 import java.sql.*;
@@ -8,6 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrcamentoDAO {
+
+    private OrcamentoItemDAO orcamentoItemDAO;
+    private ProdutoDAO produtoDAO;
+
+    public OrcamentoDAO(){
+        this.orcamentoItemDAO = new OrcamentoItemDAO();
+        this.produtoDAO = new ProdutoDAO();
+    }
 
     public List<Orcamento> consultarTodos() throws SQLException, ClassNotFoundException {
 
@@ -76,21 +86,41 @@ public class OrcamentoDAO {
 
     public void deletar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
 
-        Connection conn = FabricaConexao.getConexao();
-        conn.setAutoCommit(false);
+        Connection conn = null;
 
-        String sqlitem = "delete from orcamento_items where orcamento_id = ?";
-        PreparedStatement statement = conn.prepareStatement(sqlitem);
-        statement.setInt(1, orcamento.getId());
-        statement.execute();
+        try {
+            conn = FabricaConexao.getConexao();
+            conn.setAutoCommit(false);
 
-        String sql = "delete from orcamentos where id = ?";
-        statement = conn.prepareStatement(sql);
-        statement.setInt(1, orcamento.getId());
-        statement.execute();
+            List<OrcamentoItem> itens = orcamentoItemDAO.consultarTodosByOrcamentoId(orcamento.getId(), conn);
 
-        conn.commit();
-        conn.close();
+            for (OrcamentoItem item : itens) {
+                if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
+                    produtoDAO.atualizarEstoque(item.getProduto().getId(), item.getQuantidade(), conn);
+                }
+            }
+
+            String sqlitem = "delete from orcamento_item where orcamento_id = ?";
+            PreparedStatement statementItem = conn.prepareStatement(sqlitem);
+            statementItem.setInt(1, orcamento.getId());
+            statementItem.executeUpdate();
+
+            String sqlOrcamento = "delete from orcamentos where id = ?";
+            PreparedStatement statementOrcamento = conn.prepareStatement(sqlOrcamento);
+            statementOrcamento.setInt(1, orcamento.getId());
+            statementOrcamento.executeUpdate();
+
+            conn.commit();
+        } catch (SQLException | ClassNotFoundException e) {
+            if (conn != null) {
+                conn.rollback();
+            }
+            throw e;
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
 
     public void atualizar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
