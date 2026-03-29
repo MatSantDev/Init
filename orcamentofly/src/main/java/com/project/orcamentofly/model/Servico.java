@@ -2,29 +2,26 @@ package com.project.orcamentofly.model;
 
 import java.util.Objects;
 
-public class Produto {
+public class Servico {
 
     private int id;
     private String nome;
     private String descricao;
     private double valorUnitario;
-    private int estoque;
 
-    public Produto() {}
+    public Servico() {}
 
-    public Produto(int id, String nome, String descricao, double valorUnitario, int estoque) {
+    public Servico(String nome, String descricao, double valorUnitario) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.valorUnitario = valorUnitario;
+    }
+
+    public Servico(int id, String nome, String descricao, double valorUnitario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.valorUnitario = valorUnitario;
-        this.estoque = estoque;
-    }
-
-    public Produto(String nome, String descricao, double valorUnitario, int estoque) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.valorUnitario = valorUnitario;
-        this.estoque = estoque;
     }
 
     public int getId() {
@@ -59,19 +56,11 @@ public class Produto {
         this.valorUnitario = valorUnitario;
     }
 
-    public int getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(int estoque) {
-        this.estoque = estoque;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Produto produto = (Produto) o;
-        return Objects.equals(nome, produto.nome);
+        Servico servico = (Servico) o;
+        return Objects.equals(nome, servico.nome);
     }
 
     @Override
@@ -81,12 +70,12 @@ public class Produto {
 
     @Override
     public String toString() {
-        return "Produto{" +
+        return "Servico{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", valorUnitario=" + valorUnitario +
-                ", estoque=" + estoque +
                 '}';
     }
 }
+

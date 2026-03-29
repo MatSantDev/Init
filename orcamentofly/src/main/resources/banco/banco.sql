@@ -3,11 +3,13 @@ create database banco;
 use banco;
 
 CREATE TABLE produtos (
-                          id INT PRIMARY KEY,
-                          descricao VARCHAR(100),
-                          preco DECIMAL(10,2)
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          nome VARCHAR(255) NOT NULL,
+                          descricao TEXT,
+                          valorUnitario DECIMAL(10,2) NOT NULL,
+                          estoque INT
 );
 
-    INSERT INTO produtos (id, descricao, preco) VALUES
-(1, 'Teclado', 120.00),
-(2, 'Mouse', 50.00);
+    INSERT INTO produtos (id, nome, descricao, valorUnitario, estoque) VALUES
+(1, 'Teclado', Teclado mecânico RGB switch azul, 120.00, 50),
+(2, 'Mouse', Mouse gamer com sensor óptico 16000 DPI, 70.00, 30);

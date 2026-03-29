@@ -5,13 +5,14 @@ import model.enums.TipoOrcamentoItem;
 public class OrcamentoItem {
 
     private Integer id;
-    private Orcamento orcamento;
     private TipoOrcamentoItem tipoOrcamentoItem;
-    private Produto produto;
-    private Servico servico;
     private Integer quantidade;
     private Double valorUnitario;
     private Double subtotal;
+
+    private Orcamento orcamento;
+    private Produto produto;
+    private Servico servico;
 
     public OrcamentoItem() {
         this.valorUnitario = 0.0;
