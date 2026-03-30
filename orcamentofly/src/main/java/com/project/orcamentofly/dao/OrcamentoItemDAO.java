@@ -103,7 +103,6 @@ public class OrcamentoItemDAO {
             item.setId(rs.getInt(1));
         }
 
-        conn.close();
         return item;
     }
 

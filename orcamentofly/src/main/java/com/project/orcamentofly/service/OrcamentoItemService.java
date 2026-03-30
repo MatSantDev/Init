@@ -1,6 +1,7 @@
 package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.OrcamentoItemDAO;
+import com.project.orcamentofly.dao.ProdutoDAO;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
@@ -40,7 +41,16 @@ public class OrcamentoItemService {
         validarOrcamentoItem(item);
         item.calcularSubtotal();
         try (Connection conn = FabricaConexao.getConexao()) {
-            dao.inserir(item, conn);
+            conn.setAutoCommit(false);
+            try {
+                dao.inserir(item, conn);
+                ProdutoDAO produtoDAO = new ProdutoDAO();
+                produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade(), conn);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
         }
     }
 
