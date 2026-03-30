@@ -10,8 +10,8 @@ public class FabricaConexao {
 
         String DRIVER = "com.mysql.cj.jdbc.Driver";
         String URL = "jdbc:mysql://localhost:3306/banco";
-        String USERNAME = "root";
-        String PASSWORD = "sliver";
+        String USERNAME = "teste";
+        String PASSWORD = "TesTe@12";
 
         Class.forName(DRIVER);
         return DriverManager.getConnection(URL, USERNAME, PASSWORD);
