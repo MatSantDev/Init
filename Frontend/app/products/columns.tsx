@@ -14,10 +14,10 @@ export const columns: ColumnDef< Product >[] = [
     header: "Descrição",
   },
   {
-    accessorKey: "preco",
+    accessorKey: "valorUnitario",
     header: "Preço",
     cell: ( { row } ) => {
-      const value = row.getValue<number>("preco");
+      const value = row.getValue<number>("valorUnitario");
       const result = formatValue(value);
 
       return (
