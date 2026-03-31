@@ -1,5 +1,7 @@
 # Sistema de Controle de Orçamentos
 
+![ Wallpaper ]( Frontend/public/wallpaper.png )
+
 ## 📌 Descrição
 Sistema web desenvolvido em Java com MySQL para gerenciamento de orçamentos contendo produtos e serviços.
 
@@ -105,3 +107,8 @@ Projeto focado em:
 - CRUD simples
 - boa organização
 - modelagem relacional correta
+
+## 🛠️ Comandos
+
+- Frontend => pnpm run dev
+- Backend  => ./mvnw spring-boot:run

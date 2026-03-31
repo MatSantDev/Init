@@ -1,3 +1,5 @@
+import { AlertTriangle } from 'lucide-react'
+
 import { Product } from '@/types/product'
 import { getProducts } from '@/utils/getProducts'
 
@@ -9,23 +11,34 @@ export default async function ProductsPage() {
   const products: Product[] = await getProducts()
 
   return (
-    <main className='h-screen flex flex-col items-center pt-32 gap-12' >
+    <main className='h-screen flex flex-col items-center text-center pt-32 gap-12' >
       <section className='flex flex-col gap-5 items-center justify-center' >
         <Logo size='sm' />
 
         <h1 className='font-bold text-3xl' >
           Produtos
         </h1>
-        <p className='text-lg' >
+        <p className='text-md md:text-lg' >
           Confira todos os produtos registrados em nosso sistema.
         </p>
       </section>
-      <section className='w-full px-20 pt-5 pb-7' >
-        <DataTable
-          columns={ columns }
-          data={ products }
-        />
-      </section>
+      {
+        products.length === 0 ? (
+          <div className='flex flex-col gap-2 items-center justify-center mt-32' >
+            <AlertTriangle size={ 72 } />
+            <p className='text-sm md:text-lg font-semibold' >
+              Não foi possível trazer os produtos, por favor tente novamente mais tarde
+            </p>
+          </div>
+        ) : (
+        <section className='w-full px-2 md:px-20 pt-5 pb-7' >
+          <DataTable
+            columns={ columns }
+            data={ products }
+          />
+        </section>
+        )
+      }
     </main>
   )
 }

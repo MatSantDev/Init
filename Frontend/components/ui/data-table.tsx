@@ -1,18 +1,25 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
+  getFilteredRowModel,
+  SortingState,
+  getSortedRowModel,
 } from '@tanstack/react-table'
+
 import {
   ArrowBigRight,
   ArrowBigLeft,
   ArrowBigRightDash,
   ArrowBigLeftDash,
 } from 'lucide-react'
+
 import {
   Table,
   TableBody,
@@ -23,6 +30,8 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 
+import { Input } from '@/components/ui/input' 
+
 interface DataTableProps< TData, TValue > {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -32,15 +41,35 @@ export function DataTable< TData, TValue >({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [ globalFilter, setGlobalFilter ] = useState('')
+  const [ sorting, setSorting ] = useState<SortingState>([])
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+      sorting,
+    },
+    onGlobalFilterChange: setGlobalFilter,
   })
 
   return (
-    <nav className='flex flex-col gap-2' >
+    <nav className='flex flex-col gap-4' >
+      <div className='w-full' >
+        <Input
+          placeholder='Pesquisar...'
+          value={ globalFilter ?? '' }
+          onChange={ ( event ) => setGlobalFilter(String( event.target.value ) ) }
+          className='w-full'
+        />
+      </div>
+
       <div className='overflow-hidden rounded-md border'>
         <Table className='w-full' >
           <TableHeader className='font-bold text-lg text-center' >
@@ -54,7 +83,7 @@ export function DataTable< TData, TValue >({
                     >
                       { header.isPlaceholder
                         ? null
-                        : flexRender( 
+                        : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )
@@ -66,7 +95,7 @@ export function DataTable< TData, TValue >({
             )) }
           </TableHeader>
           <TableBody>
-            {
+            { table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(( row ) => (
                 <TableRow
                   key={ row.id }
@@ -82,20 +111,27 @@ export function DataTable< TData, TValue >({
                   ))}
                 </TableRow>
               ))
-            }
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Nenhum resultado encontrado.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
-      <section className='w-full flex items-center justify-between rounded-xl border px-3 -py-2 text-center ' >
+
+      <section className='w-full flex flex-col md:flex-row items-center justify-center md:justify-between rounded-xl border px-3 py-2 md:-py-2 text-center gap-2 md:gap-0' >
         <p className='text-md font-semibold' >
           { data.length } registros no total
         </p>
 
-        <p className='flex items-center justify-center text-sm font-medium'>
+        <p className='flex items-center justify-center text-md md:text-sm font-medium'>
           Página { table.getState().pagination.pageIndex + 1 } de { table.getPageCount() }
         </p>
 
-        <div className='flex items-center justify-end space-x-2 py-4'>
+        <div className='flex items-center justify-end space-x-2 py-0 md:py-4'>
           <Button
             variant='outline'
             size='sm'
