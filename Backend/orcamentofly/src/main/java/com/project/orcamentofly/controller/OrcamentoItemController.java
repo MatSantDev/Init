@@ -25,8 +25,8 @@ public class OrcamentoItemController {
         try {
             List<OrcamentoItem> itens = service.consultarTodosByOrcamentoId(orcamentoId);
             return ResponseEntity.ok(itens);
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -35,8 +35,8 @@ public class OrcamentoItemController {
         try {
             List<OrcamentoItem> itens = service.consultarTodosByOrcamento(orcamento);
             return ResponseEntity.ok(itens);
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -49,8 +49,8 @@ public class OrcamentoItemController {
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -63,10 +63,8 @@ public class OrcamentoItemController {
 
             service.inserir(item);
             return ResponseEntity.status(HttpStatus.CREATED).body(item);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -80,20 +78,18 @@ public class OrcamentoItemController {
 
             service.atualizar(item);
             return ResponseEntity.ok(item);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<?> deletar(@PathVariable int orcamentoId, @PathVariable int id) {
+    public ResponseEntity<?> deletar(@PathVariable int orcamentoId, @PathVariable int id, @RequestBody OrcamentoItem item) {
         try {
-            service.deletar(id, orcamentoId);
+            service.deletar(item);
             return ResponseEntity.noContent().build();
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -14,23 +14,23 @@ public class ProdutoService {
         dao = new ProdutoDAO();
     }
 
-    public List<Produto> consultarTodos() throws SQLException, ClassNotFoundException {
+    public List<Produto> consultarTodos() {
         return dao.consultarTodos();
     }
 
-    public Produto consultarById(int id) throws SQLException, ClassNotFoundException {
+    public Produto consultarById(int id) {
         return dao.consultarById(id);
     }
 
-    public void inserir(Produto produto) throws SQLException, ClassNotFoundException {
+    public void inserir(Produto produto) {
         dao.inserir(produto);
     }
 
-    public void atualizar(Produto produto) throws SQLException, ClassNotFoundException {
+    public void atualizar(Produto produto) {
         dao.atualizar(produto);
     }
 
-    public void deletar(Produto produto) throws SQLException, ClassNotFoundException {
+    public void deletar(Produto produto) {
         dao.deletar(produto);
     }
 }

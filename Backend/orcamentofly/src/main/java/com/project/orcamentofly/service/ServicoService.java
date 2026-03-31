@@ -14,23 +14,23 @@ public class ServicoService {
         dao = new ServicoDAO();
     }
 
-    public List<Servico> consultarTodos() throws SQLException, ClassNotFoundException {
+    public List<Servico> consultarTodos() {
         return dao.consultarTodos();
     }
 
-    public Servico consultarById(int id) throws SQLException, ClassNotFoundException {
+    public Servico consultarById(int id) {
         return dao.consultarById(id);
     }
 
-    public void inserir(Servico servico) throws SQLException, ClassNotFoundException {
+    public void inserir(Servico servico) {
         dao.inserir(servico);
     }
 
-    public void atualizar(Servico servico) throws SQLException, ClassNotFoundException {
+    public void atualizar(Servico servico) {
         dao.atualizar(servico);
     }
 
-    public void deletar(Servico servico) throws SQLException, ClassNotFoundException {
+    public void deletar(Servico servico) {
         dao.deletar(servico);
     }
 }

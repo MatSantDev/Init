@@ -1,5 +1,6 @@
 package com.project.orcamentofly.dao;
 
+import com.project.orcamentofly.exception.BdException;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
@@ -9,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrcamentoDAO {
+public class OrcamentoDAO implements GenericDAO<Orcamento>{
 
     private OrcamentoItemDAO orcamentoItemDAO;
     private ProdutoDAO produtoDAO;
@@ -19,84 +20,85 @@ public class OrcamentoDAO {
         this.produtoDAO = new ProdutoDAO();
     }
 
-    public List<Orcamento> consultarTodos() throws SQLException, ClassNotFoundException {
+    @Override
+    public List<Orcamento> consultarTodos() {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "select * from orcamentos";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
 
-        String sql = "select * from orcamentos";
-        PreparedStatement statement = conn.prepareStatement(sql);
-        ResultSet rs = statement.executeQuery();
+            List<Orcamento> list = new ArrayList<>();
+            Orcamento orcamento = new Orcamento();
 
-        List<Orcamento> list = new ArrayList<>();
-        Orcamento orcamento = new Orcamento();
+            while (rs.next()){
+                orcamento = getar(rs);
+                list.add(orcamento);
+            }
 
-        while (rs.next()){
-            orcamento = getar(rs);
-            list.add(orcamento);
+            return list;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return list;
     }
 
-    public Orcamento consultarById(int id) throws ClassNotFoundException, SQLException {
+    @Override
+    public Orcamento consultarById(int id) {
+        try(Connection conn = getConnection()){
+            String sql = "select * from orcamentos where id = ?";
 
-        Connection conn = FabricaConexao.getConexao();
-        String sql = "select * from orcamentos where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            Orcamento orcamento = new Orcamento();
 
-        Orcamento orcamento = new Orcamento();
+            if(rs.next()){
+                orcamento = getar(rs);
+            }
 
-        if(rs.next()){
-            orcamento = getar(rs);
+            return orcamento;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return orcamento;
     }
 
-    public Orcamento inserir(Orcamento orcamento) throws SQLException, ClassNotFoundException {
+    @Override
+    public void inserir(Orcamento orcamento) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "insert into orcamentos (cliente, dataOrcamento, observacao, valorTotal) VALUE (?, ?, ?, ?)";
 
-        String sql = "insert into orcamentos (cliente, dataOrcamento, observacao, valorTotal) VALUE (?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, orcamento.getCliente());
+            statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
+            statement.setString(3, orcamento.getObservacao());
+            statement.setDouble(4, orcamento.getValorTotal());
 
-        statement.setString(1, orcamento.getCliente());
-        statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
-        statement.setString(3, orcamento.getObservacao());
-        statement.setDouble(4, orcamento.getValorTotal());
+            statement.executeUpdate();
 
-        statement.executeUpdate();
+            ResultSet rs = statement.getGeneratedKeys();
+            if(rs.next()){
+                int orcamentoId = rs.getInt(1);
+                orcamento.setId(orcamentoId);
+            }
 
-        ResultSet rs = statement.getGeneratedKeys();
-        if(rs.next()){
-            int orcamentoId = rs.getInt(1);
-            orcamento.setId(orcamentoId);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return orcamento;
     }
 
-    public void deletar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
-
-        Connection conn = null;
-
-        try {
-            conn = FabricaConexao.getConexao();
+    @Override
+    public void deletar(Orcamento orcamento) {
+        try(Connection conn = getConnection()){
             conn.setAutoCommit(false);
-
-            List<OrcamentoItem> itens = orcamentoItemDAO.consultarTodosByOrcamentoId(orcamento.getId(), conn);
+            List<OrcamentoItem> itens = orcamentoItemDAO.consultarTodosByOrcamentoId(orcamento.getId());
 
             for (OrcamentoItem item : itens) {
                 if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
-                    produtoDAO.atualizarEstoque(item.getProduto().getId(), item.getQuantidade(), conn);
+                    produtoDAO.atualizarEstoque(item.getProduto().getId(), item.getQuantidade());
                 }
             }
 
@@ -112,34 +114,29 @@ public class OrcamentoDAO {
 
             conn.commit();
         } catch (SQLException | ClassNotFoundException e) {
-            if (conn != null) {
-                conn.rollback();
-            }
-            throw e;
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
+            throw new BdException(e.getMessage());
         }
     }
 
-    public void atualizar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
+    @Override
+    public void atualizar(Orcamento orcamento) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "update orcamentos set cliente = ?, dataOrcamento = ?, observacao = ?, valorTotal = ? where id = ?";
 
-        String sql = "update orcamentos set cliente = ?, dataOrcamento = ?, observacao = ?, valorTotal = ? where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, orcamento.getCliente());
+            statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
+            statement.setString(3, orcamento.getObservacao());
+            statement.setDouble(4, orcamento.getValorTotal());
+            statement.setInt(5, orcamento.getId());
 
-        statement.setString(1, orcamento.getCliente());
-        statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
-        statement.setString(3, orcamento.getObservacao());
-        statement.setDouble(4, orcamento.getValorTotal());
-        statement.setInt(5, orcamento.getId());
+            statement.execute();
 
-        statement.execute();
-
-        conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
     private Orcamento getar(ResultSet rs) throws SQLException {
@@ -150,5 +147,10 @@ public class OrcamentoDAO {
         orcamento.setObservacao(rs.getString("observacao"));
         orcamento.setValorTotal(rs.getDouble("valorTotal"));
         return orcamento;
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        return FabricaConexao.getConexao();
     }
 }

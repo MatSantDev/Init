@@ -14,23 +14,23 @@ public class OrcamentoService {
         dao = new OrcamentoDAO();
     }
 
-    public List<Orcamento> consultarTodos() throws SQLException, ClassNotFoundException {
+    public List<Orcamento> consultarTodos() {
         return dao.consultarTodos();
     }
 
-    public Orcamento consultarById(int id) throws SQLException, ClassNotFoundException {
+    public Orcamento consultarById(int id) {
         return dao.consultarById(id);
     }
 
-    public void inserir(Orcamento orcamento) throws SQLException, ClassNotFoundException {
+    public void inserir(Orcamento orcamento) {
         dao.inserir(orcamento);
     }
 
-    public void atualizar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
+    public void atualizar(Orcamento orcamento) {
         dao.atualizar(orcamento);
     }
 
-    public void deletar(Orcamento orcamento) throws SQLException, ClassNotFoundException {
+    public void deletar(Orcamento orcamento) {
         dao.deletar(orcamento);
     }
 }

@@ -1,5 +1,6 @@
 package com.project.orcamentofly.dao;
 
+import com.project.orcamentofly.exception.BdException;
 import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -10,96 +11,105 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoDAO {
+public class ProdutoDAO implements GenericDAO<Produto> {
 
-    public List<Produto> consultarTodos() throws ClassNotFoundException, SQLException {
+    @Override
+    public List<Produto> consultarTodos() {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "select * from produtos";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        String sql = "select * from produtos";
-        PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            List<Produto> list = new ArrayList<Produto>();
 
-        List<Produto> list = new ArrayList<Produto>();
+            while(rs.next()){
+                Produto produto = getar(rs);
+                list.add(produto);
+            }
+            return list;
 
-        while(rs.next()){
-            Produto produto = getar(rs);
-            list.add(produto);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return list;
     }
 
-    public Produto consultarById(int id) throws ClassNotFoundException, SQLException {
+    @Override
+    public Produto consultarById(int id) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
-        String sql = "select * from produtos where id = ?";
+            String sql = "select * from produtos where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            Produto produto = new Produto();
 
-        Produto produto = new Produto();
+            if(rs.next()){
+                produto = getar(rs);
+            }
 
-        if(rs.next()){
-            produto = getar(rs);
+            return produto;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return produto;
     }
 
-    public void inserir(Produto produto) throws SQLException, ClassNotFoundException {
+    @Override
+    public void inserir(Produto produto) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "insert into produtos (nome, descricao, valorUnitario, estoque) VALUE (?, ?, ?, ?)";
 
-        String sql = "insert into produtos (nome, descricao, valorUnitario, estoque) VALUE (?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, produto.getNome());
+            statement.setString(2, produto.getDescricao());
+            statement.setDouble(3, produto.getValorUnitario());
+            statement.setInt(4, produto.getEstoque());
 
-        statement.setString(1, produto.getNome());
-        statement.setString(2, produto.getDescricao());
-        statement.setDouble(3, produto.getValorUnitario());
-        statement.setInt(4, produto.getEstoque());
-
-        statement.executeUpdate();
-
-        conn.close();
+            statement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
-    public void deletar(Produto produto) throws SQLException, ClassNotFoundException {
+    @Override
+    public void deletar(Produto produto) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "delete from produtos where id = ?";
 
-        String sql = "delete from produtos where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, produto.getId());
+            statement.execute();
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, produto.getId());
-        statement.execute();
-
-        conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
-    public void atualizar(Produto produto) throws SQLException, ClassNotFoundException {
+    @Override
+    public void atualizar(Produto produto) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "update produtos set nome = ?, descricao = ?, valorUnitario = ?, estoque = ? where id = ?";
 
-        String sql = "update produtos set nome = ?, descricao = ?, valorUnitario = ?, estoque = ? where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, produto.getNome());
+            statement.setString(2, produto.getDescricao());
+            statement.setDouble(3, produto.getValorUnitario());
+            statement.setInt(4, produto.getEstoque());
+            statement.setInt(5, produto.getId());
 
-        statement.setString(1, produto.getNome());
-        statement.setString(2, produto.getDescricao());
-        statement.setDouble(3, produto.getValorUnitario());
-        statement.setInt(4, produto.getEstoque());
-        statement.setInt(5, produto.getId());
+            statement.execute();
 
-        statement.execute();
-
-        conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
     private Produto getar(ResultSet rs) throws SQLException {
@@ -114,12 +124,17 @@ public class ProdutoDAO {
         return produto;
     }
 
-    public void atualizarEstoque(int produtoId, int quantidade, Connection conn) throws SQLException {
-        String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, quantidade);
-        statement.setInt(2, produtoId);
-        statement.executeUpdate();
+    public void atualizarEstoque(int produtoId, int quantidade) {
+        try(Connection conn = getConnection()){
+            String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, quantidade);
+            statement.setInt(2, produtoId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new BdException(e.getMessage());
+        }
+
     }
 
     public void diminuirEstoque(int produtoId, int quantidade, Connection conn) throws SQLException {
@@ -128,5 +143,10 @@ public class ProdutoDAO {
         statement.setInt(1, quantidade);
         statement.setInt(2, produtoId);
         statement.executeUpdate();
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        return FabricaConexao.getConexao();
     }
 }

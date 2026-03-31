@@ -17,29 +17,29 @@ public class ServicoController {
     private final ServicoService service = new ServicoService();
 
     @GetMapping("/consultarTodos")
-    public ResponseEntity<List<Servico>> consultarTodos() throws SQLException, ClassNotFoundException {
+    public ResponseEntity<List<Servico>> consultarTodos() {
         return ResponseEntity.ok().body(service.consultarTodos());
     }
 
     @GetMapping("/consultarById/{id}")
-    public ResponseEntity<Servico> consultarByid(@PathVariable int id) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<Servico> consultarByid(@PathVariable int id) {
         return ResponseEntity.ok().body(service.consultarById(id));
     }
 
     @PostMapping("/inserir")
-    public ResponseEntity<Void> inserir(@RequestBody Servico servico) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<Void> inserir(@RequestBody Servico servico) {
         service.inserir(servico);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<Void> atualizar(@RequestBody Servico servico) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<Void> atualizar(@RequestBody Servico servico) {
         service.atualizar(servico);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletar(@RequestBody Servico servico) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<Void> deletar(@RequestBody Servico servico) {
         service.deletar(servico);
         return ResponseEntity.ok().build();
     }

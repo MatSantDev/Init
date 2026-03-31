@@ -19,8 +19,8 @@ public class OrcamentoController {
     public ResponseEntity<List<Orcamento>> consultarTodos() {
         try {
             return ResponseEntity.ok(service.consultarTodos());
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -32,8 +32,8 @@ public class OrcamentoController {
                 return ResponseEntity.ok(orcamento);
             }
             return ResponseEntity.notFound().build();
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -42,8 +42,8 @@ public class OrcamentoController {
         try {
             service.inserir(orcamento);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,8 +52,8 @@ public class OrcamentoController {
         try {
             service.atualizar(orcamento);
             return ResponseEntity.ok().build();
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -64,8 +64,8 @@ public class OrcamentoController {
             orcamento.setId(id);
             service.deletar(orcamento);
             return ResponseEntity.noContent().build();
-        } catch (SQLException | ClassNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -19,53 +19,34 @@ public class OrcamentoItemService {
         this.dao = new OrcamentoItemDAO();
     }
 
-    public List<OrcamentoItem> consultarTodosByOrcamento(Orcamento orcamento) throws SQLException, ClassNotFoundException {
-        try (Connection conn = FabricaConexao.getConexao()) {
-            return dao.consultarTodosByOrcamento(orcamento, conn);
-        }
+    public List<OrcamentoItem> consultarTodosByOrcamento(Orcamento orcamento) {
+        return dao.consultarTodosByOrcamento(orcamento);
     }
 
-    public List<OrcamentoItem> consultarTodosByOrcamentoId(int orcamentoId) throws SQLException, ClassNotFoundException {
-        try (Connection conn = FabricaConexao.getConexao()) {
-            return dao.consultarTodosByOrcamentoId(orcamentoId, conn);
-        }
+    public List<OrcamentoItem> consultarTodosByOrcamentoId(int orcamentoId) {
+        return dao.consultarTodosByOrcamentoId(orcamentoId);
     }
 
-    public OrcamentoItem consultarById(int id) throws SQLException, ClassNotFoundException {
-        try (Connection conn = FabricaConexao.getConexao()) {
-            return dao.consultarById(id, conn);
-        }
+    public OrcamentoItem consultarById(int id) {
+        return dao.consultarById(id);
     }
 
-    public void inserir(OrcamentoItem item) throws SQLException, ClassNotFoundException {
+    public void inserir(OrcamentoItem item) {
         validarOrcamentoItem(item);
         item.calcularSubtotal();
-        try (Connection conn = FabricaConexao.getConexao()) {
-            conn.setAutoCommit(false);
-            try {
-                dao.inserir(item, conn);
-                ProdutoDAO produtoDAO = new ProdutoDAO();
-                produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade(), conn);
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
-            }
-        }
+        dao.inserir(item);
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
     }
 
-    public void atualizar(OrcamentoItem item) throws SQLException, ClassNotFoundException {
+    public void atualizar(OrcamentoItem item) {
         validarOrcamentoItem(item);
         item.calcularSubtotal();
-        try (Connection conn = FabricaConexao.getConexao()) {
-            dao.atualizar(item, conn);
-        }
+        dao.atualizar(item);
     }
 
-    public void deletar(int id, int orcamentoId) throws SQLException, ClassNotFoundException {
-        try (Connection conn = FabricaConexao.getConexao()) {
-            dao.deletar(id, orcamentoId, conn);
-        }
+    public void deletar(OrcamentoItem item) {
+        dao.deletar(item);
     }
 
     private void validarOrcamentoItem(OrcamentoItem item) {

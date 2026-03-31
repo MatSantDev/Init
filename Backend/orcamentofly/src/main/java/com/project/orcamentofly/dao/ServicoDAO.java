@@ -1,5 +1,6 @@
 package com.project.orcamentofly.dao;
 
+import com.project.orcamentofly.exception.BdException;
 import com.project.orcamentofly.model.Servico;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -10,94 +11,101 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicoDAO {
+public class ServicoDAO implements GenericDAO<Servico>{
 
-    public List<Servico> consultarTodos() throws ClassNotFoundException, SQLException {
+    @Override
+    public List<Servico> consultarTodos() {
+        try(Connection conn = getConnection()){
+            String sql = "select * from servicos";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        Connection conn = FabricaConexao.getConexao();
+            ResultSet rs = statement.executeQuery();
 
-        String sql = "select * from servicos";
-        PreparedStatement statement = conn.prepareStatement(sql);
+            List<Servico> list = new ArrayList<>();
 
-        ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                Servico servico = getar(rs);
+                list.add(servico);
+            }
 
-        List<Servico> list = new ArrayList<>();
-
-        while(rs.next()){
-            Servico servico = getar(rs);
-            list.add(servico);
+            return list;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return list;
     }
 
-    public Servico consultarById(int id) throws ClassNotFoundException, SQLException {
+    @Override
+    public Servico consultarById(int id) {
+        try(Connection conn = getConnection()){
+            String sql = "select * from servicos where id = ?";
 
-        Connection conn = FabricaConexao.getConexao();
-        String sql = "select * from servicos where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
 
-        ResultSet rs = statement.executeQuery();
+            Servico servico = new Servico();
 
-        Servico servico = new Servico();
+            if(rs.next()){
+                servico = getar(rs);
+            }
 
-        if(rs.next()){
-            servico = getar(rs);
+            return servico;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
         }
-
-        conn.close();
-        return servico;
     }
 
-    public void inserir(Servico servico) throws SQLException, ClassNotFoundException {
+    @Override
+    public void inserir(Servico servico) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "insert into servicos (nome, descricao, valorUnitario) VALUE (?, ?, ?)";
 
-        String sql = "insert into servicos (nome, descricao, valorUnitario) VALUE (?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, servico.getNome());
+            statement.setString(2, servico.getDescricao());
+            statement.setDouble(3, servico.getValorUnitario());
 
-        statement.setString(1, servico.getNome());
-        statement.setString(2, servico.getDescricao());
-        statement.setDouble(3, servico.getValorUnitario());
+            statement.executeUpdate();
 
-        statement.executeUpdate();
-
-        conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
-    public void deletar(Servico servico) throws SQLException, ClassNotFoundException {
+    @Override
+    public void deletar(Servico servico) {
+        try(Connection conn = getConnection()){
 
-        Connection conn = FabricaConexao.getConexao();
+            String sql = "delete from servicos where id = ?";
 
-        String sql = "delete from servicos where id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, servico.getId());
+            statement.execute();
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, servico.getId());
-        statement.execute();
-
-        conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
-    public void atualizar(Servico servico) throws SQLException, ClassNotFoundException {
+    @Override
+    public void atualizar(Servico servico) {
+        try(Connection conn = getConnection()){
+            String sql = "update servicos set nome = ?, descricao = ?, valorUnitario = ? where id = ?";
 
-        Connection conn = FabricaConexao.getConexao();
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-        String sql = "update servicos set nome = ?, descricao = ?, valorUnitario = ? where id = ?";
+            statement.setString(1, servico.getNome());
+            statement.setString(2, servico.getDescricao());
+            statement.setDouble(3, servico.getValorUnitario());
+            statement.setInt(4, servico.getId());
 
-        PreparedStatement statement = conn.prepareStatement(sql);
-
-        statement.setString(1, servico.getNome());
-        statement.setString(2, servico.getDescricao());
-        statement.setDouble(3, servico.getValorUnitario());
-        statement.setInt(4, servico.getId());
-
-        statement.execute();
-
-        conn.close();
+            statement.execute();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new BdException(e.getMessage());
+        }
     }
 
     private Servico getar(ResultSet rs) throws SQLException {
@@ -109,5 +117,10 @@ public class ServicoDAO {
         servico.setValorUnitario(rs.getDouble("valorUnitario"));
 
         return servico;
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        return FabricaConexao.getConexao();
     }
 }
