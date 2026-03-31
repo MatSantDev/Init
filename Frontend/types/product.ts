@@ -3,4 +3,5 @@ export interface Product {
   nome: string
   descricao: string
   valorUnitario: number
+  estoque: number
 }

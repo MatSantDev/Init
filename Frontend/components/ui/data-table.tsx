@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-
+import { ReactNode, useState } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -12,12 +11,12 @@ import {
   SortingState,
   getSortedRowModel,
 } from '@tanstack/react-table'
-
 import {
   ArrowBigRight,
   ArrowBigLeft,
   ArrowBigRightDash,
   ArrowBigLeftDash,
+  Plus,
 } from 'lucide-react'
 
 import {
@@ -29,17 +28,27 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input' 
 
 interface DataTableProps< TData, TValue > {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  modalContent?: ReactNode,
+  text?: string
 }
 
 export function DataTable< TData, TValue >({
   columns,
   data,
+  modalContent,
+  text,
 }: DataTableProps<TData, TValue>) {
   const [ globalFilter, setGlobalFilter ] = useState('')
   const [ sorting, setSorting ] = useState<SortingState>([])
@@ -61,13 +70,40 @@ export function DataTable< TData, TValue >({
 
   return (
     <nav className='flex flex-col gap-4' >
-      <div className='w-full' >
+      <div className='flex items-center justify-between w-full' >
         <Input
           placeholder='Pesquisar...'
           value={ globalFilter ?? '' }
           onChange={ ( event ) => setGlobalFilter(String( event.target.value ) ) }
-          className='w-full'
+          className='w-3/4'
         />
+
+        { modalContent ? (
+          <Dialog>
+            <DialogTrigger asChild >
+              <div>
+                 <Button
+                  variant='outline'
+                  size='lg'
+                  className='p-3'
+                >
+                  <Plus size={ 32 } />
+                  <p className='text-lg' >
+                    { text || 'Adicionar novo registro' }
+                  </p>
+                </Button>
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className='text-xl font-semibold' >
+                  { text || 'Adicionar novo registro' }
+                </DialogTitle>
+              </DialogHeader>
+              { modalContent }
+            </DialogContent>
+          </Dialog>
+        ) : null }
       </div>
 
       <div className='overflow-hidden rounded-md border'>

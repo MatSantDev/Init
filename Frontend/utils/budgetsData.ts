@@ -1,3 +1,5 @@
+'use server'
+
 import { Budget } from '@/types/budget';
 
 export async function getBudgets() {

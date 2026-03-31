@@ -1,3 +1,5 @@
+'use server'
+
 import { Service } from '@/types/service';
 
 export async function getServices() {

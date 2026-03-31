@@ -1,33 +1,33 @@
-"use client"
+'use client'
 
 import { ArrowUpDown } from 'lucide-react';
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button';
 import { Budget } from '@/types/budget';
 
 export const columns: ColumnDef< Budget >[] = [
   {
-    accessorKey: "cliente",
+    accessorKey: 'cliente',
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={ () => column.toggleSorting(column.getIsSorted() === "asc") }
+          variant='ghost'
+          onClick={ () => column.toggleSorting(column.getIsSorted() === 'asc') }
         >
           < p className='text-lg font-semibold' > Cliente </p>
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
     },
   },
   {
-    accessorKey: "dataOrcamento",
-    header: "Data do Orçamento",
+    accessorKey: 'dataOrcamento',
+    header: 'Data do Orçamento',
   },
   {
-    accessorKey: "observacao",
-    header: "Observação",
+    accessorKey: 'observacao',
+    header: 'Observação',
   },
   {
     header: 'Ações',

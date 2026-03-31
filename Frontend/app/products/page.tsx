@@ -5,7 +5,7 @@ import { getProducts } from '@/utils/productsData'
 
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/app/products/columns'
-import { Logo } from '@/components/logo'
+import { AddProductsForm } from '@/components/products/addProductsForm'
 
 export default async function ProductsPage() {
   const products: Product[] = await getProducts()
@@ -33,6 +33,8 @@ export default async function ProductsPage() {
           <DataTable
             columns={ columns }
             data={ products }
+            modalContent={ <AddProductsForm /> }
+            text='Adicionar novo produto'
           />
         </section>
         )
