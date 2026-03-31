@@ -4,11 +4,10 @@ import { ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from "@tanstack/react-table"
 
 import { Button } from '@/components/ui/button';
+import { Service } from '@/types/service';
 import { formatValue } from '@/utils/formatValue';
 
-import { Product } from '@/types/product';
-
-export const columns: ColumnDef< Product >[] = [
+export const columns: ColumnDef< Service >[] = [
   {
     accessorKey: "nome",
     header: ({ column }) => {

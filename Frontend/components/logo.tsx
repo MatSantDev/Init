@@ -23,8 +23,8 @@ export function Logo( { size }: { size?: string } ) {
       text = 'text-2xl'
       break;
     case 'xs':
-      height = 30
-      width = 30
+      height = 37
+      width = 37
       text = 'text-xl'
       break;
     default:

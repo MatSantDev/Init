@@ -1,16 +1,15 @@
 import { AlertTriangle } from 'lucide-react'
 
-import { Logo } from '@/components/logo'
+import { DataTable } from '@/components/ui/data-table'
+import { getServices } from '@/utils/servicesData'
+import { columns } from './columns'
 
 export default async function ProductsPage() {
-  // const products: any[] = await getServices()
-  const services = []
+  const services = await getServices()
 
   return (
-    <main className='h-screen flex flex-col items-center text-center pt-32 gap-12' >
+    <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
       <section className='flex flex-col gap-5 items-center justify-center' >
-        <Logo size='sm' />
-
         <h1 className='font-bold text-3xl' >
           Serviços
         </h1>
@@ -27,13 +26,12 @@ export default async function ProductsPage() {
             </p>
           </div>
         ) : (
-          <div></div>
-        // <section className='w-full px-2 md:px-20 pt-5 pb-7' >
-        //   <DataTable
-        //     columns={ columns }
-        //     data={ products }
-        //   />
-        // </section>
+          <section className='w-full px-2 md:px-20 pt-5 pb-7' >
+            <DataTable
+              columns={ columns }
+              data={ services }
+            />
+          </section>
         )
       }
     </main>

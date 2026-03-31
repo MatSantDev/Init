@@ -4,42 +4,30 @@ import { ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from "@tanstack/react-table"
 
 import { Button } from '@/components/ui/button';
-import { formatValue } from '@/utils/formatValue';
+import { Budget } from '@/types/budget';
 
-import { Product } from '@/types/product';
-
-export const columns: ColumnDef< Product >[] = [
+export const columns: ColumnDef< Budget >[] = [
   {
-    accessorKey: "nome",
+    accessorKey: "cliente",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={ () => column.toggleSorting(column.getIsSorted() === "asc") }
         >
-          < p className='text-lg font-semibold' > Nome </p>
+          < p className='text-lg font-semibold' > Cliente </p>
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
   },
   {
-    accessorKey: "descricao",
-    header: "Descrição",
+    accessorKey: "dataOrcamento",
+    header: "Data do Orçamento",
   },
   {
-    accessorKey: "valorUnitario",
-    header: "Preço",
-    cell: ( { row } ) => {
-      const value = row.getValue<number>("valorUnitario");
-      const result = formatValue(value);
-
-      return (
-        <p>
-          { result }
-        </p>
-      );
-    },
+    accessorKey: "observacao",
+    header: "Observação",
   },
   {
     header: 'Ações',

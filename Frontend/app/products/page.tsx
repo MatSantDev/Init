@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react'
 
 import { Product } from '@/types/product'
-import { getProducts } from '@/utils/getProducts'
+import { getProducts } from '@/utils/productsData'
 
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/app/products/columns'
@@ -11,10 +11,8 @@ export default async function ProductsPage() {
   const products: Product[] = await getProducts()
 
   return (
-    <main className='h-screen flex flex-col items-center text-center pt-32 gap-12' >
+    <main className='h-screen w-full flex flex-col items-center text-center pt-12 gap-12' >
       <section className='flex flex-col gap-5 items-center justify-center' >
-        <Logo size='sm' />
-
         <h1 className='font-bold text-3xl' >
           Produtos
         </h1>
