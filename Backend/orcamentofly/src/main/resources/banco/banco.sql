@@ -46,8 +46,27 @@ CREATE TABLE servicos (
 );
 
 INSERT INTO servicos (nome, descricao, valorUnitario) VALUES
-    ('Formatação de Computador', 'Instalação do sistema operacional e drivers', 150.00),
-    ('Troca de Tela de Celular', 'Substituição de display danificado', 300.00)
+    ('Consultoria TI', 'Análise de infraestrutura e melhorias', 250.00),
+    ('Recuperação de Dados', 'Recuperação de arquivos deletados ou HDs corrompidos', 450.00),
+    ('Instalação de Rede', 'Cabeamento estruturado e configuração de roteadores', 350.00),
+    ('Limpeza Preventiva', 'Limpeza física e troca de pasta térmica', 120.00),
+    ('Upgrade de Hardware', 'Instalação de SSD, RAM ou Placa de Vídeo', 100.00),
+    ('Remoção de Malware', 'Limpeza profunda de vírus e spywares', 150.00),
+    ('Suporte Remoto', 'Atendimento via AnyDesk ou TeamViewer (1h)', 80.00),
+    ('Configuração de Nuvem', 'Configuração de Google Drive, iCloud ou OneDrive', 120.00),
+    ('Hospedagem de Site', 'Configuração de domínio e servidor web', 200.00),
+    ('Backup Estruturado', 'Criação de rotinas de backup automático', 300.00),
+    ('Instalação de SO', 'Instalação de Windows ou Linux com ativação', 150.00),
+    ('Reparo de Placa Mãe', 'Soldagem e reparo de componentes eletrônicos', 550.00),
+    ('Montagem de PC', 'Montagem completa a partir de peças avulsas', 250.00),
+    ('Configuração de VPN', 'Acesso seguro remoto para empresas', 400.00),
+    ('Treinamento Digital', 'Ensino básico de uso de ferramentas de escritório', 100.00),
+    ('Otimização de Sistema', 'Melhoria de performance e limpeza de registro', 90.00),
+    ('Troca de Conector', 'Substituição de conector de carga (DC Jack)', 180.00),
+    ('Crimpagem de Cabos', 'Confecção de cabos de rede sob medida (p/ metro)', 15.00),
+    ('Análise de Segurança', 'Pentest básico em redes locais', 1200.00),
+    ('Migração de Dados', 'Transferência de arquivos entre computadores', 130.00),
+    ('Suporte Presencial', 'Visita técnica local (primeira hora)', 180.00)
 ;
 
 CREATE TABLE orcamentos (
@@ -74,8 +93,27 @@ CREATE TABLE orcamento_item (
 );
 
 INSERT INTO orcamentos (cliente, dataOrcamento, observacao, valorTotal) VALUES
-    ('Mateus', '2026-03-29', 'Orçamento para manutenção de PC', 450.00),
-    ('João', '2026-03-30', 'Orçamento para conserto de celular', 300.00)
+    ('Barbara Silva', '2026-04-02', 'Consultoria em gestão de projetos', 1200.00),
+    ('Isa Oliveira', '2026-04-03', 'Configuração de servidor local', 850.00),
+    ('Ricardo Santos', '2026-04-04', 'Recuperação de dados em HD externo', 500.00),
+    ('Luciana Lima', '2026-04-05', 'Instalação de rede Wi-Fi corporativa', 750.00),
+    ('Marcos Viana', '2026-04-06', 'Upgrade de memória RAM e SSD', 400.00),
+    ('Fernanda Costa', '2026-04-07', 'Remoção de vírus e otimização', 200.00),
+    ('Gabriel Souza', '2026-04-08', 'Montagem de PC Gamer completo', 600.00),
+    ('Patrícia Amaral', '2026-04-09', 'Suporte remoto mensal (Contrato)', 350.00),
+    ('Roberto Júnior', '2026-04-10', 'Troca de bateria de notebook', 250.00),
+    ('Camila Rocha', '2026-04-11', 'Desenvolvimento de Landing Page', 1500.00),
+    ('Thiago Mendes', '2026-04-12', 'Configuração de impressoras em rede', 180.00),
+    ('Aline Ferreira', '2026-04-13', 'Treinamento de software interno', 450.00),
+    ('Bruno Alencar', '2026-04-14', 'Limpeza interna de notebook', 120.00),
+    ('Cláudia Bento', '2026-04-15', 'Atualização de BIOS e Drivers', 100.00),
+    ('Daniel Porto', '2026-04-16', 'Instalação de Pacote Office e Softwares', 150.00),
+    ('Eliana Meira', '2026-04-17', 'Configuração de Backup em Nuvem', 300.00),
+    ('Fábio Lucca', '2026-04-18', 'Substituição de teclado de laptop', 220.00),
+    ('Gisele Telles', '2026-04-19', 'Auditoria de segurança de rede', 2000.00),
+    ('Hugo Bossi', '2026-04-20', 'Manutenção preventiva preventiva trimestral', 400.00),
+    ('Igor Nogueira', '2026-04-21', 'Conserto de dobradiça de notebook', 180.00),
+    ('Juliana Paes', '2026-04-22', 'Migração de e-mails para Workspace', 650.00)
 ;
 
 INSERT INTO orcamento_item

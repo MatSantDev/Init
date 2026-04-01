@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DialogClose } from '@/components/ui/dialog'
 
-import { addProduct } from '@/utils/productsData'
+import { addService } from '@/utils/servicesData'
 
-export function AddProductsForm() {
+export function AddServiceForm() {
   const [ isLoading, setIsLoading ] = useState(false)
   const closeRef = useRef<HTMLButtonElement>(null)
 
@@ -17,18 +17,18 @@ export function AddProductsForm() {
     e.preventDefault()
     setIsLoading(true)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData( e.currentTarget )
 
     try {
-      const result = await addProduct( formData )
+      const result = await addService( formData )
 
       if ( result.success ) {
         if ( closeRef.current ) {
           closeRef.current.click()
         }
-        toast.success( 'Produto adicionado com sucesso!' )
+        toast.success( 'Serviço adicionado com sucesso!' )
       } else {
-        toast.error('Falha ao adicionar o produto. Tente novamente mais tarde')
+        toast.error('Falha ao adicionar o serviço. Tente novamente mais tarde')
         console.error('Erro do servidor:', result.error )
       }
 
@@ -43,9 +43,9 @@ export function AddProductsForm() {
     <form onSubmit={ handleSubmit } className='flex flex-col gap-4 py-4'>
       <div className='flex flex-col gap-2'>
         <label htmlFor='nome' className='text-sm font-semibold'>
-          Nome do Produto
+          Nome do Serviço
         </label>
-        <Input id='nome' name='nome' placeholder='Ex: Teclado Mecânico' required />
+        <Input id='nome' name='nome' placeholder='Ex: Limpeza de computador' required />
       </div>
 
       <div className='flex flex-col gap-2'>
@@ -56,18 +56,11 @@ export function AddProductsForm() {
       </div>
       
       <div className='flex gap-4'>
-        <div className='flex flex-col gap-2 w-1/2'>
+        <div className='flex flex-col gap-2 w-full'>
           <label htmlFor='valorUnitario' className='text-sm font-semibold'>
             Valor Unitário (R$)
           </label>
           <Input id='valorUnitario' name='valorUnitario' type='number' step='0.01' placeholder='Ex: 150.00' required />
-        </div>
-
-        <div className='flex flex-col gap-2 w-1/2'>
-          <label htmlFor='estoque' className='text-sm font-semibold'>
-            Estoque Inicial
-          </label>
-          <Input id='estoque' name='estoque' type='number' placeholder='Ex: 10' required />
         </div>
       </div>
 
@@ -76,7 +69,7 @@ export function AddProductsForm() {
         className='mt-4 w-full'
         disabled={ isLoading }
       >
-        { isLoading ? 'Salvando...' : 'Salvar Produto' }
+        { isLoading ? 'Salvando...' : 'Salvar Serviço' }
       </Button>
 
       <DialogClose ref={ closeRef } className='hidden' />

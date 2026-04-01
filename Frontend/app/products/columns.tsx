@@ -51,8 +51,8 @@ export const columns: ColumnDef< Product >[] = [
     header: 'Ações',
     cell: ({ row }) => {
       const product = row.original
-      
-      return <ProductActions product={product} />
+
+      return <ProductActions product={ product } />
     }
   }
 ]

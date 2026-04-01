@@ -6,13 +6,20 @@ import {
 } from 'lucide-react'
 
 import { Card, CardProps } from '@/components/card'
+
 import { getProducts } from '@/utils/productsData'
 import { getServices } from '@/utils/servicesData'
+import { getBudgets } from '@/utils/budgetsData'
+import { formatValue } from '@/utils/formatValue'
 
 export default async function Home() {
   const products = await getProducts()
   const services = await getServices()
-  const budgets = await getServices()
+  const budgets = await getBudgets()
+
+  const totalValue = budgets.reduce(( total, budget ) => {
+    return total + budget.valorTotal;
+  }, 0)
 
   const items: CardProps[] = [
     {
@@ -33,7 +40,7 @@ export default async function Home() {
     {
       text: 'Valor Total',
       icon: CircleDollarSign,
-      value: 0,
+      value: formatValue( totalValue ),
     },
   ]
 

@@ -1,11 +1,14 @@
 import { AlertTriangle } from 'lucide-react'
 
-import { DataTable } from '@/components/ui/data-table'
+import { Service } from '@/types/service'
 import { getServices } from '@/utils/servicesData'
-import { columns } from './columns'
+
+import { DataTable } from '@/components/ui/data-table'
+import { AddServiceForm } from '@/components/services/addServiceForm'
+import { columns } from '@/app/services/columns'
 
 export default async function ProductsPage() {
-  const services = await getServices()
+  const services: Service[] = await getServices()
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
@@ -30,6 +33,8 @@ export default async function ProductsPage() {
             <DataTable
               columns={ columns }
               data={ services }
+              modalContent={ <AddServiceForm /> }
+              text='Adicionar novo serviço'
             />
           </section>
         )

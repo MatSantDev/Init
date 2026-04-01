@@ -3,7 +3,7 @@ import { LucideIcon } from 'lucide-react'
 export interface CardProps {
   text: string
   icon: LucideIcon
-  value: number
+  value: number | string
 }
 
 export function Card( { text, icon: Icon, value }: CardProps ) {

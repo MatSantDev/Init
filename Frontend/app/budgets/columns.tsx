@@ -5,6 +5,9 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button';
 import { Budget } from '@/types/budget';
+import { formatValue } from '@/utils/formatValue';
+import { BudgetActions } from '@/components/budgets/budgetActions';
+import { formatDate } from '@/utils/formatDate';
 
 export const columns: ColumnDef< Budget >[] = [
   {
@@ -24,34 +27,42 @@ export const columns: ColumnDef< Budget >[] = [
   {
     accessorKey: 'dataOrcamento',
     header: 'Data do Orçamento',
+    cell: ( { row } ) => {
+      const date = row.getValue<string>('dataOrcamento');
+      const result = formatDate( date );
+
+      return (
+        <p>
+          { result }
+        </p>
+      );
+    },
   },
   {
     accessorKey: 'observacao',
     header: 'Observação',
   },
   {
-    header: 'Ações',
-    cell: () => {
+    accessorKey: 'valorTotal',
+    header: 'Valor Total',
+    cell: ( { row } ) => {
+      const value = row.getValue<number>('valorTotal');
+      const result = formatValue(value);
+
       return (
-        <div className='flex items-center justify-center gap-2' >
+        <p>
+          { result }
+        </p>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    header: 'Ações',
+    cell: ({ row }) => {
+      const budget = row.original
 
-            <Button
-              size='xs'
-              variant='outline'
-              onClick={ () => alert('editou') }
-            >
-              Editar
-            </Button>
-
-            <Button
-              size='xs'
-              variant='destructive'
-              onClick={ () => alert('excluiu') }
-            >
-              Excluir
-            </Button>
-        </div>
-      )
+      return <BudgetActions budget={ budget } />
     }
   }
 ]

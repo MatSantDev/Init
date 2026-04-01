@@ -1,12 +1,15 @@
 import { AlertTriangle } from 'lucide-react'
 
-import { DataTable } from '@/components/ui/data-table'
+import { Budget } from '@/types/budget'
 import { getBudgets } from '@/utils/budgetsData'
 
-import { columns } from './columns'
+import { DataTable } from '@/components/ui/data-table'
+import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
+import { columns } from '@/app/budgets/columns'
 
-export default async function ProductsPage() {
-  const budgets = await getBudgets()
+export default async function BudgetsPage() {
+  const budgets: Budget[] = await getBudgets()
+  console.log( budgets.length )
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
@@ -29,8 +32,10 @@ export default async function ProductsPage() {
         ) : (
           <section className='w-full px-2 md:px-20 pt-5 pb-7' >
             <DataTable
-              columns={ columns }
               data={ budgets }
+              columns={ columns }
+              modalContent={ <AddBudgetForm /> }
+              text='Adicionar novo orçamento'
             />
           </section>
         )

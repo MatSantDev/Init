@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button';
 import { Service } from '@/types/service';
 import { formatValue } from '@/utils/formatValue';
+import { ServiceActions } from '@/components/services/serviceActions';
 
 export const columns: ColumnDef< Service >[] = [
   {
@@ -41,28 +42,12 @@ export const columns: ColumnDef< Service >[] = [
     },
   },
   {
+    id: 'actions',
     header: 'Ações',
-    cell: () => {
-      return (
-        <div className='flex items-center justify-center gap-2' >
+    cell: ({ row }) => {
+      const service = row.original
 
-            <Button
-              size='xs'
-              variant='outline'
-              onClick={ () => alert('editou') }
-            >
-              Editar
-            </Button>
-
-            <Button
-              size='xs'
-              variant='destructive'
-              onClick={ () => alert('excluiu') }
-            >
-              Excluir
-            </Button>
-        </div>
-      )
+      return <ServiceActions service={ service } />
     }
   }
 ]
