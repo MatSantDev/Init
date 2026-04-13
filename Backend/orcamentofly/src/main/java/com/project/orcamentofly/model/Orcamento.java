@@ -1,21 +1,23 @@
 package com.project.orcamentofly.model;
 
+import com.project.orcamentofly.service.ClienteService;
+
 import java.util.*;
 import java.time.LocalDate;
 
 public class Orcamento {
 
     private int id;
-    private String cliente;
     private LocalDate dataOrcamento;
     private String observacao;
     private double valorTotal;
 
     private List<OrcamentoItem> itens = new ArrayList<>();
+    private Cliente cliente;
 
     public Orcamento() {}
 
-    public Orcamento(int id, String cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
+    public Orcamento(int id, Cliente cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
         this.id = id;
         this.cliente = cliente;
         this.dataOrcamento = dataOrcamento;
@@ -23,7 +25,7 @@ public class Orcamento {
         this.valorTotal = valorTotal;
     }
 
-    public Orcamento(String cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
+    public Orcamento(Cliente cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
         this.cliente = cliente;
         this.dataOrcamento = dataOrcamento;
         this.observacao = observacao;
@@ -38,11 +40,11 @@ public class Orcamento {
         this.id = id;
     }
 
-    public String getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(String cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 

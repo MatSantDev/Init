@@ -70,11 +70,17 @@ INSERT INTO servicos (nome, descricao, valorUnitario) VALUES
 ;
 
 CREATE TABLE orcamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    cliente VARCHAR(255) NOT NULL,
-    dataOrcamento DATE NOT NULL,
-    observacao TEXT,
-    valorTotal DECIMAL(10,2) NOT NULL
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            cliente_id INT NOT NULL,
+                            dataOrcamento DATE NOT NULL,
+                            observacao TEXT,
+                            valorTotal DECIMAL(10,2) NOT NULL,
+
+                            CONSTRAINT fk_orcamentos_clientes
+                                FOREIGN KEY (cliente_id)
+                                    REFERENCES clientes(id)
+                                    ON DELETE CASCADE
+                                    ON UPDATE CASCADE
 );
 
 CREATE TABLE orcamento_item (
@@ -93,27 +99,27 @@ CREATE TABLE orcamento_item (
 );
 
 INSERT INTO orcamentos (cliente, dataOrcamento, observacao, valorTotal) VALUES
-    ('Barbara Silva', '2026-04-02', 'Consultoria em gestão de projetos', 1200.00),
-    ('Isa Oliveira', '2026-04-03', 'Configuração de servidor local', 850.00),
-    ('Ricardo Santos', '2026-04-04', 'Recuperação de dados em HD externo', 500.00),
-    ('Luciana Lima', '2026-04-05', 'Instalação de rede Wi-Fi corporativa', 750.00),
-    ('Marcos Viana', '2026-04-06', 'Upgrade de memória RAM e SSD', 400.00),
-    ('Fernanda Costa', '2026-04-07', 'Remoção de vírus e otimização', 200.00),
-    ('Gabriel Souza', '2026-04-08', 'Montagem de PC Gamer completo', 600.00),
-    ('Patrícia Amaral', '2026-04-09', 'Suporte remoto mensal (Contrato)', 350.00),
-    ('Roberto Júnior', '2026-04-10', 'Troca de bateria de notebook', 250.00),
-    ('Camila Rocha', '2026-04-11', 'Desenvolvimento de Landing Page', 1500.00),
-    ('Thiago Mendes', '2026-04-12', 'Configuração de impressoras em rede', 180.00),
-    ('Aline Ferreira', '2026-04-13', 'Treinamento de software interno', 450.00),
-    ('Bruno Alencar', '2026-04-14', 'Limpeza interna de notebook', 120.00),
-    ('Cláudia Bento', '2026-04-15', 'Atualização de BIOS e Drivers', 100.00),
-    ('Daniel Porto', '2026-04-16', 'Instalação de Pacote Office e Softwares', 150.00),
-    ('Eliana Meira', '2026-04-17', 'Configuração de Backup em Nuvem', 300.00),
-    ('Fábio Lucca', '2026-04-18', 'Substituição de teclado de laptop', 220.00),
-    ('Gisele Telles', '2026-04-19', 'Auditoria de segurança de rede', 2000.00),
-    ('Hugo Bossi', '2026-04-20', 'Manutenção preventiva preventiva trimestral', 400.00),
-    ('Igor Nogueira', '2026-04-21', 'Conserto de dobradiça de notebook', 180.00),
-    ('Juliana Paes', '2026-04-22', 'Migração de e-mails para Workspace', 650.00)
+    (1, '2026-04-02', 'Consultoria em gestão de projetos', 1200.00),
+    (2, '2026-04-03', 'Configuração de servidor local', 850.00),
+    (3, '2026-04-04', 'Recuperação de dados em HD externo', 500.00),
+    (4, '2026-04-05', 'Instalação de rede Wi-Fi corporativa', 750.00),
+    (2, '2026-04-06', 'Upgrade de memória RAM e SSD', 400.00),
+    (3, '2026-04-07', 'Remoção de vírus e otimização', 200.00),
+    (2, '2026-04-08', 'Montagem de PC Gamer completo', 600.00),
+    (1, '2026-04-09', 'Suporte remoto mensal (Contrato)', 350.00),
+    (1, '2026-04-10', 'Troca de bateria de notebook', 250.00),
+    (2, '2026-04-11', 'Desenvolvimento de Landing Page', 1500.00),
+    (2, '2026-04-12', 'Configuração de impressoras em rede', 180.00),
+    (2, '2026-04-13', 'Treinamento de software interno', 450.00),
+    (2, '2026-04-14', 'Limpeza interna de notebook', 120.00),
+    (2, '2026-04-15', 'Atualização de BIOS e Drivers', 100.00),
+    (2, '2026-04-16', 'Instalação de Pacote Office e Softwares', 150.00),
+    (4, '2026-04-17', 'Configuração de Backup em Nuvem', 300.00),
+    (4, '2026-04-18', 'Substituição de teclado de laptop', 220.00),
+    (2, '2026-04-19', 'Auditoria de segurança de rede', 2000.00),
+    (1, '2026-04-20', 'Manutenção preventiva preventiva trimestral', 400.00),
+    (3, '2026-04-21', 'Conserto de dobradiça de notebook', 180.00),
+    (3, '2026-04-22', 'Migração de e-mails para Workspace', 650.00)
 ;
 
 INSERT INTO orcamento_item
@@ -123,3 +129,21 @@ VALUES
     ('Formatação de Computador', 'SERVICO', 1, 150.00, 150.00, 1, NULL, 1),
     ('Troca de Tela de Celular', 'SERVICO', 1, 300.00, 300.00, 2, NULL, 2)
 ;
+
+
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('João Silva', 'joao@email.com', 11999999999, '12345678900', '08700000', 'Rua A, 123', 'M', '1990-05-10', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Maria Souza', 'maria@email.com', 11988888888, '98765432100', '08650000', 'Av. Central, 456', 'F', '1995-08-20', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Carlos Pereira', 'carlos@email.com', 11977777777, '45612378900', '08500000', 'Rua das Flores, 789', 'M', '1988-02-15', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Ana Oliveira', 'ana@email.com', 11966666666, '32165498700', '08400000', 'Rua B, 321', 'F', '2000-11-30', '2026-04-13');

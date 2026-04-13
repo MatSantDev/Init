@@ -1,8 +1,10 @@
 package com.project.orcamentofly.dao;
 
 import com.project.orcamentofly.exception.BdException;
+import com.project.orcamentofly.model.Cliente;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
+import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -68,11 +70,11 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     public void inserir(Orcamento orcamento) {
         try(Connection conn = getConnection()){
 
-            String sql = "insert into orcamentos (cliente, dataOrcamento, observacao, valorTotal) VALUE (?, ?, ?, ?)";
+            String sql = "insert into orcamentos (cliente_id, dataOrcamento, observacao, valorTotal) VALUE (?, ?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            statement.setString(1, orcamento.getCliente());
+            statement.setInt(1, orcamento.getCliente().getId());
             statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
             statement.setString(3, orcamento.getObservacao());
             statement.setDouble(4, orcamento.getValorTotal());
@@ -107,6 +109,11 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
             statementItem.setInt(1, orcamento.getId());
             statementItem.executeUpdate();
 
+            String sqlCliente = "DELETE FROM clientes WHERE id=?";
+            PreparedStatement statement = conn.prepareStatement(sqlCliente);
+            statement.setInt(1, orcamento.getCliente().getId());
+            statement.executeUpdate();
+
             String sqlOrcamento = "delete from orcamentos where id = ?";
             PreparedStatement statementOrcamento = conn.prepareStatement(sqlOrcamento);
             statementOrcamento.setInt(1, orcamento.getId());
@@ -126,7 +133,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, orcamento.getCliente());
+            statement.setInt(1, orcamento.getCliente().getId());
             statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
             statement.setString(3, orcamento.getObservacao());
             statement.setDouble(4, orcamento.getValorTotal());
@@ -142,10 +149,17 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     private Orcamento getar(ResultSet rs) throws SQLException {
         Orcamento orcamento = new Orcamento();
         orcamento.setId(rs.getInt("id"));
-        orcamento.setCliente(rs.getString("cliente"));
         orcamento.setDataOrcamento(rs.getDate("dataOrcamento").toLocalDate());
         orcamento.setObservacao(rs.getString("observacao"));
         orcamento.setValorTotal(rs.getDouble("valorTotal"));
+
+        int clienteId = rs.getInt("cliente_id");
+        if (!rs.wasNull()) {
+            ClienteDAO clienteDAO = new ClienteDAO();
+            Cliente cliente = clienteDAO.consultarById(clienteId);
+            orcamento.setCliente(cliente);
+        }
+
         return orcamento;
     }
 
