@@ -4,6 +4,24 @@ CREATE DATABASE IF NOT EXISTS banco;
 
 USE banco;
 
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('João Silva', 'joao@email.com', 11999999999, '12345678900', '08700000', 'Rua A, 123', 'M', '1990-05-10', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Maria Souza', 'maria@email.com', 11988888888, '98765432100', '08650000', 'Av. Central, 456', 'F', '1995-08-20', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Carlos Pereira', 'carlos@email.com', 11977777777, '45612378900', '08500000', 'Rua das Flores, 789', 'M', '1988-02-15', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+    ('Ana Oliveira', 'ana@email.com', 11966666666, '32165498700', '08400000', 'Rua B, 321', 'F', '2000-11-30', '2026-04-13');
+
+
 CREATE TABLE produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -129,21 +147,3 @@ VALUES
     ('Formatação de Computador', 'SERVICO', 1, 150.00, 150.00, 1, NULL, 1),
     ('Troca de Tela de Celular', 'SERVICO', 1, 300.00, 300.00, 2, NULL, 2)
 ;
-
-
-INSERT INTO clientes
-(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
-VALUES
-    ('João Silva', 'joao@email.com', 11999999999, '12345678900', '08700000', 'Rua A, 123', 'M', '1990-05-10', '2026-04-13');
-INSERT INTO clientes
-(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
-VALUES
-    ('Maria Souza', 'maria@email.com', 11988888888, '98765432100', '08650000', 'Av. Central, 456', 'F', '1995-08-20', '2026-04-13');
-INSERT INTO clientes
-(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
-VALUES
-    ('Carlos Pereira', 'carlos@email.com', 11977777777, '45612378900', '08500000', 'Rua das Flores, 789', 'M', '1988-02-15', '2026-04-13');
-INSERT INTO clientes
-(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
-VALUES
-    ('Ana Oliveira', 'ana@email.com', 11966666666, '32165498700', '08400000', 'Rua B, 321', 'F', '2000-11-30', '2026-04-13');
