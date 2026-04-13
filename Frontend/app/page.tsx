@@ -47,7 +47,7 @@ export default async function Home() {
   return (
     <main className='h-screen flex flex-col w-full px-12 gap-12' >
       <section className='flex flex-col gap-5 text-center md:text-left' >
-        <h1 className='font-bold text-3xl' >
+        <h1 className='text-blue font-bold text-3xl' >
           Painel
         </h1>
         <p className='text-md md:text-lg' >

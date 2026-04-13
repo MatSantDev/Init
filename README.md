@@ -112,3 +112,30 @@ Projeto focado em:
 
 - Frontend => pnpm run dev
 - Backend  => ./mvnw spring-boot:run
+
+# TODO:
+
+## Backend
+
+- [] - 
+
+## Frontend
+
+- [] - Adicionar funcionalidade de adicionar items nos orçamentos 
+- [] - Adicionar validação de preços negativos nas tabelas
+- [] - Adicionar "status" nos Orçamentos
+- [] - Adicionar gráficos no painel
+- [] - Adicionar tabela "Cliente"
+
+# Client table
+
+- id			- number
+- nome			- string
+- email			- string
+- telefone	 	- number
+- cpf			- string
+- cep			- string
+- endereço		- string
+- sexo			- string
+- dataNascimento		- Date
+- criadoEm		- Date

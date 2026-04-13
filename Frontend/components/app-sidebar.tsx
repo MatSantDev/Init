@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import { Logo } from '@/components/logo'
-import { Handshake, PiggyBank, ShoppingBag } from 'lucide-react'
+import { Handshake, PiggyBank, ShoppingBag, Users } from 'lucide-react'
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -32,6 +32,11 @@ export function AppSidebar() {
       name: 'Orçamentos',
       icon: PiggyBank,
       href: '/budgets'
+    },
+    {
+      name: 'Clientes',
+      icon: Users,
+      href: '/clients'
     },
   ]
 
