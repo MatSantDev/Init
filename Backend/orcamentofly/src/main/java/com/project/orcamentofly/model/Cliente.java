@@ -7,7 +7,7 @@ public class Cliente {
     private int id;
     private String nome;
     private String email;
-    private int telefone;
+    private String telefone;
     private String cpf;
     private String cep;
     private String endereco;
@@ -17,7 +17,7 @@ public class Cliente {
 
     public Cliente() {}
 
-    public Cliente(int id, String nome, String email, int telefone, String cpf, String cep, String endereco, String sexo, LocalDate dataNascimento, LocalDate criadoEm) {
+    public Cliente(int id, String nome, String email, String telefone, String cpf, String cep, String endereco, String sexo, LocalDate dataNascimento, LocalDate criadoEm) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -54,11 +54,11 @@ public class Cliente {
         this.email = email;
     }
 
-    public int getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(int telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
