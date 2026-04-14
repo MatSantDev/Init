@@ -20,7 +20,7 @@ public class ClienteDAO implements GenericDAO<Cliente>{
 
             statement.setString(1, obj.getNome());
             statement.setString(2, obj.getEmail());
-            statement.setInt(3, obj.getTelefone());
+            statement.setString(3, obj.getTelefone());
             statement.setString(4, obj.getCpf());
             statement.setString(5, obj.getCep());
             statement.setString(6, obj.getEndereco());
@@ -51,7 +51,7 @@ public class ClienteDAO implements GenericDAO<Cliente>{
 
             statement.setString(1, obj.getNome());
             statement.setString(2, obj.getEmail());
-            statement.setInt(3, obj.getTelefone());
+            statement.setString(3, obj.getTelefone());
             statement.setString(4, obj.getCpf());
             statement.setString(5, obj.getCep());
             statement.setString(6, obj.getEndereco());
@@ -100,7 +100,7 @@ public class ClienteDAO implements GenericDAO<Cliente>{
                 obj.setId(rs.getInt("id"));
                 obj.setNome(rs.getString("nome"));
                 obj.setEmail(rs.getString("email"));
-                obj.setTelefone(rs.getInt("telefone"));
+                obj.setTelefone(rs.getString("telefone"));
                 obj.setCpf(rs.getString("cpf"));
                 obj.setCep(rs.getString("cep"));
                 obj.setEndereco(rs.getString("endereco"));
@@ -144,7 +144,7 @@ public class ClienteDAO implements GenericDAO<Cliente>{
         cliente.setId(rs.getInt("id"));
         cliente.setNome(rs.getString("nome"));
         cliente.setEmail(rs.getString("email"));
-        cliente.setTelefone(rs.getInt("telefone"));
+        cliente.setTelefone(rs.getString("telefone"));
         cliente.setCpf(rs.getString("cpf"));
         cliente.setCep(rs.getString("cep"));
         cliente.setEndereco(rs.getString("endereco"));
