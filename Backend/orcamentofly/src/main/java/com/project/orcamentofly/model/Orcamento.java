@@ -1,5 +1,6 @@
 package com.project.orcamentofly.model;
 
+import com.project.orcamentofly.model.enums.StatusOrcamento;
 import com.project.orcamentofly.service.ClienteService;
 
 import java.util.*;
@@ -11,18 +12,20 @@ public class Orcamento {
     private LocalDate dataOrcamento;
     private String observacao;
     private double valorTotal;
+    private StatusOrcamento status;
 
     private List<OrcamentoItem> itens = new ArrayList<>();
     private Cliente cliente;
 
     public Orcamento() {}
 
-    public Orcamento(int id, Cliente cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
+    public Orcamento(int id, Cliente cliente, LocalDate dataOrcamento, String observacao, double valorTotal, StatusOrcamento status) {
         this.id = id;
         this.cliente = cliente;
         this.dataOrcamento = dataOrcamento;
         this.observacao = observacao;
         this.valorTotal = valorTotal;
+        this.status = status;
     }
 
     public Orcamento(Cliente cliente, LocalDate dataOrcamento, String observacao, double valorTotal) {
@@ -86,6 +89,14 @@ public class Orcamento {
 
     public boolean removeItem(OrcamentoItem item){
         return this.itens.remove(item);
+    }
+
+    public StatusOrcamento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusOrcamento status) {
+        this.status = status;
     }
 
     @Override

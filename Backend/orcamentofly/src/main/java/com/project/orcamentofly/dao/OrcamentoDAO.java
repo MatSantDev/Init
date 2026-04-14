@@ -5,6 +5,7 @@ import com.project.orcamentofly.model.Cliente;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
+import com.project.orcamentofly.model.enums.StatusOrcamento;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -70,7 +71,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     public void inserir(Orcamento orcamento) {
         try(Connection conn = getConnection()){
 
-            String sql = "insert into orcamentos (cliente_id, dataOrcamento, observacao, valorTotal) VALUE (?, ?, ?, ?)";
+            String sql = "insert into orcamentos (cliente_id, dataOrcamento, observacao, valorTotal, status) VALUE (?, ?, ?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -78,6 +79,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
             statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
             statement.setString(3, orcamento.getObservacao());
             statement.setDouble(4, orcamento.getValorTotal());
+            statement.setString(5, orcamento.getStatus().toString());
 
             statement.executeUpdate();
 
@@ -129,7 +131,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     public void atualizar(Orcamento orcamento) {
         try(Connection conn = getConnection()){
 
-            String sql = "update orcamentos set cliente = ?, dataOrcamento = ?, observacao = ?, valorTotal = ? where id = ?";
+            String sql = "update orcamentos set cliente = ?, dataOrcamento = ?, observacao = ?, valorTotal = ?, status = ? where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
@@ -137,7 +139,8 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
             statement.setDate(2, Date.valueOf(orcamento.getDataOrcamento()));
             statement.setString(3, orcamento.getObservacao());
             statement.setDouble(4, orcamento.getValorTotal());
-            statement.setInt(5, orcamento.getId());
+            statement.setString(5, orcamento.getStatus().toString());
+            statement.setInt(6, orcamento.getId());
 
             statement.execute();
 
@@ -152,6 +155,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
         orcamento.setDataOrcamento(rs.getDate("dataOrcamento").toLocalDate());
         orcamento.setObservacao(rs.getString("observacao"));
         orcamento.setValorTotal(rs.getDouble("valorTotal"));
+        orcamento.setStatus(StatusOrcamento.valueOf(rs.getString("status")));
 
         int clienteId = rs.getInt("cliente_id");
         if (!rs.wasNull()) {
