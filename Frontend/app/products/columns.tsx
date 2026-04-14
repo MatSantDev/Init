@@ -3,7 +3,7 @@
 import { ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table'
 
-import { formatValue } from '@/utils/formatValue';
+import { formatValue } from '@/utils/formatters';
 import { Product } from '@/types/product';
 
 import { Button } from '@/components/ui/button';

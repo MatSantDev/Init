@@ -28,7 +28,7 @@ export function ClientActions( { client }: ClientActionsProps ) {
       const result = await deleteClient( client )
 
       if ( !result.success ) {
-        // toast.error( result.error )
+        toast.error( result.error )
         setIsDeleting( false )
         return
       }
@@ -42,7 +42,6 @@ export function ClientActions( { client }: ClientActionsProps ) {
     } finally {
       setIsDeleting(false);
     }
-    return alert('method not implemented')
   };
 
   return (

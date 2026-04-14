@@ -6,4 +6,5 @@ export interface Budget {
   dataOrcamento: Date
   observacao: string
   valorTotal: number
+  status: 'CONCLUIDO' | 'PENDENTE' | 'CANCELADO'
 }

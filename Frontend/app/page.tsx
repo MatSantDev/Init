@@ -6,11 +6,12 @@ import {
 } from 'lucide-react'
 
 import { Card, CardProps } from '@/components/card'
+import { BudgetsStatusChart, } from '@/components/chart'
 
 import { getProducts } from '@/utils/productsData'
 import { getServices } from '@/utils/servicesData'
 import { getBudgets } from '@/utils/budgetsData'
-import { formatValue } from '@/utils/formatValue'
+import { formatValue } from '@/utils/formatters'
 
 export default async function Home() {
   const products = await getProducts()
@@ -44,6 +45,18 @@ export default async function Home() {
     },
   ]
 
+  const statusCount = budgets.reduce((acc, budget) => {
+    const status = budget.status || 'PENDENTE'; 
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const chartData = [
+    { status: "Pendente", quantidade: statusCount["PENDENTE"] || 0, fill: "var(--color-pendente)" },
+    { status: "Concluído", quantidade: statusCount["CONCLUIDO"] || 0, fill: "var(--color-concluido)" },
+    { status: "Cancelado", quantidade: statusCount["CANCELADO"] || 0, fill: "var(--color-cancelado)" },
+  ]
+
   return (
     <main className='h-screen flex flex-col w-full px-12 gap-12' >
       <section className='flex flex-col gap-5 text-center md:text-left' >
@@ -62,6 +75,12 @@ export default async function Home() {
           />
         ) ) }
       </section>
+      <div className="w-full max-w-xl border rounded-xl p-6 bg-card">
+         <h2 className="text-2xl text-center font-semibold mb-4">
+            Orçamentos por Status
+          </h2>
+         <BudgetsStatusChart data={ chartData } />
+      </div>
     </main>
   )
 }

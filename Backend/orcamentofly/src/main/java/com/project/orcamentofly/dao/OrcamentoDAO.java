@@ -98,8 +98,8 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     public void deletar(Orcamento orcamento) {
         try(Connection conn = getConnection()){
             conn.setAutoCommit(false);
+            
             List<OrcamentoItem> itens = orcamentoItemDAO.consultarTodosByOrcamentoId(orcamento.getId());
-
             for (OrcamentoItem item : itens) {
                 if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
                     produtoDAO.atualizarEstoque(item.getProduto().getId(), item.getQuantidade());
@@ -110,11 +110,6 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
             PreparedStatement statementItem = conn.prepareStatement(sqlitem);
             statementItem.setInt(1, orcamento.getId());
             statementItem.executeUpdate();
-
-            String sqlCliente = "DELETE FROM clientes WHERE id=?";
-            PreparedStatement statement = conn.prepareStatement(sqlCliente);
-            statement.setInt(1, orcamento.getCliente().getId());
-            statement.executeUpdate();
 
             String sqlOrcamento = "delete from orcamentos where id = ?";
             PreparedStatement statementOrcamento = conn.prepareStatement(sqlOrcamento);
@@ -131,7 +126,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
     public void atualizar(Orcamento orcamento) {
         try(Connection conn = getConnection()){
 
-            String sql = "update orcamentos set cliente = ?, dataOrcamento = ?, observacao = ?, valorTotal = ?, status = ? where id = ?";
+            String sql = "update orcamentos set cliente_id = ?, dataOrcamento = ?, observacao = ?, valorTotal = ?, status = ? where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 

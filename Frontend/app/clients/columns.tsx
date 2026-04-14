@@ -6,8 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button';
 import { ClientActions } from '@/components/clients/clientActions';
 
-import { formatValue } from '@/utils/formatValue';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/formatters';
 
 import { Client } from '@/types/client';
 
@@ -79,9 +78,11 @@ export const columns: ColumnDef< Client >[] = [
     },
   },
   {
-    accessorKey: 'Total de Orçamentos',
+    accessorKey: 'totalBudgets',
+    header: 'Total de Orçamentos',
     cell: ({ row }) => {
-      return 2
+      const clientBudgets = row.getValue<string>('totalBudgets')
+      return ( <p> { clientBudgets } </p> )
     }
   },
   {

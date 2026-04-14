@@ -42,6 +42,7 @@ interface DataTableProps< TData, TValue > {
   data: TData[]
   modalContent?: ReactNode,
   text?: string
+  meta?: any
 }
 
 export function DataTable< TData, TValue >({
@@ -49,6 +50,7 @@ export function DataTable< TData, TValue >({
   data,
   modalContent,
   text,
+  meta,
 }: DataTableProps<TData, TValue>) {
   const [ globalFilter, setGlobalFilter ] = useState('')
   const [ sorting, setSorting ] = useState<SortingState>([])
@@ -66,6 +68,7 @@ export function DataTable< TData, TValue >({
       sorting,
     },
     onGlobalFilterChange: setGlobalFilter,
+    meta,
   })
 
   return (

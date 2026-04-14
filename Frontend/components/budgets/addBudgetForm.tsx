@@ -111,14 +111,26 @@ export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
         <label htmlFor='nome' className='text-sm font-semibold'>
           Observação
         </label>
-        <Input id='observacao' name='observacao' placeholder='Ex: Orçamento para alvenaria' required />
+        <Input
+          id='observacao'
+          name='observacao'
+          placeholder='Ex: Orçamento para alvenaria'
+          required
+        />
       </div>
 
       <div className='flex flex-col gap-2 w-full'>
         <label htmlFor='valorTotal' className='text-sm font-semibold'>
           Valor Total (R$)
         </label>
-        <Input id='valorTotal' name='valorTotal' type='number' step='0.01' placeholder='Ex: 150.00' required />
+        <Input
+          id='valorTotal'
+          name='valorTotal'
+          type='number'
+          step='0.01'
+          placeholder='Ex: 150.00'
+          required
+        />
       </div>
 
       <Button

@@ -23,95 +23,108 @@ export async function getClients() {
 }
 
 export async function addClient( formData: FormData ) {
-  // const newClient: Client = {
-    // cliente: formData.get('cliente'),
-    // dataOrcamento: formData.get('dataOrcamento'),
-    // observacao: formData.get('observacao'),
-    // valorTotal: Number(formData.get('valorTotal')),
-  // }
+  const newClient = {
+    id: 0, //! ID do novo cliente não fica zerado, necessário aplicar para funcionar
+    nome: formData.get('nome'),
+    email: formData.get('email'),
+    telefone: formData.get('telefone'),
+    cpf: formData.get('cpf'),
+    cep: formData.get('cep'),
+    endereco: formData.get('endereco'),
+    sexo: formData.get('sexo'),
+    dataNascimento: formData.get('dataNascimento'),
+    criadoEm: new Date(),
+  }
+
+  console.log( 'NOVO CLIENTE' )
+  console.log( newClient )
+
+    try {
+      const res = await fetch(`${ process.env.API_URL }/clientes/inserir`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( newClient ),
+      })
   
-    // try {
-    //   const res = await fetch(`${ process.env.API_URL }/clientes/inserir`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify( newClient ),
-    //   })
+      if ( !res.ok ) {
+        const errorText = await res.text();
+        return { success: false, error: errorText };
+      }
   
-    //   if ( !res.ok ) {
-    //     const errorText = await res.text();
-    //     return { success: false, error: errorText };
-    //   }
+      revalidatePath('/clients');
+      return { success: true };
   
-    //   revalidatePath('/clients');
-    //   return { success: true };
-  
-    // } catch ( err ) {
-    //   console.error( err );
-    //   return { success: false, error: 'Falha na comunicação com o servidor Java' };
-    // }
+    } catch ( err ) {
+      console.error( err );
+      return { success: false, error: 'Falha na comunicação com o servidor Java' };
+    }
 }
 
 export async function deleteClient( client: Client ) {
-  // try {
-  //  const res = await fetch(`${ process.env. API_URL}/clientes/deletar/${ client.id }`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify( client ),
-  //   });
+  try {
+   const res = await fetch(`${ process.env. API_URL}/clientes/deletar/${ client.id }`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( client ),
+    });
 
-  //   if ( !res.ok ) {
-  //       throw new Error('Falha ao excluir cliente');
-  //   }
+    if ( !res.ok ) {
+        throw new Error('Falha ao excluir cliente');
+    }
 
-  //   revalidatePath('/clients');
-  //   return { success: true };
+    revalidatePath('/clients');
+    return { success: true };
     
-  // } catch ( err ) {
-  //   console.error('Erro ao excluir:', err );
-  //   return { success: false, error: 'Falha ao deletar cliente' };
-  // }
+  } catch ( err ) {
+    console.error('Erro ao excluir:', err );
+    return { success: false, error: 'Falha ao deletar cliente' };
+  }
   return { success: true }
 }
 
 export async function updateClient( client: Client ) {
-  //  try {
-  //  const res = await fetch(`${ process.env. API_URL}/clientes/atualizar`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify( client ),
-  //   });
+   try {
+   const res = await fetch(`${ process.env. API_URL}/clientes/atualizar`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( client ),
+    });
 
-  //   if ( !res.ok ) {
-  //       throw new Error('Falha ao editar cliente');
-  //   }
+    if ( !res.ok ) {
+        throw new Error('Falha ao editar cliente');
+    }
 
-  //   revalidatePath('/clients');
-  //   return { success: true };
+    revalidatePath('/clients');
+    return { success: true };
     
-  // } catch ( err ) {
-  //   console.error('Erro ao excluir:', err );
-  //   return { success: false, error: 'Falha ao editar cliente' };
-  // }
+  } catch ( err ) {
+    console.error('Erro ao excluir:', err );
+    return { success: false, error: 'Falha ao editar cliente' };
+  }
 }
 
-export async function clientsBudgets( client: Client ) {
+
+export async function getClientsWithBudgets() {
+  const clients = await getClients()
   const budgets = await getBudgets()
-  let total: number
 
-  const clientBudgets = budgets.map( budget => {
-    if ( budget.cliente.nome === client.nome ) {
-      total = total + 1
-    }
-    console.log( total )
-    return total
-  } )
+  const countMap: Record<number, number> = {}
 
-  return clientBudgets
+  for ( const budget of budgets ) {
+    const clientId = budget.cliente.id
+    countMap[ clientId ] = ( countMap[ clientId ] || 0 ) + 1
+  }
 
+  const clientsWithTotal = clients.map(client => ({
+    ...client,
+    totalBudgets: countMap[client.id] || 0
+  }))
+
+  return clientsWithTotal
 }

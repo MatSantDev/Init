@@ -4,9 +4,10 @@ import { ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button';
-import { Service } from '@/types/service';
-import { formatValue } from '@/utils/formatValue';
 import { ServiceActions } from '@/components/services/serviceActions';
+
+import { Service } from '@/types/service';
+import { formatValue } from '@/utils/formatters';
 
 export const columns: ColumnDef< Service >[] = [
   {

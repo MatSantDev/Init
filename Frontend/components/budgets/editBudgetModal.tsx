@@ -18,13 +18,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 
 import { Budget } from '@/types/budget'
 import { Client } from '@/types/client'
 
 import { updateBudget } from '@/utils/budgetsData'
-import { formatDateForInput } from '@/utils/formatDateForInput'
+import { formatDateForInput } from '@/utils/formatters'
 
 type EditBudgetModalProps = {
   open: boolean
@@ -43,6 +43,7 @@ export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess
   const [ dataOrcamento, setDataOrcamento ] = useState( formatDateForInput(budget.dataOrcamento) )
   const [ observacao, setObservacao ] = useState( budget.observacao )
   const [ valorTotal, setValorTotal ] = useState( budget.valorTotal )
+  const [ status, setStatus ] = useState<'CONCLUIDO' | 'PENDENTE' | 'CANCELADO'>( budget.status || 'PENDENTE' )
 
   const [ isLoading, setIsLoading ] = useState( false )
 
@@ -53,7 +54,8 @@ export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess
       selectedClientId !== initialClientId ||
       dataOrcamento !== formatDateForInput( budget.dataOrcamento ) ||
       observacao !== budget.observacao ||
-      Number( valorTotal ) !== budget.valorTotal;
+      Number( valorTotal ) !== budget.valorTotal ||
+      status !== budget.status
 
     if ( !hasChanges ) {
       toast.info('Nenhuma alteração foi detectada para atualizar.')
@@ -66,9 +68,10 @@ export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess
       const updatedBudget = {
         ...budget,
         cliente: { id: Number(selectedClientId) },
-        dataOrcamento: new Date(dataOrcamento),
+        dataOrcamento,
         observacao,
         valorTotal: Number(valorTotal),
+        status,
       }
 
       const result = await updateBudget( updatedBudget as unknown as Budget )
@@ -103,8 +106,8 @@ export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess
           <div className='flex flex-col gap-2'>
             <label htmlFor='cliente' className='text-sm font-medium'> Cliente </label>
             <Select onValueChange={ setSelectedClientId } value={ selectedClientId }>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione um cliente" />
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder='Selecione um cliente' />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -146,12 +149,37 @@ export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess
             <input
               id='valorTotal'
               type='number'
-              step="0.01"
+              step='0.01'
               value={ valorTotal }
               onChange={ ( e ) => setValorTotal( Number( e.target.value ) ) }
               className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'
               required
             />
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            <label htmlFor='status' className='text-sm font-medium'> Status </label>
+            <Select
+              onValueChange={ (value) => setStatus(value as 'CONCLUIDO' | 'PENDENTE' | 'CANCELADO') }
+              value={ status }
+            >
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder='Selecione o status' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value='CONCLUIDO'>
+                    Concluído
+                  </SelectItem>
+                  <SelectItem value='PENDENTE'>
+                    Pendente
+                  </SelectItem>
+                  <SelectItem value='CANCELADO'>
+                    Cancelado
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter className='mt-4'>

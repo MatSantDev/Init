@@ -1,15 +1,14 @@
 import { AlertTriangle } from 'lucide-react'
 
 import { Client } from '@/types/client'
-import { getBudgets } from '@/utils/budgetsData'
 
 import { DataTable } from '@/components/ui/data-table'
-import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
+import { AddClientForm } from '@/components/clients/addClientForm'
 import { columns } from '@/app/clients/columns'
-import { clientsBudgets, getClients } from '@/utils/clientsData'
+import { getClients, getClientsWithBudgets } from '@/utils/clientsData'
 
 export default async function ClientsPage() {
-  const clients: Client[] = await getClients()
+  const clients: Client[] = await getClientsWithBudgets()
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
@@ -34,7 +33,7 @@ export default async function ClientsPage() {
             <DataTable
               data={ clients }
               columns={ columns }
-              modalContent={ <AddBudgetForm /> }
+              modalContent={ <AddClientForm /> }
               text='Adicionar novo cliente'
             />
           </section>

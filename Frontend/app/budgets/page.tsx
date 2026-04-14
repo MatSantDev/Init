@@ -9,7 +9,6 @@ import { getClients } from '@/utils/clientsData'
 import { DataTable } from '@/components/ui/data-table'
 import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
 import { columns } from '@/app/budgets/columns'
-// import { getColumns } from '@/app/budgets/columns'
 
 export default async function BudgetsPage() {
   const budgets: Budget[] = await getBudgets()
@@ -38,19 +37,11 @@ export default async function BudgetsPage() {
             <DataTable
               data={ budgets }
               columns={ columns }
+              meta={ { clients } }
               modalContent={ <AddBudgetForm clients={ clients } /> }
               text='Adicionar novo orçamento'
             />
           </section>
-        //   <section className='w-full px-2 md:px-20 pt-5 pb-7' >
-        //   <DataTable
-        //     data={ budgets }
-        //     // Chame a função passando os clientes aqui:
-        //     columns={ getColumns(clients) }
-        //     modalContent={ <AddBudgetForm clients={clients} /> }
-        //     text='Adicionar novo orçamento'
-        //   />
-        // </section>
         )
       }
     </main>

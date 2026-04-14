@@ -71,7 +71,7 @@ export function BudgetActions({ budget, clients }: BudgetActionsProps) {
       <ConfirmationModal
           open={ openConfirmModal }
           onOpenChange={ setOpenConfirmModal }
-          title={ `Excluir orçamento do ${ budget.cliente }?` }
+          title={ `Excluir orçamento do ${ budget.cliente.nome }?` }
           description='Tem certeza que deseja excluir este orçamento? Esta ação não poderá ser desfeita.'
           onConfirm={ handleDelete }
           confirmText='Excluir Orçamento'

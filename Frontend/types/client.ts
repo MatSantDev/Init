@@ -2,11 +2,11 @@ export interface Client {
   id: number
   nome: string
   email: string
-  telefone: number
+  telefone: string
   cpf: string
   cep: string
   endereco: string
-  sexo: 'F' | 'M'
+  sexo: 'M' | 'F'
   dataNascimento: Date
   criadoEm: Date
 }

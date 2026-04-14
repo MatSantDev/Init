@@ -131,27 +131,27 @@ CREATE TABLE orcamento_item (
 );
 
 INSERT INTO orcamentos ( cliente_id, dataOrcamento, observacao, valorTotal, status ) VALUES
-    (1, '2026-04-02', 'Consultoria em gestão de projetos', 1200.00, "NOVO"),
-    (2, '2026-04-03', 'Configuração de servidor local', 850.00, "NOVO"),
-    (3, '2026-04-04', 'Recuperação de dados em HD externo', 500.00, "NOVO"),
-    (4, '2026-04-05', 'Instalação de rede Wi-Fi corporativa', 750.00, "NOVO"),
-    (2, '2026-04-06', 'Upgrade de memória RAM e SSD', 400.00, "NOVO"),
-    (3, '2026-04-07', 'Remoção de vírus e otimização', 200.00, "NOVO"),
-    (2, '2026-04-08', 'Montagem de PC Gamer completo', 600.00, "NOVO"),
-    (1, '2026-04-09', 'Suporte remoto mensal (Contrato)', 350.00, "NOVO"),
-    (1, '2026-04-10', 'Troca de bateria de notebook', 250.00, "NOVO"),
-    (2, '2026-04-11', 'Desenvolvimento de Landing Page', 1500.00, "NOVO"),
-    (2, '2026-04-12', 'Configuração de impressoras em rede', 180.00, "NOVO"),
-    (2, '2026-04-13', 'Treinamento de software interno', 450.00, "NOVO"),
-    (2, '2026-04-14', 'Limpeza interna de notebook', 120.00, "NOVO"),
-    (2, '2026-04-15', 'Atualização de BIOS e Drivers', 100.00, "NOVO"),
-    (2, '2026-04-16', 'Instalação de Pacote Office e Softwares', 150.00, "NOVO"),
-    (4, '2026-04-17', 'Configuração de Backup em Nuvem', 300.00, "NOVO"),
-    (4, '2026-04-18', 'Substituição de teclado de laptop', 220.00, "NOVO"),
-    (2, '2026-04-19', 'Auditoria de segurança de rede', 2000.00, "NOVO"),
-    (1, '2026-04-20', 'Manutenção preventiva preventiva trimestral', 400.00, "NOVO"),
-    (3, '2026-04-21', 'Conserto de dobradiça de notebook', 180.00, "NOVO"),
-    (3, '2026-04-22', 'Migração de e-mails para Workspace', 650.00, "NOVO")
+    (1, '2026-04-02', 'Consultoria em gestão de projetos', 1200.00, "PENDENTE"),
+    (2, '2026-04-03', 'Configuração de servidor local', 850.00, "PENDENTE"),
+    (3, '2026-04-04', 'Recuperação de dados em HD externo', 500.00, "PENDENTE"),
+    (4, '2026-04-05', 'Instalação de rede Wi-Fi corporativa', 750.00, "PENDENTE"),
+    (2, '2026-04-06', 'Upgrade de memória RAM e SSD', 400.00, "PENDENTE"),
+    (3, '2026-04-07', 'Remoção de vírus e otimização', 200.00, "PENDENTE"),
+    (2, '2026-04-08', 'Montagem de PC Gamer completo', 600.00, "PENDENTE"),
+    (1, '2026-04-09', 'Suporte remoto mensal (Contrato)', 350.00, "PENDENTE"),
+    (1, '2026-04-10', 'Troca de bateria de notebook', 250.00, "CONCLUIDO"),
+    (2, '2026-04-11', 'Desenvolvimento de Landing Page', 1500.00, "CONCLUIDO"),
+    (2, '2026-04-12', 'Configuração de impressoras em rede', 180.00, "CONCLUIDO"),
+    (2, '2026-04-13', 'Treinamento de software interno', 450.00, "CONCLUIDO"),
+    (2, '2026-04-14', 'Limpeza interna de notebook', 120.00, "CONCLUIDO"),
+    (2, '2026-04-15', 'Atualização de BIOS e Drivers', 100.00, "CONCLUIDO"),
+    (2, '2026-04-16', 'Instalação de Pacote Office e Softwares', 150.00, "CONCLUIDO"),
+    (4, '2026-04-17', 'Configuração de Backup em Nuvem', 300.00, "CONCLUIDO"),
+    (4, '2026-04-18', 'Substituição de teclado de laptop', 220.00, "CONCLUIDO"),
+    (2, '2026-04-19', 'Auditoria de segurança de rede', 2000.00, "CANCELADO"),
+    (1, '2026-04-20', 'Manutenção preventiva preventiva trimestral', 400.00, "CANCELADO"),
+    (3, '2026-04-21', 'Conserto de dobradiça de notebook', 180.00, "CANCELADO"),
+    (3, '2026-04-22', 'Migração de e-mails para Workspace', 650.00, "CANCELADO")
 ;
 
 INSERT INTO orcamento_item
@@ -170,3 +170,9 @@ VALUES
     ('Formatação de Computador', 'SERVICO', 1, 150.00, 150.00, 1, NULL, 1),
     ('Troca de Tela de Celular', 'SERVICO', 1, 300.00, 300.00, 2, NULL, 2)
 ;
+
+SELECT * FROM orcamentos;
+SELECT * FROM clientes;
+SELECT * FROM produtos;
+SELECT * FROM servicos;
+SELECT * FROM orcamento_item;

@@ -9,10 +9,8 @@ export async function getBudgets() {
     const res = await fetch(`${ process.env.API_URL }/orcamentos/consultarTodos`)
     let data: Budget[]
 
-    console.log( res )
-
     if ( !res.ok ) return data = []
-
+    
     data = await res.json()
 
     return data;
@@ -32,10 +30,8 @@ export async function addBudget( formData: FormData ) {
     dataOrcamento: formData.get('dataOrcamento'),
     observacao: formData.get('observacao'),
     valorTotal: Number(formData.get('valorTotal')),
+    status: 'PENDENTE',
   }
-  
-  console.log( 'NEW BUDGET' )
-  console.log( newBudget )
 
     try {
       const res = await fetch(`${ process.env.API_URL }/orcamentos/inserir`, {
