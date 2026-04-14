@@ -15,8 +15,6 @@ public class Cliente {
     private LocalDate dataNascimento;
     private LocalDate criadoEm;
 
-    public Cliente() {}
-
     public Cliente(int id, String nome, String email, String telefone, String cpf, String cep, String endereco, String sexo, LocalDate dataNascimento, LocalDate criadoEm) {
         this.id = id;
         this.nome = nome;

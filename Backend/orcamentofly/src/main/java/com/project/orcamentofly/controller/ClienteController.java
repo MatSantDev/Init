@@ -1,6 +1,7 @@
 package com.project.orcamentofly.controller;
 
 import com.project.orcamentofly.model.Cliente;
+import com.project.orcamentofly.model.builder.ClienteBuilder;
 import com.project.orcamentofly.service.ClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +60,7 @@ public class ClienteController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         try {
-            Cliente cliente = new Cliente();
-            cliente.setId(id);
+            Cliente cliente = new ClienteBuilder().comId(id).constroi();
             service.deletar(cliente);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.project.orcamentofly.dao;
 
 import com.project.orcamentofly.exception.BdException;
 import com.project.orcamentofly.model.Cliente;
+import com.project.orcamentofly.model.builder.ClienteBuilder;
 import com.project.orcamentofly.util.FabricaConexao;
 
 import java.sql.*;
@@ -95,20 +96,7 @@ public class ClienteDAO implements GenericDAO<Cliente>{
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                Cliente obj = new Cliente();
-
-                obj.setId(rs.getInt("id"));
-                obj.setNome(rs.getString("nome"));
-                obj.setEmail(rs.getString("email"));
-                obj.setTelefone(rs.getString("telefone"));
-                obj.setCpf(rs.getString("cpf"));
-                obj.setCep(rs.getString("cep"));
-                obj.setEndereco(rs.getString("endereco"));
-                obj.setSexo(rs.getString("sexo"));
-                obj.setDataNascimento(rs.getDate("dataNascimento").toLocalDate());
-                obj.setCriadoEm(rs.getDate("criadoEm").toLocalDate());
-
-                return obj;
+                return getCliente(rs);
             }
 
             return null;
@@ -126,33 +114,35 @@ public class ClienteDAO implements GenericDAO<Cliente>{
             ResultSet rs = statement.executeQuery();
 
             List<Cliente> list = new ArrayList<>();
-            Cliente cliente = new Cliente();
 
             while (rs.next()){
-                cliente = getar(rs);
-                list.add(cliente);
+                list.add(getar(rs));
             }
 
             return list;
+
         } catch (SQLException | ClassNotFoundException e) {
             throw new BdException(e.getMessage());
         }
     }
 
     private Cliente getar(ResultSet rs) throws SQLException {
-        Cliente cliente = new Cliente();
-        cliente.setId(rs.getInt("id"));
-        cliente.setNome(rs.getString("nome"));
-        cliente.setEmail(rs.getString("email"));
-        cliente.setTelefone(rs.getString("telefone"));
-        cliente.setCpf(rs.getString("cpf"));
-        cliente.setCep(rs.getString("cep"));
-        cliente.setEndereco(rs.getString("endereco"));
-        cliente.setSexo(rs.getString("sexo"));
-        cliente.setDataNascimento(rs.getDate("dataNascimento").toLocalDate());
-        cliente.setCriadoEm(rs.getDate("criadoEm").toLocalDate());
+        return getCliente(rs);
+    }
 
-        return cliente;
+    private Cliente getCliente(ResultSet rs) throws SQLException {
+        return new ClienteBuilder()
+                .comId(rs.getInt("id"))
+                .comNome(rs.getString("nome"))
+                .comEmail(rs.getString("email"))
+                .comTelefone(rs.getString("telefone"))
+                .comCpf(rs.getString("cpf"))
+                .comCep(rs.getString("cep"))
+                .comEndereco(rs.getString("endereco"))
+                .comSexo(rs.getString("sexo"))
+                .comDataNascimento(rs.getDate("dataNascimento").toLocalDate())
+                .comCriadoEm(rs.getDate("criadoEm").toLocalDate())
+                .constroi();
     }
 
     @Override
