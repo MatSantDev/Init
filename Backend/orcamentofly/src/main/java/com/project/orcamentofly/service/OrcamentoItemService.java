@@ -4,6 +4,7 @@ import com.project.orcamentofly.dao.OrcamentoItemDAO;
 import com.project.orcamentofly.dao.ProdutoDAO;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
+import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -57,6 +58,11 @@ public class OrcamentoItemService {
             throw new IllegalArgumentException("O valor unitário deve ser maior ou igual a zero.");
         }
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
+            ProdutoService produtoService = new ProdutoService();
+            Produto produto = produtoService.consultarById(item.getProduto().getId());
+            if (item.getQuantidade() > produto.getEstoque()){
+                throw new IllegalArgumentException("O produto possui menor quantidade do requirida");
+            }
             if (item.getProduto() == null || item.getProduto().getId() <= 0) {
                 throw new IllegalArgumentException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
             }
