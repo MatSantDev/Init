@@ -128,6 +128,7 @@ export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
           name='valorTotal'
           type='number'
           step='0.01'
+          min='0'
           placeholder='Ex: 150.00'
           required
         />

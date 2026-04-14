@@ -38,7 +38,7 @@ export default async function BudgetsPage() {
               data={ budgets }
               columns={ columns }
               meta={ { clients } }
-              modalContent={ <AddBudgetForm clients={ clients } /> }
+              modalContent={ <AddBudgetForm key={ clients[0].id } clients={ clients } /> }
               text='Adicionar novo orçamento'
             />
           </section>

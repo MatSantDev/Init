@@ -99,6 +99,14 @@ INSERT INTO clientes
 (nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
 VALUES
     ('Ana Oliveira', 'ana@email.com', '(11) 9028-7438', '32165498700', '08400000', 'Rua B, 321', 'F', '2000-11-30', '2026-04-13');
+INSERT INTO clientes
+(nome, email, telefone, cpf, cep, endereco, sexo, dataNascimento, criadoEm)
+VALUES
+('Lucas Martins', 'lucas@email.com', '(11) 97777-1111', '11122233344', '08300000', 'Rua C, 100', 'M', '1992-03-12', '2026-04-14'),
+('Fernanda Lima', 'fernanda@email.com', '(11) 98888-2222', '22233344455', '08200000', 'Av. Brasil, 200', 'F', '1998-07-25', '2026-04-14'),
+('Ricardo Alves', 'ricardo@email.com', '(11) 99999-3333', '33344455566', '08100000', 'Rua D, 300', 'M', '1985-09-10', '2026-04-14'),
+('Juliana Rocha', 'juliana@email.com', '(11) 96666-4444', '44455566677', '08000000', 'Av. Paulista, 400', 'F', '1993-12-01', '2026-04-14'),
+('Bruno Costa', 'bruno@email.com', '(11) 95555-5555', '55566677788', '07900000', 'Rua E, 500', 'M', '1990-06-18', '2026-04-14');
 
 CREATE TABLE orcamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -154,6 +162,36 @@ INSERT INTO orcamentos ( cliente_id, dataOrcamento, observacao, valorTotal, stat
     (3, '2026-04-22', 'Migração de e-mails para Workspace', 650.00, "CANCELADO")
 ;
 
+INSERT INTO orcamentos (cliente_id, dataOrcamento, observacao, valorTotal, status) VALUES
+(5, '2026-04-10', 'Montagem de PC básico', 900.00, 'PENDENTE'),
+(5, '2026-04-11', 'Troca de HD por SSD', 450.00, 'CONCLUIDO'),
+(5, '2026-04-12', 'Limpeza e manutenção', 150.00, 'CONCLUIDO'),
+(5, '2026-04-13', 'Configuração de rede doméstica', 300.00, 'CANCELADO'),
+
+
+(6, '2026-04-10', 'Instalação de Windows', 120.00, 'CONCLUIDO'),
+(6, '2026-04-11', 'Upgrade completo', 1800.00, 'PENDENTE'),
+(6, '2026-04-12', 'Remoção de vírus', 200.00, 'CONCLUIDO'),
+(6, '2026-04-13', 'Backup de arquivos', 250.00, 'PENDENTE'),
+
+
+(7, '2026-04-09', 'Configuração de servidor', 2200.00, 'PENDENTE'),
+(7, '2026-04-10', 'Suporte técnico mensal', 400.00, 'CONCLUIDO'),
+(7, '2026-04-11', 'Migração de dados', 600.00, 'CONCLUIDO'),
+(7, '2026-04-12', 'Reparo de placa', 700.00, 'CANCELADO'),
+
+
+(8, '2026-04-08', 'Montagem de PC gamer', 3500.00, 'CONCLUIDO'),
+(8, '2026-04-09', 'Instalação de softwares', 200.00, 'CONCLUIDO'),
+(8, '2026-04-10', 'Limpeza interna', 120.00, 'PENDENTE'),
+(8, '2026-04-11', 'Configuração de VPN', 500.00, 'PENDENTE'),
+
+
+(9, '2026-04-07', 'Consultoria TI', 800.00, 'CONCLUIDO'),
+(9, '2026-04-08', 'Instalação de rede', 1200.00, 'PENDENTE'),
+(9, '2026-04-09', 'Análise de segurança', 2000.00, 'CANCELADO'),
+(9, '2026-04-10', 'Suporte remoto', 150.00, 'CONCLUIDO');
+
 INSERT INTO orcamento_item
     (
         descricao,
@@ -170,9 +208,10 @@ VALUES
     ('Formatação de Computador', 'SERVICO', 1, 150.00, 150.00, 1, NULL, 1),
     ('Troca de Tela de Celular', 'SERVICO', 1, 300.00, 300.00, 2, NULL, 2)
 ;
-
+/**
 SELECT * FROM orcamentos;
 SELECT * FROM clientes;
 SELECT * FROM produtos;
 SELECT * FROM servicos;
 SELECT * FROM orcamento_item;
+**/

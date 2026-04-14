@@ -60,14 +60,14 @@ export function AddProductForm() {
           <label htmlFor='valorUnitario' className='text-sm font-semibold'>
             Valor Unitário (R$)
           </label>
-          <Input id='valorUnitario' name='valorUnitario' type='number' step='0.01' placeholder='Ex: 150.00' required />
+          <Input id='valorUnitario' name='valorUnitario' type='number' step='0.01' placeholder='Ex: 150.00' min='0' required />
         </div>
 
         <div className='flex flex-col gap-2 w-1/2'>
           <label htmlFor='estoque' className='text-sm font-semibold'>
             Estoque Inicial
           </label>
-          <Input id='estoque' name='estoque' type='number' placeholder='Ex: 10' required />
+          <Input id='estoque' name='estoque' type='number' placeholder='Ex: 10' min='0' required />
         </div>
       </div>
 

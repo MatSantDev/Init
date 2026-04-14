@@ -60,7 +60,7 @@ export function AddServiceForm() {
           <label htmlFor='valorUnitario' className='text-sm font-semibold'>
             Valor Unitário (R$)
           </label>
-          <Input id='valorUnitario' name='valorUnitario' type='number' step='0.01' placeholder='Ex: 150.00' required />
+          <Input id='valorUnitario' name='valorUnitario' type='number' step='0.01' min='0' placeholder='Ex: 150.00' required />
         </div>
       </div>
 
