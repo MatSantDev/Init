@@ -28,35 +28,31 @@ export const columns: ColumnDef< Client >[] = [
   },
   {
     accessorKey: 'email',
-    header: 'email',
+    header: 'Email',
   },
   {
     accessorKey: 'telefone',
-    header: 'telefone',
-  },
-  {
-    accessorKey: 'telefone',
-    header: 'telefone',
+    header: 'Telefone',
   },
   {
     accessorKey: 'cpf',
-    header: 'cpf',
+    header: 'CPF',
   },
   {
     accessorKey: 'cep',
-    header: 'cep',
+    header: 'CEP',
   },
   {
     accessorKey: 'endereco',
-    header: 'endereco',
+    header: 'Endereco',
   },
   {
     accessorKey: 'sexo',
-    header: 'sexo',
+    header: 'Sexo',
   },
   {
     accessorKey: 'dataNascimento',
-    header: 'Data do Orçamento',
+    header: 'Data de Nascimento',
     cell: ( { row } ) => {
       const date = row.getValue<string>('dataNascimento');
       const result = formatDate( date );
@@ -70,7 +66,7 @@ export const columns: ColumnDef< Client >[] = [
   },
   {
     accessorKey: 'criadoEm',
-    header: 'Criado Em:',
+    header: 'Criado Em',
     cell: ( { row } ) => {
       const date = row.getValue<string>('criadoEm');
       const result = formatDate( date );
@@ -81,6 +77,12 @@ export const columns: ColumnDef< Client >[] = [
         </p>
       );
     },
+  },
+  {
+    accessorKey: 'Total de Orçamentos',
+    cell: ({ row }) => {
+      return 2
+    }
   },
   {
     id: 'actions',

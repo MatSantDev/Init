@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { Client } from '@/types/client';
+import { getBudgets } from '@/utils/budgetsData';
 
 export async function getClients() {
   try {
@@ -97,4 +98,20 @@ export async function updateClient( client: Client ) {
   //   console.error('Erro ao excluir:', err );
   //   return { success: false, error: 'Falha ao editar cliente' };
   // }
+}
+
+export async function clientsBudgets( client: Client ) {
+  const budgets = await getBudgets()
+  let total: number
+
+  const clientBudgets = budgets.map( budget => {
+    if ( budget.cliente.nome === client.nome ) {
+      total = total + 1
+    }
+    console.log( total )
+    return total
+  } )
+
+  return clientBudgets
+
 }

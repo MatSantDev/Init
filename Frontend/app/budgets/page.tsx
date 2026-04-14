@@ -1,18 +1,19 @@
 import { AlertTriangle } from 'lucide-react'
 
 import { Budget } from '@/types/budget'
+import { Client } from '@/types/client'
+
 import { getBudgets } from '@/utils/budgetsData'
+import { getClients } from '@/utils/clientsData'
 
 import { DataTable } from '@/components/ui/data-table'
 import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
 import { columns } from '@/app/budgets/columns'
+// import { getColumns } from '@/app/budgets/columns'
 
 export default async function BudgetsPage() {
   const budgets: Budget[] = await getBudgets()
-
-  console.log('ORÇAMENTOS')
-  console.log( budgets )
-
+  const clients: Client[] = await getClients()
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
@@ -37,10 +38,19 @@ export default async function BudgetsPage() {
             <DataTable
               data={ budgets }
               columns={ columns }
-              modalContent={ <AddBudgetForm /> }
+              modalContent={ <AddBudgetForm clients={ clients } /> }
               text='Adicionar novo orçamento'
             />
           </section>
+        //   <section className='w-full px-2 md:px-20 pt-5 pb-7' >
+        //   <DataTable
+        //     data={ budgets }
+        //     // Chame a função passando os clientes aqui:
+        //     columns={ getColumns(clients) }
+        //     modalContent={ <AddBudgetForm clients={clients} /> }
+        //     text='Adicionar novo orçamento'
+        //   />
+        // </section>
         )
       }
     </main>

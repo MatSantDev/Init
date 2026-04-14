@@ -121,11 +121,12 @@ Projeto focado em:
 
 ## Frontend
 
-- [] - Adicionar funcionalidade de adicionar items nos orçamentos 
+- [x] - Adicionar tabela "Cliente"
+- [] - Adicionar funcionalidade de adicionar items nos orçamentos
 - [] - Adicionar validação de preços negativos nas tabelas
 - [] - Adicionar "status" nos Orçamentos
 - [] - Adicionar gráficos no painel
-- [] - Adicionar tabela "Cliente"
+- [] - Adicionar produtos no orçamentos
 
 # Client table
 

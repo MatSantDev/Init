@@ -11,8 +11,18 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 import { Budget } from '@/types/budget'
+import { Client } from '@/types/client'
+
 import { updateBudget } from '@/utils/budgetsData'
 import { formatDateForInput } from '@/utils/formatDateForInput'
 
@@ -20,11 +30,16 @@ type EditBudgetModalProps = {
   open: boolean
   onOpenChange: ( open: boolean ) => void
   budget: Budget
+  clients: Client[]
   onSuccess: () => void
 }
 
-export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditBudgetModalProps) {
-  const [ cliente, setCliente ] = useState( budget.cliente )
+export function EditBudgetModal({ open, onOpenChange, budget, clients, onSuccess }: EditBudgetModalProps) {
+  const initialClientId = typeof budget.cliente === 'object'
+    ? ( budget.cliente as any ).id?.toString()
+    : String( budget.cliente );
+
+  const [ selectedClientId, setSelectedClientId ] = useState<string>( initialClientId )
   const [ dataOrcamento, setDataOrcamento ] = useState( formatDateForInput(budget.dataOrcamento) )
   const [ observacao, setObservacao ] = useState( budget.observacao )
   const [ valorTotal, setValorTotal ] = useState( budget.valorTotal )
@@ -35,7 +50,7 @@ export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditB
     e.preventDefault()
 
     const hasChanges =
-      cliente !== budget.cliente ||
+      selectedClientId !== initialClientId ||
       dataOrcamento !== formatDateForInput( budget.dataOrcamento ) ||
       observacao !== budget.observacao ||
       Number( valorTotal ) !== budget.valorTotal;
@@ -48,15 +63,16 @@ export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditB
     try {
       setIsLoading( true )
 
-      const updatedBudget: Budget = {
+      const updatedBudget = {
         ...budget,
-        cliente,
+        cliente: { id: Number(selectedClientId) },
         dataOrcamento: new Date(dataOrcamento),
         observacao,
         valorTotal: Number(valorTotal),
       }
 
-      const result = await updateBudget( updatedBudget )
+      const result = await updateBudget( updatedBudget as unknown as Budget )
+
       if ( !result.success ) {
         toast.error( result.error )
         setIsLoading( false )
@@ -83,15 +99,23 @@ export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditB
         </DialogHeader>
 
         <form onSubmit={ handleSubmit } className='flex flex-col gap-4 py-4'>
+          
           <div className='flex flex-col gap-2'>
-            <label htmlFor='cliente' className='text-sm font-medium'> Nome do cliente </label>
-            <input
-              id='cliente'
-              value={ cliente }
-              onChange={ ( e ) => setCliente( e.target.value ) }
-              className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'
-              required
-            />
+            <label htmlFor='cliente' className='text-sm font-medium'> Cliente </label>
+            <Select onValueChange={ setSelectedClientId } value={ selectedClientId }>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione um cliente" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  { clients?.map( client => (
+                    <SelectItem key={ client.id } value={ client.id.toString() } >
+                      { client.nome }
+                    </SelectItem>
+                  ) ) }
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -110,7 +134,6 @@ export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditB
             <label htmlFor='observacao' className='text-sm font-medium'> Observação </label>
             <input
               id='observacao'
-              step='0.01'
               value={ observacao }
               onChange={ ( e ) => setObservacao( e.target.value ) }
               className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'
@@ -123,6 +146,7 @@ export function EditBudgetModal({ open, onOpenChange, budget, onSuccess }: EditB
             <input
               id='valorTotal'
               type='number'
+              step="0.01"
               value={ valorTotal }
               onChange={ ( e ) => setValorTotal( Number( e.target.value ) ) }
               className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'
