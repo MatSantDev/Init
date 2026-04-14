@@ -9,13 +9,16 @@ import { ConfirmationModal } from '@/components/confirmationModal';
 import { EditBudgetModal } from '@/components/budgets/editBudgetModal';
 
 import { Budget } from '@/types/budget';
+import { Client } from '@/types/client';
+
 import { deleteBudget } from '@/utils/budgetsData';
 
 interface BudgetActionsProps {
   budget: Budget;
+  clients: Client[]
 }
 
-export function BudgetActions({ budget }: BudgetActionsProps) {
+export function BudgetActions({ budget, clients }: BudgetActionsProps) {
   const [ isDeleting, setIsDeleting ] = useState(false);
   const [ openConfirmModal, setOpenConfirmModal ] = useState(false)
   const [ openEditModal, setOpenEditModal ] = useState(false)
@@ -33,7 +36,7 @@ export function BudgetActions({ budget }: BudgetActionsProps) {
         return
       }
 
-      toast.success( `Orçamento do ${ budget.cliente } excluído com sucesso!`)
+      toast.success( `Orçamento do ${ budget.cliente.nome } excluído com sucesso!`)
       router.refresh()
 
     } catch ( err ) {
@@ -79,6 +82,7 @@ export function BudgetActions({ budget }: BudgetActionsProps) {
         open={ openEditModal }
         onOpenChange={ setOpenEditModal }
         budget={ budget }
+        clients={ clients }
         onSuccess={ () => router.refresh() }
       />
     </>

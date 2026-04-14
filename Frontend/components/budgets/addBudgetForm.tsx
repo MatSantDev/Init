@@ -6,11 +6,25 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DialogClose } from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 import { addBudget } from '@/utils/budgetsData'
+import { Client } from '@/types/client'
 
-export function AddBudgetForm() {
+interface AddBudgetFormProps {
+  clients: Client[]
+}
+
+export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
   const [ isLoading, setIsLoading ] = useState(false)
+  const [ selectedClientId, setSelectedClientId ] = useState<string>('')
   const closeRef = useRef<HTMLButtonElement>(null)
 
   async function handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
@@ -18,6 +32,12 @@ export function AddBudgetForm() {
     setIsLoading(true)
 
     const formData = new FormData( e.currentTarget )
+
+    if ( !selectedClientId ) {
+      toast.error('Por favor, selecione um cliente.')
+      return
+    }
+    formData.append('cliente_id', selectedClientId )
 
     const today = new Date()
     today.setHours( 0, 0, 0, 0 )
@@ -56,9 +76,22 @@ export function AddBudgetForm() {
     <form onSubmit={ handleSubmit } className='flex flex-col gap-4 py-4'>
       <div className='flex flex-col gap-2'>
         <label htmlFor='cliente' className='text-sm font-semibold'>
-          Nome do cliente
+          Selecione o Cliente:
         </label>
-        <Input id='cliente' name='cliente' placeholder='Ex: Jonas Silva' required />
+        <Select onValueChange={ setSelectedClientId } value={ selectedClientId }>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Selecione um cliente" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              { clients?.map( client => (
+                <SelectItem key={ client.id } value={ client.id.toString() } >
+                  { client.nome }
+                </SelectItem>
+              ) ) }
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className='flex flex-col gap-2'>

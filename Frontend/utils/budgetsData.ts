@@ -26,12 +26,17 @@ export async function getBudgets() {
 
 export async function addBudget( formData: FormData ) {
   const newBudget = {
-    cliente: formData.get('cliente'),
+    cliente: {
+      id: Number( formData.get('cliente_id') )
+    },
     dataOrcamento: formData.get('dataOrcamento'),
     observacao: formData.get('observacao'),
     valorTotal: Number(formData.get('valorTotal')),
   }
   
+  console.log( 'NEW BUDGET' )
+  console.log( newBudget )
+
     try {
       const res = await fetch(`${ process.env.API_URL }/orcamentos/inserir`, {
         method: 'POST',
