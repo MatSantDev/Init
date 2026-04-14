@@ -6,20 +6,26 @@ import { getBudgets } from '@/utils/budgetsData'
 import { DataTable } from '@/components/ui/data-table'
 import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
 import { columns } from '@/app/clients/columns'
+import { getClients } from '@/utils/clientsData'
 
 export default async function ClientsPage() {
-  const clients: Client[] = Array.from({ length: 100 }, ( _, i ) => ({
-    id: i + 1,
-    nome: `Cliente${i + 1}`,
-    email: `cliente${i + 1}@email.com`,
-    telefone: 1231232121,
-    cpf: `${String(i).padStart(11, "0")}`,
-    cep: '123123',
-    endereco: 'bla bla bla',
-    sexo: 'H',
-    dataNascimento: new Date(),
-    criadoEm: new Date(),
-  }));
+  // const clients: Client[] = Array.from({ length: 100 }, ( _, i ) => ({
+  //   id: i + 1,
+  //   nome: `Cliente${i + 1}`,
+  //   email: `cliente${i + 1}@email.com`,
+  //   telefone: 1231232121,
+  //   cpf: `${String(i).padStart(11, "0")}`,
+  //   cep: '123123',
+  //   endereco: 'bla bla bla',
+  //   sexo: 'M',
+  //   dataNascimento: new Date(),
+  //   criadoEm: new Date(),
+  // }));
+
+  const clients: Client[] = await getClients()
+
+  console.log('CLIENTS')
+  console.log( clients )
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >

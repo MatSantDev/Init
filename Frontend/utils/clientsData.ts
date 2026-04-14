@@ -5,21 +5,20 @@ import { revalidatePath } from 'next/cache';
 import { Client } from '@/types/client';
 
 export async function getClients() {
-  // try {
-  //   const res = await fetch(`${ process.env.API_URL }/clientes/consultarTodos`)
-  //   let data: Client[]
+  try {
+    const res = await fetch(`${ process.env.API_URL }/clientes/consultarTodos`)
+    let data: Client[]
 
-  //   if ( !res.ok ) return data = []
+    if ( !res.ok ) return data = []
 
-  //   data = await res.json()
+    data = await res.json()
 
-  //   return data;
+    return data;
 
-  // } catch ( err ) {
-  //   console.log( err )
-  //   return []
-  // }
-
+  } catch ( err ) {
+    console.log( err )
+    return []
+  }
 }
 
 export async function addClient( formData: FormData ) {

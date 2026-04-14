@@ -9,6 +9,8 @@ export async function getBudgets() {
     const res = await fetch(`${ process.env.API_URL }/orcamentos/consultarTodos`)
     let data: Budget[]
 
+    console.log( res )
+
     if ( !res.ok ) return data = []
 
     data = await res.json()

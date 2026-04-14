@@ -6,7 +6,7 @@ export interface Client {
   cpf: string
   cep: string
   endereco: string
-  sexo: 'M' | 'H'
+  sexo: 'F' | 'M'
   dataNascimento: Date
   criadoEm: Date
 }

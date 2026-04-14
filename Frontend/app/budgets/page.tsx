@@ -10,6 +10,10 @@ import { columns } from '@/app/budgets/columns'
 export default async function BudgetsPage() {
   const budgets: Budget[] = await getBudgets()
 
+  console.log('ORÇAMENTOS')
+  console.log( budgets )
+
+
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
       <section className='flex flex-col gap-5 items-center justify-center' >
