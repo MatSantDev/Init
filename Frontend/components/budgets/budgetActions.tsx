@@ -10,18 +10,25 @@ import { EditBudgetModal } from '@/components/budgets/editBudgetModal';
 
 import { Budget } from '@/types/budget';
 import { Client } from '@/types/client';
+import { Product } from '@/types/product';
+import { Service } from '@/types/service'
 
 import { deleteBudget } from '@/utils/budgetsData';
+import { AddItemToBudgetModal } from '../budgetsItem/addItemToBudgetModal';
 
 interface BudgetActionsProps {
   budget: Budget;
   clients: Client[]
+  products: Product[]
+  services: Service[]
 }
 
-export function BudgetActions({ budget, clients }: BudgetActionsProps) {
+export function BudgetActions({ budget, clients, services, products }: BudgetActionsProps ) {
   const [ isDeleting, setIsDeleting ] = useState(false);
+
   const [ openConfirmModal, setOpenConfirmModal ] = useState(false)
   const [ openEditModal, setOpenEditModal ] = useState(false)
+  const [ openManageModal, setOpenManageModal ] = useState(false)
 
   const router = useRouter();
 
@@ -50,6 +57,14 @@ export function BudgetActions({ budget, clients }: BudgetActionsProps) {
   return (
     <>
       <div className='flex items-center justify-center gap-2'>
+          <Button
+            size='sm'
+            onClick={ () => setOpenManageModal( true ) }
+            // disabled={ isDeleting }
+          >
+            Gerenciar
+          </Button>
+
         <Button
           size='sm'
           variant='outline'
@@ -84,6 +99,14 @@ export function BudgetActions({ budget, clients }: BudgetActionsProps) {
         budget={ budget }
         clients={ clients }
         onSuccess={ () => router.refresh() }
+      />
+      <AddItemToBudgetModal
+        open={ openManageModal }
+        onSuccess={ () => router.refresh() }
+        budgetId={ budget.id }
+        onOpenChange={ setOpenManageModal }
+        products={ products }
+        services={ services }
       />
     </>
   );

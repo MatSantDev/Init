@@ -8,6 +8,8 @@ import { BudgetActions } from '@/components/budgets/budgetActions';
 
 import { Budget } from '@/types/budget';
 import { Client } from '@/types/client';
+import { Product } from '@/types/product';
+import { Service } from '@/types/service';
 
 import { formatValue, formatDate, formatText } from '@/utils/formatters';
 
@@ -105,8 +107,10 @@ export const columns: ColumnDef< Budget >[] = [
     cell: ({ row, table }) => {
       const budget = row.original
       const clients = ( table.options.meta as any )?.clients as Client[]
+      const products = ( table.options.meta as any )?.products as Product[]
+      const services = ( table.options.meta as any )?.services as Service[]
 
-      return <BudgetActions budget={ budget } clients={ clients } />
+      return <BudgetActions budget={ budget } clients={ clients } products={ products } services={ services } />
     }
   }
 ]

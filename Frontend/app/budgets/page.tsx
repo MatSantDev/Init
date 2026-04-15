@@ -1,18 +1,24 @@
 import { AlertTriangle } from 'lucide-react'
 
+import { columns } from '@/app/budgets/columns'
+
 import { Budget } from '@/types/budget'
 import { Client } from '@/types/client'
+import { Product } from '@/types/product'
 
 import { getBudgets } from '@/utils/budgetsData'
 import { getClients } from '@/utils/clientsData'
+import { getProducts } from '@/utils/productsData'
+import { Service } from '@/types/service'
 
 import { DataTable } from '@/components/ui/data-table'
 import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
-import { columns } from '@/app/budgets/columns'
 
 export default async function BudgetsPage() {
   const budgets: Budget[] = await getBudgets()
   const clients: Client[] = await getClients()
+  const products: Product[] = await getProducts()
+  const services: Service[] = await getProducts()
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >
@@ -37,7 +43,7 @@ export default async function BudgetsPage() {
             <DataTable
               data={ budgets }
               columns={ columns }
-              meta={ { clients } }
+              meta={ { clients, products, services } }
               modalContent={ <AddBudgetForm key={ clients[0].id } clients={ clients } /> }
               text='Adicionar novo orçamento'
             />

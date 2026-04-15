@@ -29,7 +29,7 @@ export default async function Home() {
 
   const totalValue = budgets.reduce(( total, budget ) => {
     return total + budget.valorTotal;
-  }, 0)
+  }, 0 )
 
   const items: CardProps[] = [
     {
