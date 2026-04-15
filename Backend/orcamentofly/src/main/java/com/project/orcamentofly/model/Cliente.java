@@ -28,6 +28,9 @@ public class Cliente {
         this.criadoEm = criadoEm;
     }
 
+    public Cliente() {
+    }
+
     public int getId() {
         return id;
     }
