@@ -19,7 +19,9 @@ public class ProdutoService {
     }
 
     public Produto consultarById(int id) {
-        return dao.consultarById(id);
+        Produto produto = new Produto();
+        produto.setId(id);
+        return dao.consultarById(produto);
     }
 
     public void inserir(Produto produto) {

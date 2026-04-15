@@ -2,6 +2,7 @@ package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.ClienteDAO;
 import com.project.orcamentofly.model.Cliente;
+import com.project.orcamentofly.model.builder.ClienteBuilder;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class ClienteService {
     }
 
     public Cliente consultarById(int id) {
-        return dao.consultarById(id);
+        Cliente cliente = new ClienteBuilder().comId(id).constroi();
+        return dao.consultarById(cliente);
     }
 
     public void inserir(Cliente cliente) {
@@ -29,7 +31,7 @@ public class ClienteService {
         dao.atualizar(cliente);
     }
 
-    public void deletar(Cliente cliente) {
-        dao.deletar(cliente);
+    public void deletar(int id) {
+        dao.deletar(new ClienteBuilder().comId(id).constroi());
     }
 }

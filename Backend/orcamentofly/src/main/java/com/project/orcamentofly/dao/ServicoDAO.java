@@ -35,12 +35,12 @@ public class ServicoDAO implements GenericDAO<Servico>{
     }
 
     @Override
-    public Servico consultarById(int id) {
+    public Servico consultarById(Servico obj) {
         try(Connection conn = getConnection()){
             String sql = "select * from servicos where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, obj.getId());
 
             ResultSet rs = statement.executeQuery();
 
@@ -57,16 +57,16 @@ public class ServicoDAO implements GenericDAO<Servico>{
     }
 
     @Override
-    public void inserir(Servico servico) {
+    public void inserir(Servico obj) {
         try(Connection conn = getConnection()){
 
             String sql = "insert into servicos (nome, descricao, valorUnitario) VALUE (?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, servico.getNome());
-            statement.setString(2, servico.getDescricao());
-            statement.setDouble(3, servico.getValorUnitario());
+            statement.setString(1, obj.getNome());
+            statement.setString(2, obj.getDescricao());
+            statement.setDouble(3, obj.getValorUnitario());
 
             statement.executeUpdate();
 
@@ -76,13 +76,13 @@ public class ServicoDAO implements GenericDAO<Servico>{
     }
 
     @Override
-    public void deletar(Servico servico) {
+    public void deletar(Servico obj) {
         try(Connection conn = getConnection()){
 
             String sql = "delete from servicos where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, servico.getId());
+            statement.setInt(1, obj.getId());
             statement.execute();
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -91,16 +91,16 @@ public class ServicoDAO implements GenericDAO<Servico>{
     }
 
     @Override
-    public void atualizar(Servico servico) {
+    public void atualizar(Servico obj) {
         try(Connection conn = getConnection()){
             String sql = "update servicos set nome = ?, descricao = ?, valorUnitario = ? where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, servico.getNome());
-            statement.setString(2, servico.getDescricao());
-            statement.setDouble(3, servico.getValorUnitario());
-            statement.setInt(4, servico.getId());
+            statement.setString(1, obj.getNome());
+            statement.setString(2, obj.getDescricao());
+            statement.setDouble(3, obj.getValorUnitario());
+            statement.setInt(4, obj.getId());
 
             statement.execute();
         } catch (SQLException | ClassNotFoundException e) {

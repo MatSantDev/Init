@@ -23,8 +23,7 @@ public class OrcamentoItemController {
     @GetMapping("/consultarTodosByOrcamentoId")
     public ResponseEntity<List<OrcamentoItem>> consultarTodosByOrcamentoId(@PathVariable int orcamentoId) {
         try {
-            List<OrcamentoItem> itens = service.consultarTodosByOrcamentoId(orcamentoId);
-            return ResponseEntity.ok(itens);
+            return ResponseEntity.ok().body(service.consultarTodosByOrcamentoId(orcamentoId));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -33,8 +32,7 @@ public class OrcamentoItemController {
     @GetMapping("/consultarTodosByOrcamento")
     public ResponseEntity<List<OrcamentoItem>> consultarTodosByOrcamento(@RequestBody Orcamento orcamento) {
         try {
-            List<OrcamentoItem> itens = service.consultarTodosByOrcamento(orcamento);
-            return ResponseEntity.ok(itens);
+            return ResponseEntity.ok().body(service.consultarTodosByOrcamento(orcamento));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -43,12 +41,7 @@ public class OrcamentoItemController {
     @GetMapping("/consultarById/{id}")
     public ResponseEntity<OrcamentoItem> consultarById(@PathVariable int id) {
         try {
-            OrcamentoItem item = service.consultarById(id);
-            if (item != null) {
-                return ResponseEntity.ok(item);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok().body(service.consultarById(id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,11 +50,7 @@ public class OrcamentoItemController {
     @PostMapping("/inserir")
     public ResponseEntity<?> inserir(@PathVariable int orcamentoId, @RequestBody OrcamentoItem item) {
         try {
-            Orcamento orcamento = new Orcamento();
-            orcamento.setId(orcamentoId);
-            item.setOrcamento(orcamento);
-
-            service.inserir(item);
+            service.inserir(orcamentoId,item);
             return ResponseEntity.status(HttpStatus.CREATED).body(item);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -71,12 +60,7 @@ public class OrcamentoItemController {
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<?> atualizar(@PathVariable int orcamentoId, @PathVariable int id, @RequestBody OrcamentoItem item) {
         try {
-            item.setId(id);
-            Orcamento orcamento = new Orcamento();
-            orcamento.setId(orcamentoId);
-            item.setOrcamento(orcamento);
-
-            service.atualizar(item);
+            service.atualizar(orcamentoId, id, item);
             return ResponseEntity.ok(item);
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -19,7 +19,9 @@ public class OrcamentoService {
     }
 
     public Orcamento consultarById(int id) {
-        return dao.consultarById(id);
+        Orcamento orcamento = new Orcamento();
+        orcamento.setId(id);
+        return dao.consultarById(orcamento);
     }
 
     public void inserir(Orcamento orcamento) {
@@ -30,7 +32,9 @@ public class OrcamentoService {
         dao.atualizar(orcamento);
     }
 
-    public void deletar(Orcamento orcamento) {
+    public void deletar(int id) {
+        Orcamento orcamento = new Orcamento();
+        orcamento.setId(id);
         dao.deletar(orcamento);
     }
 }

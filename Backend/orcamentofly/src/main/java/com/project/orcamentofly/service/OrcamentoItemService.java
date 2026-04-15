@@ -25,14 +25,21 @@ public class OrcamentoItemService {
     }
 
     public List<OrcamentoItem> consultarTodosByOrcamentoId(int orcamentoId) {
-        return dao.consultarTodosByOrcamentoId(orcamentoId);
+        Orcamento orcamento = new Orcamento();
+        orcamento.setId(orcamentoId);
+        return dao.consultarTodosByOrcamentoId(orcamento);
     }
 
     public OrcamentoItem consultarById(int id) {
-        return dao.consultarById(id);
+        OrcamentoItem item = new OrcamentoItem();
+        item.setId(id);
+        return dao.consultarById(item);
     }
 
-    public void inserir(OrcamentoItem item) {
+    public void inserir(int orcamentoId, OrcamentoItem item) {
+        Orcamento orcamento = new Orcamento();
+        orcamento.setId(orcamentoId);
+        item.setOrcamento(orcamento);
         validarOrcamentoItem(item);
         item.calcularSubtotal();
         dao.inserir(item);
@@ -40,7 +47,11 @@ public class OrcamentoItemService {
         produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
     }
 
-    public void atualizar(OrcamentoItem item) {
+    public void atualizar(int orcamentoId, int id,  OrcamentoItem item) {
+        item.setId(id);
+        Orcamento orcamento = new Orcamento();
+        orcamento.setId(orcamentoId);
+        item.setOrcamento(orcamento);
         validarOrcamentoItem(item);
         item.calcularSubtotal();
         dao.atualizar(item);

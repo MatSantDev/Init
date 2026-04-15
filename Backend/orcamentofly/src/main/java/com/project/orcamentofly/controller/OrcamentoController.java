@@ -18,7 +18,7 @@ public class OrcamentoController {
     @GetMapping("/consultarTodos")
     public ResponseEntity<List<Orcamento>> consultarTodos() {
         try {
-            return ResponseEntity.ok(service.consultarTodos());
+            return ResponseEntity.ok().body(service.consultarTodos());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -27,11 +27,7 @@ public class OrcamentoController {
     @GetMapping("/consultarById/{id}")
     public ResponseEntity<Orcamento> consultarById(@PathVariable int id) {
         try {
-            Orcamento orcamento = service.consultarById(id);
-            if (orcamento != null) {
-                return ResponseEntity.ok(orcamento);
-            }
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(service.consultarById(id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -60,9 +56,7 @@ public class OrcamentoController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         try {
-            Orcamento orcamento = new Orcamento();
-            orcamento.setId(id);
-            service.deletar(orcamento);
+            service.deletar(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new RuntimeException(e);

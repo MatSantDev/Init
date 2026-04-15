@@ -1,7 +1,6 @@
 package com.project.orcamentofly.controller;
 
 import com.project.orcamentofly.model.Cliente;
-import com.project.orcamentofly.model.builder.ClienteBuilder;
 import com.project.orcamentofly.service.ClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ public class ClienteController {
     @GetMapping("/consultarTodos")
     public ResponseEntity<List<Cliente>> consultarTodos() {
         try {
-            return ResponseEntity.ok(service.consultarTodos());
+            return ResponseEntity.ok().body(service.consultarTodos());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -27,11 +26,7 @@ public class ClienteController {
     @GetMapping("/consultarById/{id}")
     public ResponseEntity<Cliente> consultarById(@PathVariable int id) {
         try {
-            Cliente cliente = service.consultarById(id);
-            if (cliente != null) {
-                return ResponseEntity.ok(cliente);
-            }
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(service.consultarById(id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -60,8 +55,7 @@ public class ClienteController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         try {
-            Cliente cliente = new ClienteBuilder().comId(id).constroi();
-            service.deletar(cliente);
+            service.deletar(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new RuntimeException(e);

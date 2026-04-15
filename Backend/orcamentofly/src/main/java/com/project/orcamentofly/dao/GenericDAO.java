@@ -9,7 +9,7 @@ public interface GenericDAO<T> {
     void inserir(T obj);
     void atualizar(T obj);
     void deletar(T obj);
-    T consultarById(int id);
+    T consultarById(T id);
     List<T> consultarTodos();
 
     Connection getConnection() throws SQLException, ClassNotFoundException;

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
-    public List<OrcamentoItem> consultarTodosByOrcamento(Orcamento orcamento) {
+    public List<OrcamentoItem> consultarTodosByOrcamento(Orcamento obj) {
         try(Connection conn = getConnection()){
             String sql = "select oi.*, p.nome as produto_nome, s.nome as servico_nome from orcamento_item oi " +
                     "LEFT JOIN produtos p ON oi.produto_id = p.id " +
@@ -22,7 +22,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
                     "WHERE oi.orcamento_id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, orcamento.getId());
+            statement.setInt(1, obj.getId());
             ResultSet rs = statement.executeQuery();
 
             List<OrcamentoItem> list = new ArrayList<>();
@@ -36,7 +36,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
         }
     }
 
-    public List<OrcamentoItem> consultarTodosByOrcamentoId(int orcamentoId) {
+    public List<OrcamentoItem> consultarTodosByOrcamentoId(Orcamento obj) {
         try(Connection conn = getConnection()){
             String sql = "select oi.*, p.nome as produto_nome, s.nome as servico_nome from orcamento_item oi " +
                     "LEFT JOIN produtos p ON oi.produto_id = p.id " +
@@ -44,7 +44,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
                     "WHERE oi.orcamento_id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, orcamentoId);
+            statement.setInt(1, obj.getId());
 
             ResultSet rs = statement.executeQuery();
 
@@ -60,7 +60,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
     }
 
     @Override
-    public OrcamentoItem consultarById(int id) {
+    public OrcamentoItem consultarById(OrcamentoItem obj) {
         try(Connection conn = getConnection()){
             String sql = "SELECT oi.*, p.nome as produto_nome, s.nome as servico_nome " +
                     "FROM orcamento_item oi " +
@@ -69,7 +69,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
                     "WHERE oi.id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, obj.getId());
             ResultSet rs = statement.executeQuery();
             OrcamentoItem item = new OrcamentoItem();
 
@@ -105,27 +105,27 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
     }
 
     @Override
-    public void inserir(OrcamentoItem item) {
+    public void inserir(OrcamentoItem obj) {
         try(Connection conn = getConnection()){
             String sql = "INSERT INTO orcamento_item (orcamento_id, descricao, tipoOrcamentoItem, quantidade, valorUnitario, subtotal, produto_id, servico_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            statement.setInt(1, item.getOrcamento().getId());
-            statement.setString(2, item.getDescricao());
-            statement.setString(3, item.getTipoOrcamentoItem().name());
-            statement.setInt(4, item.getQuantidade());
-            statement.setDouble(5, item.getValorUnitario());
-            statement.setDouble(6, item.getSubtotal());
+            statement.setInt(1, obj.getOrcamento().getId());
+            statement.setString(2, obj.getDescricao());
+            statement.setString(3, obj.getTipoOrcamentoItem().name());
+            statement.setInt(4, obj.getQuantidade());
+            statement.setDouble(5, obj.getValorUnitario());
+            statement.setDouble(6, obj.getSubtotal());
 
-            if (item.getProduto() != null) {
-                statement.setInt(7, item.getProduto().getId());
+            if (obj.getProduto() != null) {
+                statement.setInt(7, obj.getProduto().getId());
             } else {
                 statement.setNull(7, Types.INTEGER);
             }
 
-            if (item.getServico() != null) {
-                statement.setInt(8, item.getServico().getId());
+            if (obj.getServico() != null) {
+                statement.setInt(8, obj.getServico().getId());
             } else {
                 statement.setNull(8, Types.INTEGER);
             }
@@ -134,7 +134,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()){
-                item.setId(rs.getInt(1));
+                obj.setId(rs.getInt(1));
             }
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -143,33 +143,33 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
     }
 
     @Override
-    public void atualizar(OrcamentoItem item) {
+    public void atualizar(OrcamentoItem obj) {
         try(Connection conn = getConnection()){
 
             String sql = "UPDATE orcamento_item SET descricao = ?, tipoOrcamentoItem = ?, quantidade = ?, valorUnitario = ?, subtotal = ?, produto_id = ?, servico_id = ? " +
                     "WHERE id = ? AND orcamento_id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, item.getDescricao());
-            statement.setString(2, item.getTipoOrcamentoItem().name());
-            statement.setInt(3, item.getQuantidade());
-            statement.setDouble(4, item.getValorUnitario());
-            statement.setDouble(5, item.getSubtotal());
+            statement.setString(1, obj.getDescricao());
+            statement.setString(2, obj.getTipoOrcamentoItem().name());
+            statement.setInt(3, obj.getQuantidade());
+            statement.setDouble(4, obj.getValorUnitario());
+            statement.setDouble(5, obj.getSubtotal());
 
-            if (item.getProduto() != null) {
-                statement.setInt(6, item.getProduto().getId());
+            if (obj.getProduto() != null) {
+                statement.setInt(6, obj.getProduto().getId());
             } else {
                 statement.setNull(6, Types.INTEGER);
             }
 
-            if (item.getServico() != null) {
-                statement.setInt(7, item.getServico().getId());
+            if (obj.getServico() != null) {
+                statement.setInt(7, obj.getServico().getId());
             } else {
                 statement.setNull(7, Types.INTEGER);
             }
 
-            statement.setInt(8, item.getId());
-            statement.setInt(9, item.getOrcamento().getId());
+            statement.setInt(8, obj.getId());
+            statement.setInt(9, obj.getOrcamento().getId());
 
             statement.executeUpdate();
 
@@ -179,12 +179,12 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
     }
 
     @Override
-    public void deletar(OrcamentoItem item) {
+    public void deletar(OrcamentoItem obj) {
         try(Connection conn = getConnection()){
             String sql = "DELETE FROM orcamento_item WHERE id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, item.getId());
+            statement.setInt(1, obj.getId());
 
             statement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {

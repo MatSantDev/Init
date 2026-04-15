@@ -4,6 +4,7 @@ import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.Servico;
 import com.project.orcamentofly.service.ProdutoService;
 import com.project.orcamentofly.service.ServicoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class ServicoController {
     @PostMapping("/inserir")
     public ResponseEntity<Void> inserir(@RequestBody Servico servico) {
         service.inserir(servico);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/atualizar")
@@ -41,6 +42,6 @@ public class ServicoController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@RequestBody Servico servico) {
         service.deletar(servico);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

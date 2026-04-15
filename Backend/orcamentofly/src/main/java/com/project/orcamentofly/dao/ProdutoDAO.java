@@ -36,12 +36,12 @@ public class ProdutoDAO implements GenericDAO<Produto> {
     }
 
     @Override
-    public Produto consultarById(int id) {
+    public Produto consultarById(Produto obj) {
         try(Connection conn = getConnection()){
 
             String sql = "select * from produtos where id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, obj.getId());
 
             ResultSet rs = statement.executeQuery();
 
@@ -58,17 +58,17 @@ public class ProdutoDAO implements GenericDAO<Produto> {
     }
 
     @Override
-    public void inserir(Produto produto) {
+    public void inserir(Produto obj) {
         try(Connection conn = getConnection()){
 
             String sql = "insert into produtos (nome, descricao, valorUnitario, estoque) VALUE (?, ?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, produto.getNome());
-            statement.setString(2, produto.getDescricao());
-            statement.setDouble(3, produto.getValorUnitario());
-            statement.setInt(4, produto.getEstoque());
+            statement.setString(1, obj.getNome());
+            statement.setString(2, obj.getDescricao());
+            statement.setDouble(3, obj.getValorUnitario());
+            statement.setInt(4, obj.getEstoque());
 
             statement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -77,13 +77,13 @@ public class ProdutoDAO implements GenericDAO<Produto> {
     }
 
     @Override
-    public void deletar(Produto produto) {
+    public void deletar(Produto obj) {
         try(Connection conn = getConnection()){
 
             String sql = "delete from produtos where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, produto.getId());
+            statement.setInt(1, obj.getId());
             statement.execute();
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -92,18 +92,18 @@ public class ProdutoDAO implements GenericDAO<Produto> {
     }
 
     @Override
-    public void atualizar(Produto produto) {
+    public void atualizar(Produto obj) {
         try(Connection conn = getConnection()){
 
             String sql = "update produtos set nome = ?, descricao = ?, valorUnitario = ?, estoque = ? where id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, produto.getNome());
-            statement.setString(2, produto.getDescricao());
-            statement.setDouble(3, produto.getValorUnitario());
-            statement.setInt(4, produto.getEstoque());
-            statement.setInt(5, produto.getId());
+            statement.setString(1, obj.getNome());
+            statement.setString(2, obj.getDescricao());
+            statement.setDouble(3, obj.getValorUnitario());
+            statement.setInt(4, obj.getEstoque());
+            statement.setInt(5, obj.getId());
 
             statement.execute();
 

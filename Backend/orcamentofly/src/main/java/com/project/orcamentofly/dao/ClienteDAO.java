@@ -85,13 +85,13 @@ public class ClienteDAO implements GenericDAO<Cliente>{
     }
 
     @Override
-    public Cliente consultarById(int id) {
+    public Cliente consultarById(Cliente obj) {
         try (Connection conn = getConnection()) {
 
             String sql = "SELECT * FROM clientes WHERE id = ?";
 
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
+            statement.setInt(1, obj.getId());
 
             ResultSet rs = statement.executeQuery();
 

@@ -19,7 +19,9 @@ public class ServicoService {
     }
 
     public Servico consultarById(int id) {
-        return dao.consultarById(id);
+        Servico servico = new Servico();
+        servico.setId(id);
+        return dao.consultarById(servico);
     }
 
     public void inserir(Servico servico) {
