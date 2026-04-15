@@ -23,7 +23,8 @@ import { Input } from '@/components/ui/input'
 import { Service } from '@/types/service'
 import { Product } from '@/types/product'
 
-// import { addBudgetItem } from '@/utils/budgetsItemData'
+import { formatValue, formatText } from '@/utils/formatters'
+import { addBudgetItem } from '@/utils/budgetItemData'
 
 interface AddItemToBudgetModalProps {
   products: Product[]
@@ -45,56 +46,82 @@ export function AddItemToBudgetModal( {
   const [ isLoading, setIsLoading ] = useState(false)
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const [ tipoItem, setTipoItem ] = useState<'PRODUTO' | 'SERVICO'>('PRODUTO')
+  const [ itemType, setItemType ] = useState<'PRODUTO' | 'SERVICO' | ''>('' )
   const [ selectedItemId, setSelectedItemId ] = useState<string>('')
-  const [ quantidade, setQuantidade ] = useState<number>(1)
+  const [ quantity, setQuantity ] = useState<number>(1)
 
-  const itemSelecionado = useMemo(() => {
-    if ( !selectedItemId ) return null;
+  const itemSelected = useMemo(() => {
+    if ( !selectedItemId || !itemType ) return null;
 
-    if ( tipoItem === 'PRODUTO' ) {
-      return products.find(p => p.id.toString() === selectedItemId)
-    } else {
+    if ( itemType === 'PRODUTO' ) {
+      return products.find(p => p.id.toString() === selectedItemId )
+    } else if ( itemType === 'SERVICO' ) {
       return services.find(s => s.id.toString() === selectedItemId)
     }
-  }, [ selectedItemId, tipoItem, products, services ] )
 
-  const valorUnitario = itemSelecionado?.valorUnitario || 0
-  const subtotal = valorUnitario * quantidade
+    return null;
+  }, [ selectedItemId, itemType, products, services ] )
+
+  const itemPrice = itemSelected?.valorUnitario || 0
+  const total = itemPrice * quantity
 
   async function handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
     e.preventDefault()
 
-    if ( !selectedItemId ) {
-      toast.error('Por favor, selecione um item.')
+    if ( !selectedItemId || !itemType ) {
+      toast.error('Por favor, selecione um tipo e um item.')
       return
+    }
+
+    if ( itemType === 'PRODUTO' && itemSelected ) {
+      const product = itemSelected as Product
+
+      console.log("PRODUTO SELECIONADO: ", product)
+      
+      if ( product.estoque === 0 ) {
+        toast.error('Este produto está fora de estoque no momento!');
+        return;
+      }
+
+      if ( quantity > product.estoque ) {
+        toast.error(`Estoque insuficiente! Temos apenas ${ product.estoque } unidade(s) disponível(is).`);
+        return;
+      }
     }
 
     setIsLoading( true )
 
-    const novoItem = {
-      orcamentoId: budgetId,
-      tipoOrcamentoItem: tipoItem,
-      quantidade: quantidade,
-      valorUnitario: valorUnitario,
-      subtotal: subtotal,
-      descricao: itemSelecionado?.nome,
-      produto_id: tipoItem === 'PRODUTO' ? Number(selectedItemId) : null,
-      servico_id: tipoItem === 'SERVICO' ? Number(selectedItemId) : null,
+    const formData = new FormData()
+
+    formData.append( 'orcamentoId', String( budgetId ) )
+    formData.append( 'tipoOrcamentoItem', itemType )
+    formData.append( 'quantidade', String( quantity ) )
+    formData.append( 'valorUnitario', String( itemPrice ) )
+    formData.append( 'subtotal', String( total ) )
+    
+    if ( itemSelected?.nome ) {
+      formData.append('descricao', itemSelected.nome)
+    }
+
+    if ( itemType === 'PRODUTO') {
+      formData.append('produto_id', selectedItemId )
+    } else if ( itemType === 'SERVICO' ) {
+      formData.append('servico_id', selectedItemId )
     }
 
     try {
-      // 🚨 Aqui você vai chamar a sua função de API!
-      // const result = await addBudgetItem(novoItem)
+      const result = await addBudgetItem( formData, budgetId )
 
-      // Simulando o sucesso por enquanto:
-      setTimeout(() => {
-        toast.success( `${tipoItem === 'PRODUTO' ? 'Produto' : 'Serviço'} adicionado ao orçamento!` )
-        onSuccess() // Atualiza a tabela do Next.js
-        setIsLoading(false)
-        setSelectedItemId('') // Limpa o campo
-        setQuantidade(1)
-      }, 1000)
+     if ( result.success ) {
+        if ( closeRef.current ) {
+          closeRef.current.click()
+        }
+        toast.success( 'Item adicionado ao orçamento com sucesso!' )
+      } else {
+        setIsLoading( false )
+        toast.error('Falha ao adicionar o item ao orçamento. Tente novamente mais tarde')
+        console.error('Erro do servidor:', result.error )
+      }
 
     } catch ( err ) {
       console.error('Erro ao adicionar item:', err )
@@ -105,7 +132,7 @@ export function AddItemToBudgetModal( {
 
   return (
     <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
 
         <DialogHeader>
           <DialogTitle>
@@ -118,71 +145,98 @@ export function AddItemToBudgetModal( {
 
         <form onSubmit={ handleSubmit } className='flex flex-col gap-4 py-4'>
           <div className='flex gap-4'>
+            
             <div className='flex flex-col gap-2 w-1/3'>
               <label className='text-sm font-semibold'>
                 Tipo de item
               </label>
               <Select
-                value={ tipoItem }
+                value={ itemType }
                 onValueChange={ ( val: 'PRODUTO' | 'SERVICO' ) => {
-                  setTipoItem(val)
+                  setItemType(val )
                   setSelectedItemId('')
+                  setQuantity(1)
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Tipo" />
+                  <SelectValue placeholder='Tipo' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PRODUTO">
-                    Produto
-                  </SelectItem>
-                  <SelectItem value="SERVICO">
-                    Serviço
-                  </SelectItem>
+                  <SelectItem value='PRODUTO'>Produto</SelectItem>
+                  <SelectItem value='SERVICO'>Serviço</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className='flex flex-col gap-2 w-2/3'>
               <label className='text-sm font-semibold'>
-                Selecionar { tipoItem === 'PRODUTO' ? 'Produto' : 'Serviço' }
+                Selecionar { itemType === 'PRODUTO' ? 'Produto' : itemType === 'SERVICO' ? 'Serviço' : 'Item' }
               </label>
-              <Select value={ selectedItemId } onValueChange={ setSelectedItemId }>
+              
+              <Select
+                key={ itemType }
+                value={ selectedItemId }
+                onValueChange={ setSelectedItemId }
+                disabled={ !itemType }
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione..." />
+                  <SelectValue placeholder={ itemType ? 'Selecione...' : 'Escolha o tipo antes' } />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    { tipoItem === 'PRODUTO'
-                      ? products?.map( p => <SelectItem key={ p.id } value={ p.id.toString() }>{ p.nome }</SelectItem> )
-                      : services?.map( s => <SelectItem key={ s.id } value={ s.id.toString() }>{ s.nome }</SelectItem> )
-                    }
+                    { itemType === 'PRODUTO' && products?.map( p => (
+                        <SelectItem
+                          key={ `prod-${ p.id }` }
+                          value={ p.id.toString() }
+                          disabled={ p.estoque === 0 }
+                        >
+                          { p.nome } { p.estoque === 0 ? '(Sem estoque)' : `(Estoque: ${p.estoque})` }
+                        </SelectItem>
+                    ))}
+                    
+                    { itemType === 'SERVICO' && services?.map( s => (
+                        <SelectItem key={ `serv-${ s.id }` } value={ s.id.toString() }>
+                          { s.nome }
+                        </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className='flex gap-4 items-end'>
+          <div className='flex gap-4 items-end' >
             <div className='flex flex-col gap-2 w-1/3'>
-              <label className='text-sm font-semibold'>Quantidade</label>
+              <label className='text-sm font-semibold'>
+                Quantidade
+              </label>
               <Input
-                type="number"
-                min="1"
-                value={ quantidade }
-                onChange={ ( e ) => setQuantidade(Number( e.target.value ) ) }
+                type='number'
+                min='1'
+                value={ itemType === 'SERVICO' ? 1 : quantity }
+                onChange={ ( e ) => setQuantity(Number( e.target.value ) ) }
                 required
+                disabled={ !selectedItemId || itemType === 'SERVICO' }
               />
             </div>
 
-            <div className='flex flex-col gap-2 w-2/3'>
-              <div className="flex justify-between items-center h-10 px-3 rounded-md border bg-muted/50 text-sm">
-                <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-bold text-blue-600">
-                  R$ {subtotal.toFixed(2).replace('.', ',')}
-                </span>
-              </div>
+            <div className='flex flex-col gap-2 w-1/3'>
+              <label className='text-sm font-semibold whitespace-nowrap'>
+                Preço do { itemType ? formatText( itemType ) : 'Item' }
+              </label>
+              <p className='h-10 py-2'>
+                { formatValue( itemPrice ) }
+              </p>
             </div>
+          </div>
+
+          <div className='flex gap-2 items-center'>
+              <span className='text-muted-foreground text-sm font-semibold'>
+                Subtotal:
+              </span>
+              <span className='font-bold text-lg text-blue-600'>
+                { formatValue( total ) }
+              </span>
           </div>
 
           <Button type='submit' className='mt-4 w-full' disabled={ isLoading || !selectedItemId }>

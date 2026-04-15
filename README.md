@@ -117,7 +117,7 @@ Projeto focado em:
 
 ## Backend
 
-- [] - 
+- [x] - Mateus fingir que fez algo no Backend
 
 ## Frontend
 
@@ -125,7 +125,7 @@ Projeto focado em:
 - [x] - Adicionar "status" nos Orçamentos
 - [x] - Adicionar gráficos no painel
 - [x] - Adicionar validação de preços negativos nas tabelas
-- [] - Adicionar funcionalidade de incluir produtos no orçamentos
+- [x] - Adicionar funcionalidade de incluir produtos no orçamentos
 
 # Client table
 

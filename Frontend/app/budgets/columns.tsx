@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react';
 import { ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -12,6 +13,33 @@ import { Product } from '@/types/product';
 import { Service } from '@/types/service';
 
 import { formatValue, formatDate, formatText } from '@/utils/formatters';
+import { getBudgetItems } from '@/utils/budgetItemData';
+
+function BudgetItemsCountCell( { budgetId }: { budgetId: number } ) {
+  const [ count, setCount ] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchCount() {
+      try {
+        const items = await getBudgetItems( budgetId )
+        setCount(items.length)
+      } catch (error) {
+        setCount(0);
+      }
+    }
+    fetchCount();
+  }, [budgetId]);
+
+  if ( count === null ) {
+    return <span className="text-xs text-muted-foreground animate-pulse">Buscando...</span>;
+  }
+
+  return (
+    <span className="font-medium">
+      { count } { count === 1 ? 'item' : 'itens' }
+    </span>
+  );
+}
 
 export const columns: ColumnDef< Budget >[] = [
   {
@@ -98,7 +126,17 @@ export const columns: ColumnDef< Budget >[] = [
           </p>
         </div>
       )
+    },
+  },
+  {
+    accessorKey: 'totalItemsBudgets',
+    header: 'Items no Orçamento',
+    cell: ( { row } ) => {
+      const budgetId = row.original.id; 
 
+      return (
+        <BudgetItemsCountCell budgetId={ budgetId } />
+      )
     },
   },
   {

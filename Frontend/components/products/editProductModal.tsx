@@ -36,7 +36,7 @@ export function EditProductModal({ open, onOpenChange, product, onSuccess }: Edi
     const hasChanges =
       nome !== product.nome ||
       descricao !== product.descricao ||
-      Number( valorUnitario ) !== product.valorUnitario;
+      Number( valorUnitario ) !== product.valorUnitario ||
       Number( estoque ) !== product.estoque
 
     if ( !hasChanges ) {

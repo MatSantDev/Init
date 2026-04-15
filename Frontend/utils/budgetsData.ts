@@ -19,7 +19,6 @@ export async function getBudgets() {
     console.log( err )
     return []
   }
-
 }
 
 export async function addBudget( formData: FormData ) {

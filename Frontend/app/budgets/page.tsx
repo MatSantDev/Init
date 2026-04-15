@@ -13,12 +13,13 @@ import { Service } from '@/types/service'
 
 import { DataTable } from '@/components/ui/data-table'
 import { AddBudgetForm } from '@/components/budgets/addBudgetForm'
+import { getServices } from '@/utils/servicesData'
 
 export default async function BudgetsPage() {
   const budgets: Budget[] = await getBudgets()
   const clients: Client[] = await getClients()
   const products: Product[] = await getProducts()
-  const services: Service[] = await getProducts()
+  const services: Service[] = await getServices()
 
   return (
     <main className='h-screen flex flex-col items-center text-center pt-12 gap-12' >

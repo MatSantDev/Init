@@ -40,11 +40,16 @@ public class OrcamentoItemService {
         Orcamento orcamento = new Orcamento();
         orcamento.setId(orcamentoId);
         item.setOrcamento(orcamento);
+
         validarOrcamentoItem(item);
         item.calcularSubtotal();
         dao.inserir(item);
-        ProdutoDAO produtoDAO = new ProdutoDAO();
-        produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
+
+        if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
+            ProdutoDAO produtoDAO = new ProdutoDAO();
+            produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
+        }
+
     }
 
     public void atualizar(int orcamentoId, int id,  OrcamentoItem item) {
@@ -65,18 +70,27 @@ public class OrcamentoItemService {
         if (item.getQuantidade() <= 0) {
             throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
         }
+
         if (item.getValorUnitario() < 0) {
             throw new IllegalArgumentException("O valor unitário deve ser maior ou igual a zero.");
         }
+
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
-            ProdutoService produtoService = new ProdutoService();
-            Produto produto = produtoService.consultarById(item.getProduto().getId());
-            if (item.getQuantidade() > produto.getEstoque()){
-                throw new IllegalArgumentException("O produto possui menor quantidade do requirida");
-            }
             if (item.getProduto() == null || item.getProduto().getId() <= 0) {
                 throw new IllegalArgumentException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
             }
+
+            ProdutoService produtoService = new ProdutoService();
+            Produto produto = produtoService.consultarById(item.getProduto().getId());
+            
+            if (item.getQuantidade() > produto.getEstoque()){
+                throw new IllegalArgumentException("O produto possui menor quantidade do requirida");
+            }
+
+            if (item.getProduto() == null || item.getProduto().getId() <= 0) {
+                throw new IllegalArgumentException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
+            }
+
             item.setServico(null);
         } else if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.SERVICO) {
             if (item.getServico() == null || item.getServico().getId() <= 0) {

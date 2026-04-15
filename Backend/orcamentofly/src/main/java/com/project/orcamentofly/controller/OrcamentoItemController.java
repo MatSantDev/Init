@@ -125,7 +125,7 @@ public class OrcamentoItemController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<?> deletar(@PathVariable int orcamentoId, @PathVariable int id, @RequestBody OrcamentoItem item) {
+    public ResponseEntity<?> deletar( @PathVariable int orcamentoId, @PathVariable int id ) {
         try {
             if (orcamentoId <= 0) {
                 throw new BadRequestException("ID do orçamento inválido");
@@ -133,11 +133,14 @@ public class OrcamentoItemController {
             if (id <= 0) {
                 throw new BadRequestException("ID do item inválido");
             }
+            
             OrcamentoItem existente = service.consultarById(id);
             if (existente == null) {
                 throw new ResourceNotFoundException("Item com ID " + id + " não encontrado");
             }
-            service.deletar(item);
+
+            service.deletar(existente);
+
             return ResponseEntity.noContent().build();
         } catch (BadRequestException | ResourceNotFoundException e) {
             throw e;

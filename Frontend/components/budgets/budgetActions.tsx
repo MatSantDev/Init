@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ConfirmationModal } from '@/components/confirmationModal';
 import { EditBudgetModal } from '@/components/budgets/editBudgetModal';
+import { ManageItemsBudgetsModal } from '@/components/budgetsItem/manageItemsBudgetsModal';
 
 import { Budget } from '@/types/budget';
 import { Client } from '@/types/client';
@@ -14,7 +15,6 @@ import { Product } from '@/types/product';
 import { Service } from '@/types/service'
 
 import { deleteBudget } from '@/utils/budgetsData';
-import { AddItemToBudgetModal } from '../budgetsItem/addItemToBudgetModal';
 
 interface BudgetActionsProps {
   budget: Budget;
@@ -60,7 +60,6 @@ export function BudgetActions({ budget, clients, services, products }: BudgetAct
           <Button
             size='sm'
             onClick={ () => setOpenManageModal( true ) }
-            // disabled={ isDeleting }
           >
             Gerenciar
           </Button>
@@ -100,7 +99,7 @@ export function BudgetActions({ budget, clients, services, products }: BudgetAct
         clients={ clients }
         onSuccess={ () => router.refresh() }
       />
-      <AddItemToBudgetModal
+      <ManageItemsBudgetsModal
         open={ openManageModal }
         onSuccess={ () => router.refresh() }
         budgetId={ budget.id }

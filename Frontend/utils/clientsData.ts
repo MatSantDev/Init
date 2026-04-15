@@ -23,21 +23,18 @@ export async function getClients() {
 }
 
 export async function addClient( formData: FormData ) {
-  const newClient = {
-    id: 0, //! ID do novo cliente não fica zerado, necessário aplicar para funcionar
-    nome: formData.get('nome'),
-    email: formData.get('email'),
-    telefone: formData.get('telefone'),
-    cpf: formData.get('cpf'),
-    cep: formData.get('cep'),
-    endereco: formData.get('endereco'),
-    sexo: formData.get('sexo'),
-    dataNascimento: formData.get('dataNascimento'),
-    criadoEm: new Date(),
-  }
-
-  console.log( 'NOVO CLIENTE' )
-  console.log( newClient )
+    const newClient = {
+      id: 0, //! ID do novo cliente não fica zerado, necessário aplicar para funcionar
+      nome: formData.get('nome'),
+      email: formData.get('email'),
+      telefone: formData.get('telefone'),
+      cpf: formData.get('cpf'),
+      cep: formData.get('cep'),
+      endereco: formData.get('endereco'),
+      sexo: formData.get('sexo'),
+      dataNascimento: formData.get('dataNascimento'),
+      criadoEm: new Date(),
+    }
 
     try {
       const res = await fetch(`${ process.env.API_URL }/clientes/inserir`, {
