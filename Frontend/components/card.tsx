@@ -8,7 +8,7 @@ export interface CardProps {
 
 export function Card( { text, icon: Icon, value }: CardProps ) {
   return (
-    <div className='flex flex-col gap-3 p-5 w-full md:w-3/4 h-36 bg-accent rounded-xl' >
+    <div className='flex flex-col gap-3 p-5 w-full md:w-3/4 h-36 bg-card border rounded-xl' >
 
       <div className='flex items-center justify-between w-full' >
         <p className='text-xl font-semibold' >
