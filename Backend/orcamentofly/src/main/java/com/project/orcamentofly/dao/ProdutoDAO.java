@@ -126,16 +126,22 @@ public class ProdutoDAO implements GenericDAO<Produto> {
     }
 
     public void atualizarEstoque(OrcamentoItem item) {
+        Produto produto = new Produto();
+        produto.setId(item.getProduto().getId());
+        produto.setEstoque(item.getQuantidade());
+        atualizarEstoque(produto);
+    }
+
+    public void atualizarEstoque(Produto produto) {
         try(Connection conn = getConnection()){
             String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, item.getQuantidade());
-            statement.setInt(2, item.getProduto().getId());
+            statement.setInt(1, produto.getEstoque());
+            statement.setInt(2, produto.getId());
             statement.executeUpdate();
         } catch (ClassNotFoundException | SQLException e) {
             throw new BdException(e.getMessage());
         }
-
     }
 
     @Override

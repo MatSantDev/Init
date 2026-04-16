@@ -79,6 +79,25 @@ public class ProdutoService {
         dao.atualizarEstoque(item);
     }
 
+    public void aumentarEstoque(int produtoId, int quantidade) {
+        validarMovimentoEstoque(produtoId, quantidade);
+        dao.atualizarEstoque(criarMovimentoEstoque(produtoId, quantidade));
+    }
+
+    public void reduzirEstoque(int produtoId, int quantidade) {
+        validarMovimentoEstoque(produtoId, quantidade);
+
+        Produto produto = consultarById(produtoId);
+        if (produto == null) {
+            throw new ResourceNotFoundException("Produto com ID " + produtoId + " não encontrado");
+        }
+        if (quantidade > produto.getEstoque()) {
+            throw new BadRequestException("O produto possui menor quantidade do requirida");
+        }
+
+        dao.atualizarEstoque(criarMovimentoEstoque(produtoId, -quantidade));
+    }
+
     private void validarProduto(Produto produto, boolean validarId) {
         if (produto == null) {
             throw new BadRequestException("Produto é obrigatório");
@@ -95,5 +114,21 @@ public class ProdutoService {
         if (produto.getEstoque() < 0) {
             throw new BadRequestException("Estoque do produto não pode ser negativo");
         }
+    }
+
+    private void validarMovimentoEstoque(int produtoId, int quantidade) {
+        if (produtoId <= 0) {
+            throw new BadRequestException("ID do produto inválido");
+        }
+        if (quantidade <= 0) {
+            throw new BadRequestException("Quantidade para movimentação de estoque inválida");
+        }
+    }
+
+    private Produto criarMovimentoEstoque(int produtoId, int quantidade) {
+        Produto produto = new Produto();
+        produto.setId(produtoId);
+        produto.setEstoque(quantidade);
+        return produto;
     }
 }

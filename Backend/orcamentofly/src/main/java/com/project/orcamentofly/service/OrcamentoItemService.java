@@ -52,7 +52,7 @@ public class OrcamentoItemService {
         dao.inserir(item);
 
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
-            produtoService.atualizarEstoque(item);
+            produtoService.reduzirEstoque(item.getProduto().getId(), item.getQuantidade());
         }
 
         orcamentoService.atualizarValorTotal(orcamentoId);
@@ -69,6 +69,7 @@ public class OrcamentoItemService {
         item.setOrcamento(orcamento);
 
         validarOrcamentoItem(item);
+        reconciliarEstoqueProduto(existente, item);
         item.calcularSubtotal();
         dao.atualizar(item);
         orcamentoService.atualizarValorTotal(orcamentoId);
@@ -82,6 +83,10 @@ public class OrcamentoItemService {
         OrcamentoItem existente = consultarById(item.getId());
         if (existente == null) {
             throw new ResourceNotFoundException("Item com ID " + item.getId() + " não encontrado");
+        }
+
+        if (existente.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO && existente.getProduto() != null) {
+            produtoService.aumentarEstoque(existente.getProduto().getId(), existente.getQuantidade());
         }
 
         dao.deletar(existente);
@@ -140,5 +145,40 @@ public class OrcamentoItemService {
         }
 
         return orcamento;
+    }
+
+    private void reconciliarEstoqueProduto(OrcamentoItem existente, OrcamentoItem atualizado) {
+        boolean existenteEhProduto = existente.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO && existente.getProduto() != null;
+        boolean atualizadoEhProduto = atualizado.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO && atualizado.getProduto() != null;
+
+        if (!existenteEhProduto && !atualizadoEhProduto) {
+            return;
+        }
+
+        if (existenteEhProduto && !atualizadoEhProduto) {
+            produtoService.aumentarEstoque(existente.getProduto().getId(), existente.getQuantidade());
+            return;
+        }
+
+        if (!existenteEhProduto) {
+            produtoService.reduzirEstoque(atualizado.getProduto().getId(), atualizado.getQuantidade());
+            return;
+        }
+
+        int produtoAnteriorId = existente.getProduto().getId();
+        int produtoAtualId = atualizado.getProduto().getId();
+
+        if (produtoAnteriorId == produtoAtualId) {
+            int diferencaQuantidade = atualizado.getQuantidade() - existente.getQuantidade();
+            if (diferencaQuantidade > 0) {
+                produtoService.reduzirEstoque(produtoAtualId, diferencaQuantidade);
+            } else if (diferencaQuantidade < 0) {
+                produtoService.aumentarEstoque(produtoAtualId, Math.abs(diferencaQuantidade));
+            }
+            return;
+        }
+
+        produtoService.aumentarEstoque(produtoAnteriorId, existente.getQuantidade());
+        produtoService.reduzirEstoque(produtoAtualId, atualizado.getQuantidade());
     }
 }
