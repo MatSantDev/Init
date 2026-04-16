@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Database, Edit, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ConfirmationModal } from '@/components/confirmationModal';
@@ -61,7 +62,7 @@ export function BudgetActions({ budget, clients, services, products }: BudgetAct
             size='sm'
             onClick={ () => setOpenManageModal( true ) }
           >
-            Gerenciar
+            <Database />
           </Button>
 
         <Button
@@ -70,7 +71,7 @@ export function BudgetActions({ budget, clients, services, products }: BudgetAct
           onClick={ () => setOpenEditModal(true) }
           disabled={ isDeleting }
         >
-          Editar
+          <Edit />
         </Button>
 
         <Button
@@ -79,7 +80,8 @@ export function BudgetActions({ budget, clients, services, products }: BudgetAct
           onClick={ () => setOpenConfirmModal(true) }
           disabled={ isDeleting }
         >
-          { isDeleting ? 'Excluindo...' : 'Excluir' }
+          {/* { isDeleting ? 'Excluindo...' : 'Excluir' } */}
+          <Trash />
         </Button>
       </div>
       <ConfirmationModal

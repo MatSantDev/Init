@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Edit, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ConfirmationModal } from '@/components/confirmationModal';
@@ -53,7 +54,7 @@ export function ProductActions({ product }: ProductActionsProps) {
           onClick={ () => setOpenEditModal(true) }
           disabled={ isDeleting }
         >
-          Editar
+          <Edit />
         </Button>
 
         <Button
@@ -62,7 +63,7 @@ export function ProductActions({ product }: ProductActionsProps) {
           onClick={ () => setOpenConfirmModal(true) }
           disabled={ isDeleting }
         >
-          { isDeleting ? 'Excluindo...' : 'Excluir' }
+          <Trash />
         </Button>
       </div>
       <ConfirmationModal

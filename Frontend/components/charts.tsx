@@ -61,7 +61,7 @@ export function BudgetsStatusPieChart( { data }: BudgetsStatusPieChartProps ) {
   return (
     <ChartContainer
       config={ statusPieChartConfig }
-      className='w-full h-96 max-h-3/4 flex mx-auto aspect-square'
+      className='w-full h-80 max-h-3/4 flex mx-auto aspect-square'
     >
       <PieChart>
         <ChartTooltip
@@ -91,7 +91,7 @@ export function ClientsBudgetsChart( { data }: ClientsBudgetsChartProps ) {
   return (
     <ChartContainer
       config={ clientsBudgetsBarChartConfig }
-      className='w-full h-96 '
+      className='w-full h-80'
     >
       <BarChart
         accessibilityLayer

@@ -80,21 +80,21 @@ export function DataTable< TData, TValue >({
     <nav className='flex flex-col gap-4' >
       <div className='flex items-center justify-between w-full' >
         <div className='flex gap-2 w-3/4'>
+          { table.getColumn('id') && (
+            <Input
+              placeholder='Buscar por ID...'
+              value={ ( table.getColumn('id')?.getFilterValue() as string) ?? '' }
+              onChange={ ( event ) => table.getColumn('id')?.setFilterValue(event.target.value) }
+              className='w-32'
+            />
+          )}
+
           <Input
             placeholder='Pesquisar...'
             value={ globalFilter ?? '' }
             onChange={ ( event ) => setGlobalFilter(String( event.target.value ) ) }
             className='w-full'
           />
-
-          { table.getColumn('id') && (
-            <Input
-              placeholder='Buscar por ID...'
-              value={ ( table.getColumn('id')?.getFilterValue() as string) ?? '' }
-              onChange={ ( event ) => table.getColumn('id')?.setFilterValue(event.target.value) }
-              className='w-48'
-            />
-          )}
         </div>
 
         { modalContent ? (
@@ -126,7 +126,7 @@ export function DataTable< TData, TValue >({
       </div>
 
       <div className='overflow-hidden rounded-md border'>
-        <Table className='w-full' >
+        <Table className='w-full min-w-200' >
           <TableHeader className='font-bold text-lg text-center' >
             { table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={ headerGroup.id } className='bg-blue hover:bg-blue/70 transition-all' >

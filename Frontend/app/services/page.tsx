@@ -29,7 +29,7 @@ export default async function ProductsPage() {
             </p>
           </div>
         ) : (
-          <section className='w-full px-2 md:px-20 pt-5 pb-7' >
+          <section className='w-full px-2 md:px-12 pt-5 pb-7' >
             <DataTable
               columns={ columns }
               data={ services }

@@ -83,7 +83,7 @@ export default async function Home() {
     .slice( 0, 5 )
 
   return (
-    <main className='h-screen flex flex-col w-full px-7 md:px-12 py-3 md:py-0 gap-12' >
+    <main className='h-screen flex flex-col w-full px-7 md:px-12 py-3 md:py-5 gap-12' >
       <section className='flex flex-col gap-5 text-center md:text-left' >
         <h1 className='text-blue font-bold text-3xl' >
           Painel
@@ -100,7 +100,7 @@ export default async function Home() {
           />
         ) ) }
       </section>
-      <section className='w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-2' >
+      <section className='w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-2 pb-4' >
         { budgets.length > 0 ? (
           <div className="flex flex-col justify-center items-center w-full max-w-xl border rounded-xl p-6 bg-card">
             <h2 className="text-lg md:text-2xl text-center font-semibold mb-4">

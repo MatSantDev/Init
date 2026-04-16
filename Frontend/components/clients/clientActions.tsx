@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Edit, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -53,7 +54,7 @@ export function ClientActions( { client }: ClientActionsProps ) {
           onClick={ () => setOpenEditModal(true) }
           disabled={ isDeleting }
         >
-          Editar
+          <Edit />
         </Button>
 
         <Button
@@ -62,7 +63,7 @@ export function ClientActions( { client }: ClientActionsProps ) {
           onClick={ () => setOpenConfirmModal(true) }
           disabled={ isDeleting }
         >
-          { isDeleting ? 'Excluindo...' : 'Excluir' }
+          <Trash />
         </Button>
       </div>
       <ConfirmationModal
