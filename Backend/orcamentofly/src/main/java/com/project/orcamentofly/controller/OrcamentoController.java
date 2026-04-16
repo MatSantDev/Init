@@ -58,9 +58,6 @@ public class OrcamentoController {
             if (orcamento.getDataOrcamento() == null) {
                 throw new BadRequestException("Data do orçamento é obrigatória");
             }
-            if (orcamento.getValorTotal() <= 0) {
-                throw new BadRequestException("Valor total do orçamento deve ser maior que zero");
-            }
             service.inserir(orcamento);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (BadRequestException e) {
