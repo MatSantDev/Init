@@ -124,7 +124,6 @@ export function ManageItemsBudgetsModal( {
      if ( result.success ) {
         toast.success( 'Item adicionado ao orçamento com sucesso!' )
         
-        // Limpa o formulário e Volta para a tela de lista!
         setItemType('')
         setSelectedItemId('')
         setQuantity(1)
@@ -148,15 +147,15 @@ export function ManageItemsBudgetsModal( {
         <DialogHeader className="border-b pb-4">
           <DialogTitle className="flex justify-between items-center">
             <span className="text-xl">
-              Gerenciar Itens - Orçamento #{budgetId}
+              Gerenciar Itens - Orçamento #{ budgetId }
             </span>
             { view === 'list' ? (
               <Button size="sm" onClick={() => setView('add')} className="gap-2">
-                <Plus size={16} /> Novo Item
+                <Plus size={ 16 } /> Novo Item
               </Button>
             ) : (
               <Button size="sm" variant="outline" onClick={() => setView('list')} className="gap-2">
-                <ArrowLeft size={16} /> Voltar para Lista
+                <ArrowLeft size={ 16 } /> Voltar para Lista
               </Button>
             )}
           </DialogTitle>
@@ -165,7 +164,9 @@ export function ManageItemsBudgetsModal( {
         { view === 'list' && (
           <div className="flex-1 overflow-y-auto py-2">
             { isLoadingData ? (
-              <div className="flex justify-center py-10"><p>Carregando itens...</p></div>
+              <div className="flex justify-center py-10">
+                <p> Carregando itens...</p>
+              </div>
             ) : (
               <div className="border rounded-md overflow-hidden">
                 <table className="w-full text-sm text-left">
@@ -180,18 +181,18 @@ export function ManageItemsBudgetsModal( {
                   </thead>
                   <tbody>
                     { itemsList.map(item => (
-                      <tr key={item.id} className="border-b last:border-0 hover:bg-muted/20">
-                        <td className="p-3">{item.descricao}</td>
+                      <tr key={ item.id } className="border-b last:border-0 hover:bg-muted/20">
+                        <td className="p-3">{ item.descricao }</td>
                         <td className="p-3">
-                           <span className={`px-2 py-1 text-xs rounded-full ${item.tipoOrcamentoItem === 'PRODUTO' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
-                             {formatText(item.tipoOrcamentoItem)}
+                           <span className={ `px-2 py-1 text-xs font-semibold rounded-full ${ item.tipoOrcamentoItem === 'PRODUTO' ? 'bg-blue-700 text-blue-100' : 'bg-purple-700 text-purple-100' }`}>
+                             { formatText(item.tipoOrcamentoItem) }
                            </span>
                         </td>
-                        <td className="p-3 text-center">{item.quantidade}</td>
-                        <td className="p-3 text-right font-medium">{formatValue(item.subtotal)}</td>
+                        <td className="p-3 text-center">{ item.quantidade }</td>
+                        <td className="p-3 text-right font-medium">{ formatValue( item.subtotal ) }</td>
                         <td className="p-3 text-center">
                           <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)} title="Remover item">
-                            <Trash2 size={18} className="text-red-500" />
+                            <Trash2 size={ 18 } className="text-red-500" />
                           </Button>
                         </td>
                       </tr>

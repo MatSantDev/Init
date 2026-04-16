@@ -61,7 +61,7 @@ export function BudgetsStatusPieChart( { data }: BudgetsStatusPieChartProps ) {
   return (
     <ChartContainer
       config={ statusPieChartConfig }
-      className='h-96 max-h-3/4 flex mx-auto aspect-square'
+      className='w-full h-96 max-h-3/4 flex mx-auto aspect-square'
     >
       <PieChart>
         <ChartTooltip
@@ -79,7 +79,7 @@ export function BudgetsStatusPieChart( { data }: BudgetsStatusPieChartProps ) {
 
         <ChartLegend
           content={ <ChartLegendContent nameKey='status' />}
-          className=' justify-center gap-4 mt-4'
+          className=' justify-center gap-4 mt-4 text-lg'
         />
 
       </PieChart>
@@ -91,7 +91,7 @@ export function ClientsBudgetsChart( { data }: ClientsBudgetsChartProps ) {
   return (
     <ChartContainer
       config={ clientsBudgetsBarChartConfig }
-      className='h-96 max-h-3/4 w-full'
+      className='w-full h-96 '
     >
       <BarChart
         accessibilityLayer
@@ -106,14 +106,16 @@ export function ClientsBudgetsChart( { data }: ClientsBudgetsChartProps ) {
         <XAxis
           dataKey='nome'
           tickLine={ false }
-          tickMargin={ 10 }
           axisLine={ false }
+          interval={ 0 }
+          tick={{ className: 'fill-white' }}
           tickFormatter={ ( value ) =>
             value.length > 12 ? value.slice( 0, 12 ) + '...' : value 
           }
         />
 
         <YAxis
+          hide
           tickLine={ false }
           axisLine={ false }
           tickMargin={ 10 }
@@ -121,13 +123,16 @@ export function ClientsBudgetsChart( { data }: ClientsBudgetsChartProps ) {
           allowDecimals={ false }
         />
 
-        <ChartTooltip cursor={ false } content={ <ChartTooltipContent hideLabel /> } />
+        <ChartTooltip
+          cursor={ false }
+          content={ <ChartTooltipContent hideLabel /> }
+        />
 
         <Bar
           dataKey='quantidade'
           fill='var(--color-quantidade)'
           radius={ [ 6, 6, 0, 0 ] }
-          // barSize={ 40 }
+          barSize={ 125 }
         >
           <LabelList
             dataKey='quantidade'

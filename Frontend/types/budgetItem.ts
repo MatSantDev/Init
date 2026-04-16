@@ -5,7 +5,7 @@ export interface BudgetItem {
   tipoOrcamento: 'PRODUTO' | 'SERVICO'
   quantidade: number
   valorUnitario: number
-  subTotal: number // qnt x valorUnitario
+  subTotal: number //? qnt x valorUnitario
   produto_id: number | null
   servico_id: number | null
 }

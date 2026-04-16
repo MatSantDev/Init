@@ -91,7 +91,7 @@ export function DataTable< TData, TValue >({
                   className='p-3'
                 >
                   <Plus size={ 32 } />
-                  <p className='text-lg' >
+                  <p className='hidden md:flex text-lg' >
                     { text || 'Adicionar novo registro' }
                   </p>
                 </Button>

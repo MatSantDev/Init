@@ -83,12 +83,12 @@ export default async function Home() {
     .slice( 0, 5 )
 
   return (
-    <main className='h-screen flex flex-col w-full px-12 gap-12' >
+    <main className='h-screen flex flex-col w-full px-7 md:px-12 py-3 md:py-0 gap-12' >
       <section className='flex flex-col gap-5 text-center md:text-left' >
         <h1 className='text-blue font-bold text-3xl' >
           Painel
         </h1>
-        <p className='text-md md:text-lg' >
+        <p className='text-xl md:text-lg' >
           Tenha uma visão geral do nosso sistema e confira os principais dados
         </p>
       </section>
@@ -100,9 +100,9 @@ export default async function Home() {
           />
         ) ) }
       </section>
-      <section className='w-full flex flex-col md:flex-row items-center justify-between gap-2' >
+      <section className='w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-2' >
         { budgets.length > 0 ? (
-          <div className="w-full max-w-xl border rounded-xl p-6 bg-card">
+          <div className="flex flex-col justify-center items-center w-full max-w-xl border rounded-xl p-6 bg-card">
             <h2 className="text-lg md:text-2xl text-center font-semibold mb-4">
               Orçamentos por Status
             </h2>
@@ -119,7 +119,7 @@ export default async function Home() {
 
         { clients.length > 0 ? (
           <div className="w-full border rounded-xl p-6 bg-card">
-            <h2 className="text-lg md:text-2xl text-center font-semibold mb-4">
+            <h2 className="flex flex-col justify-center items-center text-lg md:text-2xl text-center font-semibold mb-4">
                 Clientes com mais orçamentos
               </h2>
             <ClientsBudgetsChart data={ topClientsData } />
