@@ -1,6 +1,7 @@
 package com.project.orcamentofly.dao;
 
 import com.project.orcamentofly.exception.BdException;
+import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.util.FabricaConexao;
 
@@ -124,25 +125,17 @@ public class ProdutoDAO implements GenericDAO<Produto> {
         return produto;
     }
 
-    public void atualizarEstoque(int produtoId, int quantidade) {
+    public void atualizarEstoque(OrcamentoItem item) {
         try(Connection conn = getConnection()){
             String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, quantidade);
-            statement.setInt(2, produtoId);
+            statement.setInt(1, item.getQuantidade());
+            statement.setInt(2, item.getProduto().getId());
             statement.executeUpdate();
         } catch (ClassNotFoundException | SQLException e) {
             throw new BdException(e.getMessage());
         }
 
-    }
-
-    public void diminuirEstoque(int produtoId, int quantidade, Connection conn) throws SQLException {
-        String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, quantidade);
-        statement.setInt(2, produtoId);
-        statement.executeUpdate();
     }
 
     @Override

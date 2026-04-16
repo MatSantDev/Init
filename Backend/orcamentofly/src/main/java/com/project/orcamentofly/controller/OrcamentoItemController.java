@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/orcamentos/{orcamentoId}/itens")
 public class OrcamentoItemController {
 
-    private OrcamentoItemService service;
+    private final OrcamentoItemService service;
 
     public OrcamentoItemController() {
         this.service = new OrcamentoItemService();
@@ -78,17 +78,8 @@ public class OrcamentoItemController {
     @PostMapping("/inserir")
     public ResponseEntity<?> inserir(@PathVariable int orcamentoId, @RequestBody OrcamentoItem item) {
         try {
-            if (orcamentoId <= 0) {
-                throw new BadRequestException("ID do orçamento inválido");
-            }
-            if (item == null || item.getDescricao() == null || item.getDescricao().isEmpty()) {
-                throw new BadRequestException("Descrição do item é obrigatória");
-            }
-            if (item.getQuantidade() <= 0) {
-                throw new BadRequestException("Quantidade do item deve ser maior que zero");
-            }
-            if (item.getValorUnitario() <= 0) {
-                throw new BadRequestException("Valor unitário do item deve ser maior que zero");
+            if (item == null) {
+                throw new BadRequestException("Item do orçamento é obrigatório");
             }
             service.inserir(orcamentoId, item);
             return ResponseEntity.status(HttpStatus.CREATED).body(item);
@@ -102,18 +93,8 @@ public class OrcamentoItemController {
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<?> atualizar(@PathVariable int orcamentoId, @PathVariable int id, @RequestBody OrcamentoItem item) {
         try {
-            if (orcamentoId <= 0) {
-                throw new BadRequestException("ID do orçamento inválido");
-            }
-            if (id <= 0) {
-                throw new BadRequestException("ID do item inválido");
-            }
-            if (item == null || item.getDescricao() == null || item.getDescricao().isEmpty()) {
-                throw new BadRequestException("Descrição do item é obrigatória");
-            }
-            OrcamentoItem existente = service.consultarById(id);
-            if (existente == null) {
-                throw new ResourceNotFoundException("Item com ID " + id + " não encontrado");
+            if (item == null) {
+                throw new BadRequestException("Item do orçamento é obrigatório");
             }
             service.atualizar(orcamentoId, id, item);
             return ResponseEntity.ok(item);
@@ -125,22 +106,16 @@ public class OrcamentoItemController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<?> deletar( @PathVariable int orcamentoId, @PathVariable int id ) {
+    public ResponseEntity<?> deletar(@PathVariable int orcamentoId, @PathVariable int id) {
         try {
-            if (orcamentoId <= 0) {
-                throw new BadRequestException("ID do orçamento inválido");
-            }
-            if (id <= 0) {
-                throw new BadRequestException("ID do item inválido");
-            }
-            
-            OrcamentoItem existente = service.consultarById(id);
-            if (existente == null) {
-                throw new ResourceNotFoundException("Item com ID " + id + " não encontrado");
-            }
+            OrcamentoItem item = new OrcamentoItem();
+            item.setId(id);
 
-            service.deletar(existente);
+            Orcamento orcamento = new Orcamento();
+            orcamento.setId(orcamentoId);
+            item.setOrcamento(orcamento);
 
+            service.deletar(item);
             return ResponseEntity.noContent().build();
         } catch (BadRequestException | ResourceNotFoundException e) {
             throw e;

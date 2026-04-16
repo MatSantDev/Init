@@ -103,7 +103,7 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
             List<OrcamentoItem> itens = orcamentoItemDAO.consultarTodosByOrcamentoId(obj);
             for (OrcamentoItem item : itens) {
                 if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
-                    produtoDAO.atualizarEstoque(item.getProduto().getId(), item.getQuantidade());
+                    produtoDAO.atualizarEstoque(item);
                 }
             }
 
@@ -164,15 +164,15 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
         return orcamento;
     }
 
-    public void atualizarValorTotal(int orcamentoId) {
+    public void atualizarValorTotal(Orcamento obj) {
         try (Connection conn = getConnection()) {
             String sql = "UPDATE orcamentos SET valorTotal = " +
                          "(SELECT COALESCE(SUM(subtotal), 0) FROM orcamento_item WHERE orcamento_id = ?) " +
                          "WHERE id = ?";
             
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, orcamentoId);
-            statement.setInt(2, orcamentoId);
+            statement.setInt(1, obj.getId());
+            statement.setInt(2, obj.getId());
             
             statement.executeUpdate();
             

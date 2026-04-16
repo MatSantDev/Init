@@ -1,24 +1,25 @@
 package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.OrcamentoItemDAO;
-import com.project.orcamentofly.dao.ProdutoDAO;
-import com.project.orcamentofly.dao.OrcamentoDAO;
+import com.project.orcamentofly.exception.BadRequestException;
+import com.project.orcamentofly.exception.ResourceNotFoundException;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
-import com.project.orcamentofly.util.FabricaConexao;
 
-import java.sql.Connection;
-import java.util.*;
-import java.sql.SQLException;
+import java.util.List;
 
 public class OrcamentoItemService {
 
-    private OrcamentoItemDAO dao;
+    private final OrcamentoItemDAO dao;
+    private final ProdutoService produtoService;
+    private final OrcamentoService orcamentoService;
 
     public OrcamentoItemService() {
         this.dao = new OrcamentoItemDAO();
+        this.produtoService = new ProdutoService();
+        this.orcamentoService = new OrcamentoService();
     }
 
     public List<OrcamentoItem> consultarTodosByOrcamento(Orcamento orcamento) {
@@ -26,20 +27,24 @@ public class OrcamentoItemService {
     }
 
     public List<OrcamentoItem> consultarTodosByOrcamentoId(int orcamentoId) {
-        Orcamento orcamento = new Orcamento();
-        orcamento.setId(orcamentoId);
+        Orcamento orcamento = obterOrcamentoExistente(orcamentoId);
         return dao.consultarTodosByOrcamentoId(orcamento);
     }
 
     public OrcamentoItem consultarById(int id) {
         OrcamentoItem item = new OrcamentoItem();
         item.setId(id);
-        return dao.consultarById(item);
+
+        OrcamentoItem itemEncontrado = dao.consultarById(item);
+        if (itemEncontrado == null || itemEncontrado.getId() <= 0) {
+            return null;
+        }
+
+        return itemEncontrado;
     }
 
     public void inserir(int orcamentoId, OrcamentoItem item) {
-        Orcamento orcamento = new Orcamento();
-        orcamento.setId(orcamentoId);
+        Orcamento orcamento = obterOrcamentoExistente(orcamentoId);
         item.setOrcamento(orcamento);
 
         validarOrcamentoItem(item);
@@ -47,59 +52,93 @@ public class OrcamentoItemService {
         dao.inserir(item);
 
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
-            ProdutoDAO produtoDAO = new ProdutoDAO();
-            produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
+            produtoService.atualizarEstoque(item);
         }
 
-        OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
-        orcamentoDAO.atualizarValorTotal(orcamentoId);
+        orcamentoService.atualizarValorTotal(orcamentoId);
     }
 
-    public void atualizar(int orcamentoId, int id,  OrcamentoItem item) {
+    public void atualizar(int orcamentoId, int id, OrcamentoItem item) {
+        OrcamentoItem existente = consultarById(id);
+        if (existente == null) {
+            throw new ResourceNotFoundException("Item com ID " + id + " não encontrado");
+        }
+
+        Orcamento orcamento = obterOrcamentoExistente(orcamentoId);
         item.setId(id);
-        Orcamento orcamento = new Orcamento();
-        orcamento.setId(orcamentoId);
         item.setOrcamento(orcamento);
+
         validarOrcamentoItem(item);
         item.calcularSubtotal();
         dao.atualizar(item);
+        orcamentoService.atualizarValorTotal(orcamentoId);
     }
 
     public void deletar(OrcamentoItem item) {
-        dao.deletar(item);
+        if (item == null || item.getId() <= 0) {
+            throw new BadRequestException("Item do orçamento inválido");
+        }
+
+        OrcamentoItem existente = consultarById(item.getId());
+        if (existente == null) {
+            throw new ResourceNotFoundException("Item com ID " + item.getId() + " não encontrado");
+        }
+
+        dao.deletar(existente);
+        if (existente.getOrcamento() != null && existente.getOrcamento().getId() > 0) {
+            orcamentoService.atualizarValorTotal(existente.getOrcamento().getId());
+        }
     }
 
     private void validarOrcamentoItem(OrcamentoItem item) {
-        if (item.getQuantidade() <= 0) {
-            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        if (item == null) {
+            throw new BadRequestException("Item do orçamento é obrigatório");
         }
-
+        if (item.getDescricao() == null || item.getDescricao().isBlank()) {
+            throw new BadRequestException("Descrição do item é obrigatória");
+        }
+        if (item.getQuantidade() <= 0) {
+            throw new BadRequestException("A quantidade deve ser maior que zero.");
+        }
         if (item.getValorUnitario() < 0) {
-            throw new IllegalArgumentException("O valor unitário deve ser maior ou igual a zero.");
+            throw new BadRequestException("O valor unitário deve ser maior ou igual a zero.");
+        }
+        if (item.getTipoOrcamentoItem() == null) {
+            throw new BadRequestException("Tipo do item do orçamento é obrigatório.");
         }
 
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
             if (item.getProduto() == null || item.getProduto().getId() <= 0) {
-                throw new IllegalArgumentException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
+                throw new BadRequestException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
             }
 
-            ProdutoService produtoService = new ProdutoService();
             Produto produto = produtoService.consultarById(item.getProduto().getId());
-            
-            if (item.getQuantidade() > produto.getEstoque()){
-                throw new IllegalArgumentException("O produto possui menor quantidade do requirida");
+            if (produto == null) {
+                throw new ResourceNotFoundException("Produto com ID " + item.getProduto().getId() + " não encontrado");
             }
-
-            if (item.getProduto() == null || item.getProduto().getId() <= 0) {
-                throw new IllegalArgumentException("Para itens do tipo PRODUTO, um produto válido deve ser informado.");
+            if (item.getQuantidade() > produto.getEstoque()) {
+                throw new BadRequestException("O produto possui menor quantidade do requirida");
             }
 
             item.setServico(null);
         } else if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.SERVICO) {
             if (item.getServico() == null || item.getServico().getId() <= 0) {
-                throw new IllegalArgumentException("Para itens do tipo SERVICO, um serviço válido deve ser informado.");
+                throw new BadRequestException("Para itens do tipo SERVICO, um serviço válido deve ser informado.");
             }
             item.setProduto(null);
         }
+    }
+
+    private Orcamento obterOrcamentoExistente(int orcamentoId) {
+        if (orcamentoId <= 0) {
+            throw new BadRequestException("ID do orçamento inválido");
+        }
+
+        Orcamento orcamento = orcamentoService.consultarById(orcamentoId);
+        if (orcamento == null) {
+            throw new ResourceNotFoundException("Orçamento com ID " + orcamentoId + " não encontrado");
+        }
+
+        return orcamento;
     }
 }

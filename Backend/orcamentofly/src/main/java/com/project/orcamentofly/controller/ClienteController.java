@@ -65,9 +65,10 @@ public class ClienteController {
             if (cliente.getCpf() == null || cliente.getCpf().isEmpty()) {
                 throw new BadRequestException("CPF do cliente é obrigatório");
             }
-            // Usando Command Pattern para executar a inserção
+
             InserirClienteCommand comando = new InserirClienteCommand(service, cliente);
             invoker.executar(comando);
+
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (BadRequestException e) {
             throw e;
@@ -89,9 +90,10 @@ public class ClienteController {
             if (existente == null) {
                 throw new ResourceNotFoundException("Cliente com ID " + cliente.getId() + " não encontrado");
             }
-            // Usando Command Pattern para executar a atualização
-            AtualizarClienteCommand comando = new AtualizarClienteCommand(service, cliente, existente);
+
+            AtualizarClienteCommand comando = new AtualizarClienteCommand(service, cliente);
             invoker.executar(comando);
+
             return ResponseEntity.ok().build();
         } catch (BadRequestException | ResourceNotFoundException e) {
             throw e;

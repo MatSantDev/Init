@@ -1,5 +1,9 @@
 package com.project.orcamentofly.controller;
 
+import com.project.orcamentofly.command.CommandInvoker;
+import com.project.orcamentofly.command.servico.AtualizarServicoCommand;
+import com.project.orcamentofly.command.servico.DeletarServicoCommand;
+import com.project.orcamentofly.command.servico.InserirServicoCommand;
 import com.project.orcamentofly.exception.BadRequestException;
 import com.project.orcamentofly.exception.ResourceNotFoundException;
 import com.project.orcamentofly.model.Servico;
@@ -15,6 +19,7 @@ import java.util.List;
 public class ServicoController {
 
     private final ServicoService service = new ServicoService();
+    private final CommandInvoker invoker = new CommandInvoker();
 
     @GetMapping("/consultarTodos")
     public ResponseEntity<List<Servico>> consultarTodos() {
@@ -52,13 +57,11 @@ public class ServicoController {
     @PostMapping("/inserir")
     public ResponseEntity<Void> inserir(@RequestBody Servico servico) {
         try {
-            if (servico == null || servico.getNome() == null || servico.getNome().isEmpty()) {
-                throw new BadRequestException("Nome do serviço é obrigatório");
+            if (servico == null) {
+                throw new BadRequestException("Serviço é obrigatório");
             }
-            if (servico.getValorUnitario() <= 0) {
-                throw new BadRequestException("Valor unitário do serviço deve ser maior que zero");
-            }
-            service.inserir(servico);
+
+            invoker.executar(new InserirServicoCommand(service, servico));
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (BadRequestException e) {
             throw e;
@@ -70,20 +73,11 @@ public class ServicoController {
     @PutMapping("/atualizar")
     public ResponseEntity<Void> atualizar(@RequestBody Servico servico) {
         try {
-            if (servico == null || servico.getId() <= 0) {
-                throw new BadRequestException("ID do serviço inválido");
+            if (servico == null) {
+                throw new BadRequestException("Serviço é obrigatório");
             }
-            if (servico.getNome() == null || servico.getNome().isEmpty()) {
-                throw new BadRequestException("Nome do serviço é obrigatório");
-            }
-            if (servico.getValorUnitario() <= 0) {
-                throw new BadRequestException("Valor unitário do serviço deve ser maior que zero");
-            }
-            Servico existente = service.consultarById(servico.getId());
-            if (existente == null) {
-                throw new ResourceNotFoundException("Serviço com ID " + servico.getId() + " não encontrado");
-            }
-            service.atualizar(servico);
+
+            invoker.executar(new AtualizarServicoCommand(service, servico));
             return ResponseEntity.ok().build();
         } catch (BadRequestException | ResourceNotFoundException e) {
             throw e;
@@ -95,14 +89,7 @@ public class ServicoController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         try {
-            if (id <= 0) {
-                throw new BadRequestException("ID do serviço inválido");
-            }
-            Servico existente = service.consultarById(id);
-            if (existente == null) {
-                throw new ResourceNotFoundException("Serviço com ID " + id + " não encontrado");
-            }
-            service.deletar(existente);
+            invoker.executar(new DeletarServicoCommand(service, id));
             return ResponseEntity.noContent().build();
         } catch (BadRequestException | ResourceNotFoundException e) {
             throw e;

@@ -1,17 +1,20 @@
 package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.ProdutoDAO;
+import com.project.orcamentofly.exception.BadRequestException;
+import com.project.orcamentofly.exception.ResourceNotFoundException;
+import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
+import com.project.orcamentofly.model.factory.ProdutoFactory;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ProdutoService {
 
-    private ProdutoDAO dao;
+    private final ProdutoDAO dao;
 
     public ProdutoService() {
-        dao = new ProdutoDAO();
+        this.dao = new ProdutoDAO();
     }
 
     public List<Produto> consultarTodos() {
@@ -21,18 +24,76 @@ public class ProdutoService {
     public Produto consultarById(int id) {
         Produto produto = new Produto();
         produto.setId(id);
-        return dao.consultarById(produto);
+
+        Produto produtoEncontrado = dao.consultarById(produto);
+        if (produtoEncontrado == null || produtoEncontrado.getId() <= 0) {
+            return null;
+        }
+
+        return produtoEncontrado;
     }
 
     public void inserir(Produto produto) {
-        dao.inserir(produto);
+        validarProduto(produto, false);
+
+        Produto novoProduto = ProdutoFactory.criarProduto(
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getValorUnitario(),
+                produto.getEstoque()
+        );
+        dao.inserir(novoProduto);
     }
 
     public void atualizar(Produto produto) {
-        dao.atualizar(produto);
+        validarProduto(produto, true);
+
+        if (consultarById(produto.getId()) == null) {
+            throw new ResourceNotFoundException("Produto com ID " + produto.getId() + " não encontrado");
+        }
+
+        Produto produtoAtualizado = ProdutoFactory.criarProduto(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getValorUnitario(),
+                produto.getEstoque()
+        );
+        dao.atualizar(produtoAtualizado);
     }
 
-    public void deletar(Produto produto) {
+    public void deletar(int id) {
+        if (id <= 0) {
+            throw new BadRequestException("ID do produto inválido");
+        }
+
+        Produto produto = consultarById(id);
+        if (produto == null) {
+            throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado");
+        }
+
         dao.deletar(produto);
+    }
+
+    public void atualizarEstoque(OrcamentoItem item) {
+        dao.atualizarEstoque(item);
+    }
+
+    private void validarProduto(Produto produto, boolean validarId) {
+        if (produto == null) {
+            throw new BadRequestException("Produto é obrigatório");
+        }
+        if (validarId && produto.getId() <= 0) {
+            throw new BadRequestException("ID do produto inválido");
+        }
+        if (produto.getNome() == null || produto.getNome().isBlank()) {
+            throw new BadRequestException("Nome do produto é obrigatório");
+        }
+        if (produto.getValorUnitario() <= 0) {
+            throw new BadRequestException("Valor unitário do produto deve ser maior que zero");
+        }
+        if (produto.getEstoque() < 0) {
+            throw new BadRequestException("Estoque do produto não pode ser negativo");
+        }
     }
 }
