@@ -28,7 +28,7 @@ export async function addBudget( formData: FormData ) {
     },
     dataOrcamento: formData.get('dataOrcamento'),
     observacao: formData.get('observacao'),
-    valorTotal: Number(formData.get('valorTotal')),
+    valorTotal: 0,
     status: 'PENDENTE',
   }
 

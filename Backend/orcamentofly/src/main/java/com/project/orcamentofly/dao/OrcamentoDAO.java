@@ -164,6 +164,23 @@ public class OrcamentoDAO implements GenericDAO<Orcamento>{
         return orcamento;
     }
 
+    public void atualizarValorTotal(int orcamentoId) {
+        try (Connection conn = getConnection()) {
+            String sql = "UPDATE orcamentos SET valorTotal = " +
+                         "(SELECT COALESCE(SUM(subtotal), 0) FROM orcamento_item WHERE orcamento_id = ?) " +
+                         "WHERE id = ?";
+            
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, orcamentoId);
+            statement.setInt(2, orcamentoId);
+            
+            statement.executeUpdate();
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException("Erro ao atualizar o valor total do orçamento", e);
+        }
+    }
+
     @Override
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         return FabricaConexao.getConexao();

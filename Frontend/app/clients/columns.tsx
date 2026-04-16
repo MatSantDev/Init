@@ -12,6 +12,22 @@ import { Client } from '@/types/client';
 
 export const columns: ColumnDef< Client >[] = [
   {
+    accessorKey: 'id',
+    header: 'ID',
+    filterFn: ( row, id, filterValue ) => {
+      if ( !filterValue ) return true
+      
+      return Number( row.getValue( id ) ) === Number( filterValue )
+    },
+    cell: ({ row }) => {
+      return (
+        <p className='font-bold text-muted-foreground'>
+          #{ row.getValue('id') }
+        </p>
+      )
+    }
+  },
+  {
     accessorKey: 'nome',
     header: ({ column }) => {
       return (

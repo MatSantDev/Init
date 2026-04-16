@@ -11,6 +11,22 @@ import { formatValue } from '@/utils/formatters';
 
 export const columns: ColumnDef< Service >[] = [
   {
+    accessorKey: 'id',
+    header: 'ID',
+    filterFn: ( row, id, filterValue ) => {
+      if ( !filterValue ) return true
+      
+      return Number( row.getValue( id ) ) === Number( filterValue )
+    },
+    cell: ({ row }) => {
+      return (
+        <p className='font-bold text-muted-foreground'>
+          #{ row.getValue('id') }
+        </p>
+      )
+    }
+  },
+  {
     accessorKey: 'nome',
     header: ({ column }) => {
       return (

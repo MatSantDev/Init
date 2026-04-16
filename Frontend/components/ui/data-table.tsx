@@ -10,6 +10,7 @@ import {
   getFilteredRowModel,
   SortingState,
   getSortedRowModel,
+  ColumnFiltersState,
 } from '@tanstack/react-table'
 import {
   ArrowBigRight,
@@ -55,6 +56,8 @@ export function DataTable< TData, TValue >({
   const [ globalFilter, setGlobalFilter ] = useState('')
   const [ sorting, setSorting ] = useState<SortingState>([])
 
+  const [ columnFilters, setColumnFilters ] = useState<ColumnFiltersState>([])
+
   const table = useReactTable({
     data,
     columns,
@@ -63,9 +66,11 @@ export function DataTable< TData, TValue >({
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     state: {
       globalFilter,
       sorting,
+      columnFilters,
     },
     onGlobalFilterChange: setGlobalFilter,
     meta,
@@ -74,12 +79,23 @@ export function DataTable< TData, TValue >({
   return (
     <nav className='flex flex-col gap-4' >
       <div className='flex items-center justify-between w-full' >
-        <Input
-          placeholder='Pesquisar...'
-          value={ globalFilter ?? '' }
-          onChange={ ( event ) => setGlobalFilter(String( event.target.value ) ) }
-          className='w-3/4'
-        />
+        <div className='flex gap-2 w-3/4'>
+          <Input
+            placeholder='Pesquisar...'
+            value={ globalFilter ?? '' }
+            onChange={ ( event ) => setGlobalFilter(String( event.target.value ) ) }
+            className='w-full'
+          />
+
+          { table.getColumn('id') && (
+            <Input
+              placeholder='Buscar por ID...'
+              value={ ( table.getColumn('id')?.getFilterValue() as string) ?? '' }
+              onChange={ ( event ) => table.getColumn('id')?.setFilterValue(event.target.value) }
+              className='w-48'
+            />
+          )}
+        </div>
 
         { modalContent ? (
           <Dialog>

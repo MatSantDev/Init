@@ -43,6 +43,22 @@ function BudgetItemsCountCell( { budgetId }: { budgetId: number } ) {
 
 export const columns: ColumnDef< Budget >[] = [
   {
+    accessorKey: 'id',
+    header: 'ID',
+    filterFn: ( row, id, filterValue ) => {
+      if ( !filterValue ) return true
+      
+      return Number( row.getValue( id ) ) === Number( filterValue )
+    },
+    cell: ({ row }) => {
+      return (
+        <p className='font-bold text-muted-foreground'>
+          #{ row.getValue('id') }
+        </p>
+      )
+    }
+  },
+  {
     accessorKey: 'cliente',
     header: ({ column }) => {
       return (

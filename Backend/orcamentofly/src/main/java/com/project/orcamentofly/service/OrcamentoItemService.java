@@ -2,6 +2,7 @@ package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.OrcamentoItemDAO;
 import com.project.orcamentofly.dao.ProdutoDAO;
+import com.project.orcamentofly.dao.OrcamentoDAO;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
@@ -50,6 +51,8 @@ public class OrcamentoItemService {
             produtoDAO.atualizarEstoque(item.getProduto().getId(), -item.getQuantidade());
         }
 
+        OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
+        orcamentoDAO.atualizarValorTotal(orcamentoId);
     }
 
     public void atualizar(int orcamentoId, int id,  OrcamentoItem item) {

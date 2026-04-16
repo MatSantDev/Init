@@ -38,10 +38,10 @@ export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
       return
     }
     formData.append('cliente_id', selectedClientId )
-
+    
     const today = new Date()
     today.setHours( 0, 0, 0, 0 )
-
+    
     const dataOrcamento = formData.get('dataOrcamento') as string
     const selectedDate = new Date( dataOrcamento )
     selectedDate.setHours( 0, 0, 0, 0 )
@@ -54,7 +54,7 @@ export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
 
     try {
       const result = await addBudget( formData )
-
+      
       if ( result.success ) {
         if ( closeRef.current ) {
           closeRef.current.click()
@@ -115,21 +115,6 @@ export function AddBudgetForm( { clients }: AddBudgetFormProps ) {
           id='observacao'
           name='observacao'
           placeholder='Ex: Orçamento para alvenaria'
-          required
-        />
-      </div>
-
-      <div className='flex flex-col gap-2 w-full'>
-        <label htmlFor='valorTotal' className='text-sm font-semibold'>
-          Valor Total (R$)
-        </label>
-        <Input
-          id='valorTotal'
-          name='valorTotal'
-          type='number'
-          step='0.01'
-          min='0'
-          placeholder='Ex: 150.00'
           required
         />
       </div>
