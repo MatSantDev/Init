@@ -1,0 +1,167 @@
+@startuml
+' Pacotes
+package "controller" {
+  class ClienteController
+  class OrcamentoController
+  class OrcamentoItemController
+  class ProdutoController
+  class ServicoController
+}
+
+package "service" {
+  class ClienteService
+  class OrcamentoService
+  class OrcamentoItemService
+  class ProdutoService
+  class ServicoService
+  class ServicoDecoratorService
+}
+
+package "dao" {
+  class ClienteDAO
+  class OrcamentoDAO
+  class OrcamentoItemDAO
+  class ProdutoDAO
+  class ServicoDAO
+  class ServicoDecoratorDAO
+}
+
+package "model" {
+  class Cliente
+  class Orcamento
+  class OrcamentoItem
+  class Produto
+  class Servico
+  class ServicoDecoratorModel
+}
+
+package "command" {
+  interface Command
+  class CommandInvoker
+}
+
+package "command.cliente" {
+  class InserirClienteCommand
+  class AtualizarClienteCommand
+}
+
+package "command.produto" {
+  class InserirProdutoCommand
+  class AtualizarProdutoCommand
+  class DeletarProdutoCommand
+}
+
+package "command.servico" {
+  class InserirServicoCommand
+  class AtualizarServicoCommand
+  class DeletarServicoCommand
+}
+
+package "command.orcamento" {
+  class InserirOrcamentoCommand
+  class AtualizarOrcamentoCommand
+  class DeletarOrcamentoCommand
+}
+
+package "util" {
+  class FabricaConexao
+}
+
+package "exception" {
+  class BadRequestException
+  class ResourceNotFoundException
+  class BdException
+}
+
+' Relações principais: controllers -> services
+ClienteController     --> ClienteService : uses
+OrcamentoController   --> OrcamentoService : uses
+OrcamentoItemController --> OrcamentoItemService : uses
+ProdutoController     --> ProdutoService : uses
+ServicoController     --> ServicoService : uses
+
+' Controllers têm CommandInvoker
+ClienteController     --> CommandInvoker : has
+ProdutoController     --> CommandInvoker : has
+ServicoController     --> CommandInvoker : has
+OrcamentoController   --> CommandInvoker : has
+
+' Services -> DAOs
+ClienteService        --> ClienteDAO : uses
+OrcamentoService      --> OrcamentoDAO : uses
+OrcamentoItemService  --> OrcamentoItemDAO : uses
+ProdutoService        --> ProdutoDAO : uses
+ServicoService        --> ServicoDAO : uses
+ServicoDecoratorService --> ServicoDecoratorDAO : uses
+
+' DAOs -> util (FabricaConexao) e models
+ClienteDAO            --> FabricaConexao : obtains Connection
+OrcamentoDAO          --> FabricaConexao
+OrcamentoItemDAO      --> FabricaConexao
+ProdutoDAO            --> FabricaConexao
+ServicoDAO            --> FabricaConexao
+
+ClienteDAO            --> Cliente : CRUD
+OrcamentoDAO          --> Orcamento
+OrcamentoItemDAO      --> OrcamentoItem
+ProdutoDAO            --> Produto
+ServicoDAO            --> Servico
+
+' Command pattern
+Command <|.. InserirClienteCommand
+Command <|.. AtualizarClienteCommand
+
+Command <|.. InserirProdutoCommand
+Command <|.. AtualizarProdutoCommand
+Command <|.. DeletarProdutoCommand
+
+Command <|.. InserirServicoCommand
+Command <|.. AtualizarServicoCommand
+Command <|.. DeletarServicoCommand
+
+Command <|.. InserirOrcamentoCommand
+Command <|.. AtualizarOrcamentoCommand
+Command <|.. DeletarOrcamentoCommand
+
+CommandInvoker --> Command : executes
+
+' Commands call services
+InserirClienteCommand  --> ClienteService : calls inserir(...)
+AtualizarClienteCommand --> ClienteService : calls atualizar(...)
+
+InserirProdutoCommand  --> ProdutoService : calls inserir(...)
+AtualizarProdutoCommand --> ProdutoService : calls atualizar(...)
+DeletarProdutoCommand  --> ProdutoService : calls deletar(...)
+
+InserirServicoCommand  --> ServicoService : calls inserir(...)
+AtualizarServicoCommand --> ServicoService : calls atualizar(...)
+DeletarServicoCommand  --> ServicoService : calls deletar(...)
+
+InserirOrcamentoCommand --> OrcamentoService : calls inserir(...)
+AtualizarOrcamentoCommand --> OrcamentoService : calls atualizar(...)
+DeletarOrcamentoCommand --> OrcamentoService : calls deletar(...)
+
+' OrcamentoItemService depende de ProdutoService e OrcamentoService
+OrcamentoItemService --> ProdutoService : validates product
+OrcamentoItemService --> OrcamentoService : validates/updates orcamento
+
+' Controllers may throw exceptions
+ClienteController --> BadRequestException : may throw
+ClienteController --> ResourceNotFoundException : may throw
+ServicoController --> BadRequestException
+OrcamentoController --> ResourceNotFoundException
+
+note bottom of ClienteController
+Files:
+ - src/main/java/com/project/orcamentofly/controller/ClienteController.java
+ - ClienteService: src/main/java/com/project/orcamentofly/service/ClienteService.java
+ - ClienteDAO: src/main/java/com/project/orcamentofly/dao/ClienteDAO.java
+end note
+
+note bottom of CommandInvoker
+Files:
+ - src/main/java/com/project/orcamentofly/command/Command.java
+ - src/main/java/com/project/orcamentofly/command/CommandInvoker.java
+end note
+
+@enduml
