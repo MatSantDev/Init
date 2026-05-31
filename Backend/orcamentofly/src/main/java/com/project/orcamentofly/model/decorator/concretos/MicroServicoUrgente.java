@@ -10,7 +10,7 @@ public class MicroServicoUrgente extends MicroServicoDecorator {
     }
 
     @Override
-    public Double getValor() {
-        return super.getValor() * 1.20;
+    public double getValor() {
+        return super.getValor() * 1.30;
     }
 }

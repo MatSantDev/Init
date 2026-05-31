@@ -7,6 +7,7 @@ import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.Servico;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
+import com.project.orcamentofly.model.MicroServicoDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,7 +28,9 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             List<OrcamentoItem> list = new ArrayList<>();
             while (rs.next()){
-                list.add(getar(rs));
+                OrcamentoItem item = getar(rs);
+                item.setMicroServicos(carregarMicroServicos(conn, item.getId()));
+                list.add(item);
             }
 
             return list;
@@ -50,7 +53,9 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             List<OrcamentoItem> list = new ArrayList<>();
             while (rs.next()){
-                list.add(getar(rs));
+                OrcamentoItem item = getar(rs);
+                item.setMicroServicos(carregarMicroServicos(conn, item.getId()));
+                list.add(item);
             }
 
             return list;
@@ -75,6 +80,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             if(rs.next()){
                 item = getar(rs);
+                item.setMicroServicos(carregarMicroServicos(conn, item.getId()));
             }
 
             return item;
@@ -95,6 +101,7 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             while(rs.next()){
                 OrcamentoItem item = getar(rs);
+                item.setMicroServicos(carregarMicroServicos(conn, item.getId()));
                 list.add(item);
             }
 
@@ -137,6 +144,8 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
                 obj.setId(rs.getInt(1));
             }
 
+            inserirMicroServicosAssociados(conn, obj.getId(), obj.getMicroServicos());
+
         } catch (SQLException | ClassNotFoundException e) {
             throw new BdException(e.getMessage());
         }
@@ -173,6 +182,16 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
 
             statement.executeUpdate();
 
+            // atualizar microservicos associados: simplifica removendo os antigos e inserindo os novos
+            // primeiro remover
+            String deleteSql = "DELETE FROM orcamento_item_microservico WHERE orcamento_item_id = ?";
+            try (PreparedStatement delStmt = conn.prepareStatement(deleteSql)){
+                delStmt.setInt(1, obj.getId());
+                delStmt.executeUpdate();
+            }
+            // inserir novos
+            inserirMicroServicosAssociados(conn, obj.getId(), obj.getMicroServicos());
+
         } catch (SQLException | ClassNotFoundException e) {
             throw new BdException(e.getMessage());
         }
@@ -182,6 +201,13 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
     public void deletar(OrcamentoItem obj) {
         try(Connection conn = getConnection()){
             String sql = "DELETE FROM orcamento_item WHERE id = ?";
+
+            // remover microservicos associados antes de deletar o item
+            String deleteSql = "DELETE FROM orcamento_item_microservico WHERE orcamento_item_id = ?";
+            try (PreparedStatement delStmt = conn.prepareStatement(deleteSql)){
+                delStmt.setInt(1, obj.getId());
+                delStmt.executeUpdate();
+            }
 
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, obj.getId());
@@ -225,6 +251,35 @@ public class OrcamentoItemDAO implements GenericDAO<OrcamentoItem>{
         }
 
         return item;
+    }
+
+    private void inserirMicroServicosAssociados(Connection conn, int orcamentoItemId, List<MicroServicoDTO> microServicos) throws SQLException {
+        if (microServicos == null || microServicos.isEmpty()) return;
+        String insertSql = "INSERT INTO orcamento_item_microservico (orcamento_item_id, tipo) VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(insertSql)){
+            for (MicroServicoDTO dto : microServicos){
+                if (dto == null || dto.getTipo() == null) continue;
+                stmt.setInt(1, orcamentoItemId);
+                stmt.setString(2, dto.getTipo().toUpperCase().trim());
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+        }
+    }
+
+    private List<MicroServicoDTO> carregarMicroServicos(Connection conn, int orcamentoItemId) throws SQLException {
+        String sql = "SELECT tipo FROM orcamento_item_microservico WHERE orcamento_item_id = ? ORDER BY id";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, orcamentoItemId);
+            ResultSet rs = stmt.executeQuery();
+            List<MicroServicoDTO> list = new ArrayList<>();
+            while (rs.next()){
+                MicroServicoDTO dto = new MicroServicoDTO();
+                dto.setTipo(rs.getString("tipo"));
+                list.add(dto);
+            }
+            return list;
+        }
     }
 
     @Override

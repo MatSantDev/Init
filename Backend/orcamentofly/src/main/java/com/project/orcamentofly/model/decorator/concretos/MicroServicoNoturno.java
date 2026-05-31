@@ -10,7 +10,7 @@ public class MicroServicoNoturno extends MicroServicoDecorator {
     }
 
     @Override
-    public Double getValor() {
-        return super.getValor() * 1.10;
+    public double getValor() {
+        return super.getValor() + 150.0;
     }
 }

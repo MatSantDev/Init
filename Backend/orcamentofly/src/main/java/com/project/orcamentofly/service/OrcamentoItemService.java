@@ -6,6 +6,8 @@ import com.project.orcamentofly.exception.ResourceNotFoundException;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
+import com.project.orcamentofly.model.Servico;
+import com.project.orcamentofly.model.interfaces.MicroServicoInterface;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 
 import java.util.List;
@@ -48,6 +50,11 @@ public class OrcamentoItemService {
         item.setOrcamento(orcamento);
 
         validarOrcamentoItem(item);
+        if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.SERVICO) {
+            Servico servico = item.getServico();
+            MicroServicoInterface msFinal = MicroServicoDecoratorFactory.aplicarDecorators(servico, item.getMicroServicos());
+            item.setValorUnitario(msFinal.getValor());
+        }
         item.calcularSubtotal();
         dao.inserir(item);
 
@@ -70,6 +77,11 @@ public class OrcamentoItemService {
 
         validarOrcamentoItem(item);
         reconciliarEstoqueProduto(existente, item);
+        if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.SERVICO) {
+            Servico servico = item.getServico();
+            MicroServicoInterface msFinal = MicroServicoDecoratorFactory.aplicarDecorators(servico, item.getMicroServicos());
+            item.setValorUnitario(msFinal.getValor());
+        }
         item.calcularSubtotal();
         dao.atualizar(item);
         orcamentoService.atualizarValorTotal(orcamentoId);

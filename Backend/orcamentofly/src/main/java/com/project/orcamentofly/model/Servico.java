@@ -1,8 +1,10 @@
 package com.project.orcamentofly.model;
 
+import com.project.orcamentofly.model.interfaces.MicroServicoInterface;
+
 import java.util.Objects;
 
-public class Servico {
+public class Servico implements MicroServicoInterface {
 
     private int id;
     private String nome;
@@ -76,6 +78,11 @@ public class Servico {
                 ", descricao='" + descricao + '\'' +
                 ", valorUnitario=" + valorUnitario +
                 '}';
+    }
+
+    @Override
+    public double getValor() {
+        return getValorUnitario();
     }
 }
 

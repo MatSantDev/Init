@@ -15,8 +15,8 @@ public class MicroServico implements MicroServicoInterface {
     }
 
     @Override
-    public Double getValor() {
-        return 0.0;
+    public double getValor() {
+        return this.valor;
     }
 
     @Override

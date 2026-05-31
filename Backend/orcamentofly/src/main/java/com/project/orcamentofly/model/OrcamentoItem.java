@@ -2,6 +2,8 @@ package com.project.orcamentofly.model;
 
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 
+import java.util.List;
+
 public class OrcamentoItem {
 
     private Integer id;
@@ -14,6 +16,7 @@ public class OrcamentoItem {
     private Orcamento orcamento;
     private Produto produto;
     private Servico servico;
+    private List<MicroServicoDTO> microServicos;
 
     public OrcamentoItem() {
     }
@@ -86,6 +89,14 @@ public class OrcamentoItem {
 
     public void setServico(Servico servico) {
         this.servico = servico;
+    }
+
+    public List<MicroServicoDTO> getMicroServicos() {
+        return microServicos;
+    }
+
+    public void setMicroServicos(List<MicroServicoDTO> microServicos) {
+        this.microServicos = microServicos;
     }
 
     public void calcularSubtotal(){

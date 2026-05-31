@@ -130,6 +130,16 @@ CREATE TABLE orcamento_item (
     FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE SET NULL
 );
 
+CREATE TABLE orcamento_item_microservico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    orcamento_item_id INT NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_oimi_orcamento_item
+        FOREIGN KEY (orcamento_item_id)
+        REFERENCES orcamento_item(id)
+        ON DELETE CASCADE
+);
+
 INSERT INTO orcamentos ( cliente_id, dataOrcamento, observacao, valorTotal, status ) VALUES
     (1, '2026-04-02', 'Consultoria em gestão de projetos', 1200.00, "PENDENTE"),
     (2, '2026-04-03', 'Configuração de servidor local', 850.00, "PENDENTE"),
@@ -170,6 +180,11 @@ VALUES
     ('Formatação de Computador', 'SERVICO', 1, 150.00, 150.00, 1, NULL, 1),
     ('Troca de Tela de Celular', 'SERVICO', 1, 300.00, 300.00, 2, NULL, 2)
 ;
+
+INSERT INTO orcamento_item_microservico (orcamento_item_id, tipo) VALUES
+    (2, 'NOTURNO'),
+    (3, 'GARANTIA'),
+    (3, 'URGENTE');
 
 SELECT * FROM orcamentos;
 SELECT * FROM clientes;

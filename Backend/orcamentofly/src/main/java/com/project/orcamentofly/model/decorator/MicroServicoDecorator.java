@@ -11,7 +11,7 @@ public abstract class MicroServicoDecorator implements MicroServicoInterface {
     }
 
     @Override
-    public Double getValor() {
+    public double getValor() {
         return microServico.getValor();
     }
 }
