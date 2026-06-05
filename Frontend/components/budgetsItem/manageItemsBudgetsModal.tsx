@@ -20,6 +20,8 @@ import {
  } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 import { Service } from '@/types/service'
 import { Product } from '@/types/product'
@@ -35,6 +37,42 @@ interface ManageItemsBudgetsModalProps {
   onOpenChange: ( open: boolean ) => void
   onSuccess: () => void
 }
+
+const subProductOptions = [
+  {
+    name: 'EMBALAGEM',
+    label: 'Embalagem Especial / Presente',
+    value: 25,
+  },
+  {
+    name: 'SEGURO',
+    label: 'Seguro de Envio / Carga',
+    value: 45,
+  },
+  {
+    name: 'CUSTOMIZACAO',
+    label: 'Customização / Ajuste de Fábrica',
+    value: 75,
+  },
+]
+
+const subServiceOptions = [
+  {
+    name: 'GARANTIA',
+    label: 'Garantia Estendida',
+    value: 120,
+  },
+  {
+    name: 'NOTURNO',
+    label: 'Adicional Noturno',
+    value: 150,
+  },
+  {
+    name: 'URGENTE',
+    label: 'Taxa de urgência',
+    value: 170,
+  },
+]
 
 export function ManageItemsBudgetsModal( {
   products,
@@ -54,6 +92,9 @@ export function ManageItemsBudgetsModal( {
   const [ selectedItemId, setSelectedItemId ] = useState<string>('')
   const [ quantity, setQuantity ] = useState<number>(1)
 
+  const [ selectedSubServices, setSelectedSubServices ] = useState< string[] >([])
+  const [ selectedSubProducts, setSelectedSubProducts ] = useState< string[] >([])
+
   useEffect(() => {
     if ( open ) {
       setView('list')
@@ -68,7 +109,7 @@ export function ManageItemsBudgetsModal( {
     setIsLoadingData(false)
   }
 
-  async function handleDelete(itemId: number) {
+  async function handleDelete( itemId: number ) {
     const res = await deleteBudgetItem(budgetId, itemId)
     if ( res.success ) {
       toast.success("Item removido!")
@@ -86,8 +127,17 @@ export function ManageItemsBudgetsModal( {
     return null;
   }, [ selectedItemId, itemType, products, services ] )
 
+  const subServiceValue = subServiceOptions
+    .filter(option => selectedSubServices.includes(option.name))
+    .reduce(( sum, option ) => sum + option.value, 0)
+
+    const subProductValue = subProductOptions
+    .filter(option => selectedSubProducts.includes( option.name ) )
+    .reduce(( sum, option ) => sum + option.value, 0)
+
   const itemPrice = itemSelected?.valorUnitario || 0
-  const total = itemPrice * quantity
+
+  const total = ( itemPrice + subServiceValue + subProductValue ) * quantity
 
   async function handleAddItem( e: React.FormEvent<HTMLFormElement> ) {
     e.preventDefault()
@@ -113,13 +163,14 @@ export function ManageItemsBudgetsModal( {
     formData.append( 'quantidade', String( quantity ) )
     formData.append( 'valorUnitario', String( itemPrice ) )
     formData.append( 'subtotal', String( total ) )
+
     if ( itemSelected?.nome ) formData.append('descricao', itemSelected.nome)
 
     if ( itemType === 'PRODUTO' ) formData.append('produto_id', selectedItemId )
     else if ( itemType === 'SERVICO' ) formData.append('servico_id', selectedItemId )
 
     try {
-      const result = await addBudgetItem( formData, budgetId )
+      const result = await addBudgetItem( formData, budgetId, selectedSubServices )
 
      if ( result.success ) {
         toast.success( 'Item adicionado ao orçamento com sucesso!' )
@@ -127,8 +178,8 @@ export function ManageItemsBudgetsModal( {
         setItemType('')
         setSelectedItemId('')
         setQuantity(1)
-        setView('list') 
-        fetchItems() 
+        setView('list')
+        fetchItems()
         onSuccess()
       } else {
         toast.error('Falha ao adicionar o item.')
@@ -137,6 +188,22 @@ export function ManageItemsBudgetsModal( {
       toast.error('Erro no servidor.')
     } finally {
       setIsLoadingSubmit(false)
+    }
+  }
+
+  function handleDecoratorServiceToggle( id: string, checked: boolean ) {
+    if ( checked ) {
+      setSelectedSubServices( prev => [ ...prev, id ] )
+    } else {
+      setSelectedSubServices( prev => prev.filter(item => item !== id ) )
+    }
+  }
+
+  function handleDecoratorProductToggle( id: string, checked: boolean ) {
+    if ( checked ) {
+      setSelectedSubProducts( prev => [ ...prev, id ] )
+    } else {
+      setSelectedSubProducts( prev => prev.filter(item => item !== id ) )
     }
   }
 
@@ -214,10 +281,18 @@ export function ManageItemsBudgetsModal( {
 
         { view === 'add' && (
           <form onSubmit={ handleAddItem } className='flex flex-col gap-4 py-4 animate-in fade-in slide-in-from-bottom-4'>
-            <div className='flex gap-4'>
+            <div className='flex justify-between gap-4 px-2'>
               <div className='flex flex-col gap-2 w-1/3'>
                 <label className='text-sm font-semibold'>Tipo de item</label>
-                <Select value={ itemType } onValueChange={ ( val: 'PRODUTO' | 'SERVICO' ) => { setItemType(val); setSelectedItemId(''); setQuantity(1) } }>
+                <Select
+                  value={ itemType }
+                  onValueChange={ ( val: 'PRODUTO' | 'SERVICO' ) => {
+                    setItemType(val)
+                    setSelectedItemId('')
+                    setQuantity(1)
+                    setSelectedSubServices([])
+                  } }
+                >
                   <SelectTrigger><SelectValue placeholder='Tipo' /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value='PRODUTO'>Produto</SelectItem>
@@ -238,9 +313,70 @@ export function ManageItemsBudgetsModal( {
                   </SelectContent>
                 </Select>
               </div>
+
+              { itemType === 'SERVICO' && selectedItemId && (
+                <div className='flex flex-col gap-3 w-2/3'>
+                  <label className='text-sm font-semibold'>
+                    MicroServiços Adicionais:
+                  </label>
+                  <div className='flex flex-col gap-4'>
+                    { subServiceOptions.map( ( option ) => (
+                      <div key={ option.name } className='flex items-center space-x-2'>
+                        <Checkbox
+                          id={ option.name }
+                          checked={ selectedSubServices.includes(option.name ) }
+                          onCheckedChange={ ( checked ) => handleDecoratorServiceToggle( option.name, checked as boolean ) }
+                        />
+                        <div className='flex flex-col gap-2' >
+                          <Label
+                            htmlFor={ option.name }
+                            className='text-xs font-medium leading-none cursor-pointer'
+                          >
+                            { option.label }
+                          </Label>
+                          <p className='text-xs font-medium leading-none cursor-pointer' >
+                            (+ { formatValue(option.value) })
+                          </p>
+                        </div>
+                      </div>
+                    ) ) }
+                  </div>
+                </div>
+              ) }
+
+              { itemType === 'PRODUTO' && selectedItemId && (
+                <div className='flex flex-col gap-3 w-2/3'>
+                  <label className='text-sm font-semibold'>
+                    MicroProdutos Adicionais:
+                  </label>
+                  <div className='flex flex-col gap-4'>
+                    { subProductOptions.map( ( option ) => (
+                      <div key={ option.name } className='flex items-center space-x-2'>
+                        <Checkbox
+                          id={ option.name }
+                          checked={ selectedSubProducts.includes(option.name) }
+                          onCheckedChange={ ( checked ) => handleDecoratorProductToggle( option.name, checked as boolean ) }
+                        />
+                        <div className='flex flex-col gap-2' >
+                          <Label
+                            htmlFor={ option.name }
+                            className='text-xs font-medium leading-none cursor-pointer'
+                          >
+                            { option.label }
+                          </Label>
+                          <p className='text-xs font-medium leading-none cursor-pointer' >
+                            (+ { formatValue(option.value) })
+                          </p>
+                        </div>
+                      </div>
+                    ) ) }
+                  </div>
+                </div>
+              ) }
+
             </div>
 
-            <div className='flex gap-4 items-end' >
+            <div className='flex gap-4 items-center justify-between mt-4 px-2' >
               <div className='flex flex-col gap-2 w-1/3'>
                 <label className='text-sm font-semibold'>Quantidade</label>
                 <Input type='number' min='1' value={ itemType === 'SERVICO' ? 1 : quantity } onChange={ ( e ) => setQuantity(Number( e.target.value ) ) } required disabled={ !selectedItemId || itemType === 'SERVICO' } />

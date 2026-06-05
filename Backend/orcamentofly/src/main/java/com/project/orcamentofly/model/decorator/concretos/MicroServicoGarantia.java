@@ -11,6 +11,6 @@ public class MicroServicoGarantia extends MicroServicoDecorator {
 
     @Override
     public double getValor() {
-        return super.getValor() * 1.10;
+        return super.getValor() + 120;
     }
 }

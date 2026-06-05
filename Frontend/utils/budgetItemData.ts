@@ -23,7 +23,12 @@ export async function getBudgetItems( budgetId: number ) {
     }
 }
 
-export async function addBudgetItem( formData: FormData, budgetId: number ) {
+export async function addBudgetItem(
+  formData: FormData,
+  budgetId: number,
+  subServices?: Array<string>,
+  subProducts?: Array<string>,
+) {
   let newItem
 
   const tipo = formData.get('tipoOrcamentoItem')
@@ -42,6 +47,7 @@ export async function addBudgetItem( formData: FormData, budgetId: number ) {
         descricao: descricao,
         produto: { id: Number( formData.get('produto_id') ) },
         servico: null,
+        microProdutos: subProducts?.map(tipo => ({ tipo: tipo })) ?? []
       }
   } else if ( tipo === 'SERVICO' ) {
       newItem = {
@@ -53,6 +59,7 @@ export async function addBudgetItem( formData: FormData, budgetId: number ) {
         descricao: descricao,
         produto: null,
         servico: { id: Number( formData.get('servico_id') ) },
+        microServicos: subServices?.map(tipo => ({ tipo: tipo })) ?? [],
       }
   }
 
