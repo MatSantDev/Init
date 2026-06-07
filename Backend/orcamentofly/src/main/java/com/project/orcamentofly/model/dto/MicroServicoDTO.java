@@ -1,4 +1,4 @@
-package com.project.orcamentofly.model;
+package com.project.orcamentofly.model.dto;
 
 public class MicroServicoDTO {
 

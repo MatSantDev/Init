@@ -7,7 +7,7 @@ import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.Servico;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 import com.project.orcamentofly.util.FabricaConexao;
-import com.project.orcamentofly.model.MicroServicoDTO;
+import com.project.orcamentofly.model.dto.MicroServicoDTO;
 
 import java.sql.*;
 import java.util.ArrayList;

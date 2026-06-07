@@ -1,6 +1,6 @@
-package com.project.orcamentofly.service;
+package com.project.orcamentofly.model.factory;
 
-import com.project.orcamentofly.model.MicroServicoDTO;
+import com.project.orcamentofly.model.dto.MicroServicoDTO;
 import com.project.orcamentofly.model.Servico;
 import com.project.orcamentofly.model.interfaces.MicroServicoInterface;
 import com.project.orcamentofly.model.decorator.concretos.MicroServicoGarantia;
@@ -13,7 +13,8 @@ public class MicroServicoDecoratorFactory {
 
     public static MicroServicoInterface aplicarDecorators(Servico servicoBase, List<MicroServicoDTO> microServicos) {
         MicroServicoInterface corrente = servicoBase;
-        if (microServicos == null || microServicos.isEmpty()) {
+
+            if (microServicos == null || microServicos.isEmpty()) {
             return corrente;
         }
 

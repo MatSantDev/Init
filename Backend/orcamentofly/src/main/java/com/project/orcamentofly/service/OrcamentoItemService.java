@@ -1,12 +1,17 @@
 package com.project.orcamentofly.service;
 
 import com.project.orcamentofly.dao.OrcamentoItemDAO;
+import com.project.orcamentofly.dao.ProdutoDAO;
+import com.project.orcamentofly.dao.ServicoDAO;
 import com.project.orcamentofly.exception.BadRequestException;
 import com.project.orcamentofly.exception.ResourceNotFoundException;
 import com.project.orcamentofly.model.Orcamento;
 import com.project.orcamentofly.model.OrcamentoItem;
 import com.project.orcamentofly.model.Produto;
 import com.project.orcamentofly.model.Servico;
+import com.project.orcamentofly.model.factory.MicroProdutoDecoratorFactory;
+import com.project.orcamentofly.model.factory.MicroServicoDecoratorFactory;
+import com.project.orcamentofly.model.interfaces.MicroProdutoInterface;
 import com.project.orcamentofly.model.interfaces.MicroServicoInterface;
 import com.project.orcamentofly.model.enums.TipoOrcamentoItem;
 
@@ -51,9 +56,17 @@ public class OrcamentoItemService {
 
         validarOrcamentoItem(item);
         if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.SERVICO) {
-            Servico servico = item.getServico();
+            Servico servico = validarServico(item.getServico());
+            item.setServico(servico);
             MicroServicoInterface msFinal = MicroServicoDecoratorFactory.aplicarDecorators(servico, item.getMicroServicos());
             item.setValorUnitario(msFinal.getValor());
+        }
+
+        if (item.getTipoOrcamentoItem() == TipoOrcamentoItem.PRODUTO) {
+            Produto produto = validarProduto(item.getProduto());
+            item.setProduto(produto);
+            MicroProdutoInterface mpFinal = MicroProdutoDecoratorFactory.aplicarDecorators(produto, item.getMicroProdutos());
+            item.setValorUnitario(mpFinal.getValor());
         }
         item.calcularSubtotal();
         dao.inserir(item);
@@ -63,6 +76,24 @@ public class OrcamentoItemService {
         }
 
         orcamentoService.atualizarValorTotal(orcamentoId);
+    }
+
+    private Produto validarProduto(Produto produto) {
+        if(produto.getId() <= 0) {
+            throw new BadRequestException("ID do produto inválido");
+        }
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        produto = produtoDAO.consultarById(produto);
+        return produto;
+    }
+
+    private Servico validarServico(Servico servico) {
+        if(servico.getId() <= 0) {
+            throw new BadRequestException("ID do serviço inválido");
+        }
+        ServicoDAO servicoDAO = new ServicoDAO();
+        servico = servicoDAO.consultarById(servico);
+        return servico;
     }
 
     public void atualizar(int orcamentoId, int id, OrcamentoItem item) {

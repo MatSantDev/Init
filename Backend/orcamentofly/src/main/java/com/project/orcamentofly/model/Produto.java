@@ -1,8 +1,10 @@
 package com.project.orcamentofly.model;
 
+import com.project.orcamentofly.model.interfaces.MicroProdutoInterface;
+
 import java.util.Objects;
 
-public class Produto {
+public class Produto implements MicroProdutoInterface {
 
     private int id;
     private String nome;
@@ -88,5 +90,10 @@ public class Produto {
                 ", valorUnitario=" + valorUnitario +
                 ", estoque=" + estoque +
                 '}';
+    }
+
+    @Override
+    public double getValor() {
+        return getValorUnitario();
     }
 }
