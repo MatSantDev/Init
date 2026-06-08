@@ -170,7 +170,7 @@ export function ManageItemsBudgetsModal( {
     else if ( itemType === 'SERVICO' ) formData.append('servico_id', selectedItemId )
 
     try {
-      const result = await addBudgetItem( formData, budgetId, selectedSubServices )
+      const result = await addBudgetItem( formData, budgetId, selectedSubServices, selectedSubProducts )
 
      if ( result.success ) {
         toast.success( 'Item adicionado ao orçamento com sucesso!' )
