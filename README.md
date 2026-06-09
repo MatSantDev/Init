@@ -1,128 +1,114 @@
 # Sistema de Controle de Orçamentos
 
-![ Wallpaper ]( Frontend/public/wallpaper.png )
-
 ## 📌 Descrição
-Sistema web desenvolvido em Java com MySQL para gerenciamento de orçamentos contendo produtos e serviços.
 
-O sistema permite cadastrar produtos, serviços e criar orçamentos com múltiplos itens, calculando automaticamente o valor total.
+Sistema web para gerenciamento de clientes, produtos, serviços e orçamentos.
+
+A aplicação permite cadastrar produtos e serviços, controlar estoque, gerenciar clientes e criar orçamentos personalizados contendo múltiplos itens.
+
+Além disso, produtos e serviços podem receber funcionalidades adicionais através de microprodutos e microserviços, permitindo personalização e composição dos itens cadastrados.
 
 ---
 
 ## 🎯 Objetivo
-Permitir a criação e organização de orçamentos de forma simples, incluindo produtos e serviços em um único documento.
+
+Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizando informações de clientes, produtos e serviços em uma única plataforma.
 
 ---
 
 ## ⚙️ Funcionalidades
 
-### Produtos
-- Cadastrar
-- Editar
-- Excluir
-- Listar
+### 👥 Clientes
 
-### Serviços
-- Cadastrar
-- Editar
-- Excluir
-- Listar
+* Cadastro de clientes
+* Edição de clientes
+* Exclusão de clientes
+* Listagem de clientes
 
-### Orçamentos
-- Criar orçamento
-- Adicionar itens
-- Editar itens
-- Remover itens
-- Calcular total
-- Listar orçamentos
-- Visualizar detalhes
+### 📦 Produtos
 
----
+* Cadastro de produtos
+* Edição de produtos
+* Exclusão de produtos
+* Listagem de produtos
+* Controle de estoque
 
-## 🗄️ Estrutura do Banco de Dados
+### 🛠️ Serviços
 
-### Tabelas:
-- produto
-- servico
-- orcamento
-- orcamento_item
+* Cadastro de serviços
+* Edição de serviços
+* Exclusão de serviços
+* Listagem de serviços
 
----
+### 🔧 Personalização
 
-## 🔗 Relacionamentos
+* Adição de microprodutos aos produtos
+* Adição de microserviços aos serviços
+* Cálculo automático do valor final dos itens personalizados
 
-- orcamento (1:N) orcamento_item
-- produto (1:N) orcamento_item
-- servico (1:N) orcamento_item
+### 📄 Orçamentos
 
-### Regra:
-Cada item do orçamento deve ser:
-- um produto OU
-- um serviço
+* Criação de orçamentos
+* Associação de orçamento a um cliente
+* Inclusão de produtos e serviços
+* Remoção de itens
+* Atualização de status
+* Cálculo automático do valor total
+* Consulta e listagem de orçamentos
+
+### 📊 Dashboard
+
+* Visualização de gráficos e indicadores do sistema
 
 ---
 
 ## 🧠 Regras de Negócio
 
-- subtotal = quantidade × valor_unitario
-- valor_total = soma dos itens
-- orçamento deve ter pelo menos 1 item
-- produtos possuem estoque
-- serviços não possuem estoque
+* Todo orçamento deve estar vinculado a um cliente.
+* Produtos possuem controle de estoque.
+* Serviços não possuem controle de estoque.
+* O valor total do orçamento é calculado automaticamente.
+* Um orçamento deve possuir pelo menos um item.
+* Produtos e serviços podem receber funcionalidades adicionais através de microprodutos e microserviços.
 
 ---
 
-## 🏗️ Arquitetura
+## 🚀 Tecnologias Utilizadas
 
-Estrutura sugerida:
+### Backend
 
-src/
- ├── model  
- ├── dao  
- ├── controller (Servlets)  
- ├── service  
- └── util  
+* Java
+* Spring Boot
+* Maven
 
----
+### Frontend
 
-## 🧩 Padrões Utilizados
+* Next.js
+* TypeScript
 
-### dao
-Responsável pelo acesso ao banco de dados.
+### Banco de Dados
 
-### MVC
-Separação entre:
-- Model
-- View
-- Controller
-
-### Service (opcional)
-Centraliza regras de negócio.
+* MySQL
 
 ---
 
-## 🚀 Considerações
+## 🛠️ Como Executar
 
-Projeto focado em:
-- CRUD simples
-- boa organização
-- modelagem relacional correta
+### Backend
 
-## 🛠️ Comandos
+```bash
+./mvnw spring-boot:run
+```
 
-- Frontend => pnpm run dev
-- Backend  => ./mvnw spring-boot:run
+### Frontend
 
-# TODO:
+```bash
+pnpm install
+pnpm dev
+```
 
-## Backend
+---
 
-- [x] - Mateus fingir que fez algo no Backend
+## 📚 Projeto Acadêmico
 
-## Frontend
-
-- [x] - Adicionar tabela "Cliente"
-- [x] - Adicionar "status" nos Orçamentos
-- [x] - Adicionar gráficos no painel
-- [x] - Adicionar validação de preços negativos nas tabelas
-- [x] - Adicionar funcionalidade de incluir produtos no orçamentos
+Projeto desenvolvido para aplicação prática de conceitos de desenvolvimento web, programação orientada a objetos, persistência de dados e integração entre frontend e backend.
