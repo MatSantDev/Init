@@ -1,7 +1,9 @@
 # OrcamentoFly
 ## Sistema de Controle de Orçamentos
 
-## Descrição
+![ Wallpaper ]( Frontend/public/wallpaper.png )
+
+# Descrição
 
 Sistema web para gerenciamento de clientes, produtos, serviços e orçamentos.
 
