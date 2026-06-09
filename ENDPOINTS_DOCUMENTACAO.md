@@ -1,10 +1,10 @@
-# 📋 Documentação de Endpoints - OrcamentoFly API
+# Documentação de Endpoints - OrcamentoFly API
 
 **Base URL:** `http://localhost:8080`
 
 ---
 
-## 📑 Índice
+## Índice
 1. [Clientes](#clientes)
 2. [Serviços](#serviços)
 3. [Produtos](#produtos)
@@ -15,7 +15,7 @@
 
 ---
 
-## 🧑 CLIENTES
+## CLIENTES
 
 ### 1. Consultar Todos os Clientes
 **Método:** `GET`  
@@ -151,7 +151,7 @@
 
 ---
 
-## 🔧 SERVIÇOS
+## SERVIÇOS
 
 ### 1. Consultar Todos os Serviços
 **Método:** `GET`  
@@ -265,7 +265,7 @@
 
 ---
 
-## 📦 PRODUTOS
+## PRODUTOS
 
 ### 1. Consultar Todos os Produtos
 **Método:** `GET`  
@@ -383,7 +383,7 @@
 
 ---
 
-## 📊 ORÇAMENTOS
+## ORÇAMENTOS
 
 ### 1. Consultar Todos os Orçamentos
 **Método:** `GET`  
@@ -533,7 +533,7 @@
 
 ---
 
-## 🎁 ITEMS DO ORÇAMENTO
+## ITEMS DO ORÇAMENTO
 
 ### 1. Consultar Todos os Items do Orçamento por ID
 **Método:** `GET`  
@@ -779,7 +779,7 @@
 
 ---
 
-## 📚 Enums
+## Enums
 
 ### StatusOrcamento
 Possíveis valores para o status de um orçamento:
@@ -796,7 +796,7 @@ Possíveis valores para o tipo de item do orçamento:
 
 ---
 
-## 💡 Exemplos de Uso com cURL
+## Exemplos de Uso com cURL
 
 ### Consultar todos os clientes
 ```bash
@@ -843,7 +843,7 @@ curl -X DELETE http://localhost:8080/clientes/deletar/1
 
 ---
 
-## ⚠️ Observações Importantes
+## Observações Importantes
 
 1. **Validações obrigatórias:**
    - Cliente: nome, email e CPF são obrigatórios na criação
