@@ -1,6 +1,6 @@
 # Sistema de Controle de Orçamentos
 
-## 📌 Descrição
+## Descrição
 
 Sistema web para gerenciamento de clientes, produtos, serviços e orçamentos.
 
@@ -10,22 +10,22 @@ Além disso, produtos e serviços podem receber funcionalidades adicionais atrav
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 
 Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizando informações de clientes, produtos e serviços em uma única plataforma.
 
 ---
 
-## ⚙️ Funcionalidades
+## Funcionalidades
 
-### 👥 Clientes
+### Clientes
 
 * Cadastro de clientes
 * Edição de clientes
 * Exclusão de clientes
 * Listagem de clientes
 
-### 📦 Produtos
+### Produtos
 
 * Cadastro de produtos
 * Edição de produtos
@@ -33,20 +33,20 @@ Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizan
 * Listagem de produtos
 * Controle de estoque
 
-### 🛠️ Serviços
+### Serviços
 
 * Cadastro de serviços
 * Edição de serviços
 * Exclusão de serviços
 * Listagem de serviços
 
-### 🔧 Personalização
+### Personalização
 
 * Adição de microprodutos aos produtos
 * Adição de microserviços aos serviços
 * Cálculo automático do valor final dos itens personalizados
 
-### 📄 Orçamentos
+### Orçamentos
 
 * Criação de orçamentos
 * Associação de orçamento a um cliente
@@ -56,13 +56,13 @@ Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizan
 * Cálculo automático do valor total
 * Consulta e listagem de orçamentos
 
-### 📊 Dashboard
+### Dashboard
 
 * Visualização de gráficos e indicadores do sistema
 
 ---
 
-## 🧠 Regras de Negócio
+## Regras de Negócio
 
 * Todo orçamento deve estar vinculado a um cliente.
 * Produtos possuem controle de estoque.
@@ -73,7 +73,7 @@ Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizan
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### Backend
 
@@ -92,7 +92,7 @@ Facilitar o processo de elaboração e gerenciamento de orçamentos, centralizan
 
 ---
 
-## 🛠️ Como Executar
+## Como Executar
 
 ### Backend
 
@@ -109,6 +109,6 @@ pnpm dev
 
 ---
 
-## 📚 Projeto Acadêmico
+## Projeto Acadêmico
 
 Projeto desenvolvido para aplicação prática de conceitos de desenvolvimento web, programação orientada a objetos, persistência de dados e integração entre frontend e backend.
